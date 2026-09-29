@@ -601,6 +601,22 @@
   }
 
   // -------------------------------------------------------------
+  // 4b. SIGNATURE STAGED HERO ENTRANCE
+  // -------------------------------------------------------------
+  function playHeroEntrance() {
+    var hero = byId("celebrationHero");
+    if (!hero) return;
+    if (hero.classList.contains("is-revealed") || hero.classList.contains("is-animating-entrance")) return;
+    hero.classList.add("is-animating-entrance");
+    setTimeout(function () {
+      hero.classList.remove("is-animating-entrance");
+      hero.classList.add("is-revealed");
+    }, 2400);
+  }
+
+  window.playHeroEntrance = playHeroEntrance;
+
+  // -------------------------------------------------------------
   // 5. STEP-BY-STEP LUXURY ENVELOPE OPENING ANIMATION
   // -------------------------------------------------------------
   function setupEnvelopeOpening() {
@@ -728,6 +744,7 @@
       var celebrationHero = byId("celebrationHero");
       if (celebrationHero) {
         celebrationHero.scrollIntoView({ behavior: "smooth" });
+        playHeroEntrance();
       }
     }
 
@@ -960,15 +977,63 @@
     var winH = window.innerHeight || 800;
     var isMobile = window.innerWidth <= 768;
 
-    // 1. Hero Content subtle depth as user scrolls away
+    // 1. Hero Content cinematic depth and transition
+    var hero = byId("celebrationHero");
     var heroContent = document.querySelector(".hero-content");
-    if (heroContent && currentScrollY < winH * 1.5) {
-      var heroRatio = Math.min(1, Math.max(0, currentScrollY / (winH * 0.85)));
-      var heroTransY = heroRatio * (isMobile ? -14 : -24);
-      var heroScale = 1 - (heroRatio * 0.035);
-      var heroOpacity = 1 - (heroRatio * 0.55);
-      heroContent.style.transform = "translate3d(0, " + heroTransY.toFixed(1) + "px, 0) scale(" + heroScale.toFixed(3) + ")";
-      heroContent.style.opacity = heroOpacity.toFixed(2);
+    var heroGlow = document.querySelector(".hero-ambient-glow");
+    var heroTitle = document.querySelector(".script-line");
+    var coupleNames = document.querySelector(".couple-names");
+
+    if (hero && heroContent) {
+      var hRect = hero.getBoundingClientRect();
+
+      // Trigger staged entrance animation when hero becomes visible after auth
+      if (accessGranted && hRect.top < winH * 0.75 && !hero.classList.contains("is-revealed") && !hero.classList.contains("is-animating-entrance")) {
+        playHeroEntrance();
+      }
+
+      // Viewport-relative scroll transition:
+      // When hero is active at the top of the viewport (hRect.top ~ 0), opacity is 1.0!
+      // When user scrolls down out of the hero, hRect.top becomes negative.
+      if (hRect.top <= 10 && hRect.bottom > 0) {
+        var exitRatio = Math.min(1, Math.max(0, -hRect.top / (winH * 0.85)));
+
+        // Background moves approximately -12px (mobile: -6px)
+        var bgShift = (exitRatio * (isMobile ? -6 : -12)).toFixed(1);
+        hero.style.backgroundPosition = "center " + bgShift + "px";
+
+        // Decorative glow slowly reduces
+        if (heroGlow) {
+          var glowAlpha = 0.88 * (1 - exitRatio * 0.40);
+          heroGlow.style.opacity = glowAlpha.toFixed(2);
+        }
+
+        // Title translateY approximately -8px
+        if (heroTitle) {
+          var titleShift = (exitRatio * (isMobile ? -4 : -8)).toFixed(1);
+          heroTitle.style.transform = "translate3d(0, " + titleShift + "px, 0)";
+        }
+
+        // Couple names scale 1 -> approximately 0.985, very small movement (8-14px desktop, 4-8px mobile)
+        if (coupleNames) {
+          var nameScale = 1 - (exitRatio * 0.015);
+          var nameShift = (exitRatio * (isMobile ? -4 : -10)).toFixed(1);
+          coupleNames.style.transform = "translate3d(0, " + nameShift + "px, 0) scale(" + nameScale.toFixed(3) + ")";
+        }
+
+        // Overall content opacity: 1 -> approximately 0.78 maximum (NEVER drops below 0.76 while leaving!)
+        var heroOpacity = 1 - (exitRatio * 0.22);
+        heroContent.style.opacity = heroOpacity.toFixed(2);
+      } else if (hRect.top > 10) {
+        // Hero is approaching or at rest
+        heroContent.style.opacity = "1";
+        if (heroTitle) heroTitle.style.transform = "translate3d(0, 0, 0)";
+        if (coupleNames) coupleNames.style.transform = "translate3d(0, 0, 0) scale(1)";
+        if (heroGlow) heroGlow.style.opacity = "0.88";
+      } else {
+        // Hero is completely past viewport
+        heroContent.style.opacity = "0.78";
+      }
     }
 
     // 2. Wedding Section Ambient Gold Light Glow & Depth

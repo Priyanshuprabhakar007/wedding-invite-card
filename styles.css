@@ -555,17 +555,29 @@ button {
   color: var(--paper);
 }
 
-/* Hero Section with Looping Background Video */
+/* ========================================================
+   2. HERO SECTION — LUMINOUS ROYAL BURGUNDY
+   ======================================================== */
 .hero {
   position: relative;
-  min-height: 720px;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   overflow: hidden;
-  background: var(--crimson-darker);
+  background-color: #4a0116;
+  background-image:
+    /* Layer 1: Luminous wine/crimson center radiance */
+    radial-gradient(ellipse 75% 65% at 50% 48%, rgba(148, 14, 48, 0.78) 0%, rgba(102, 2, 31, 0.45) 55%, transparent 100%),
+    /* Layer 2: Subtle warm champagne warmth in upper center */
+    radial-gradient(circle 380px at 50% 48%, rgba(223, 190, 118, 0.10) 0%, transparent 70%),
+    /* Layer 3: Cinematic corner & edge vignette */
+    radial-gradient(ellipse 95% 90% at 50% 50%, transparent 58%, rgba(35, 0, 9, 0.60) 100%),
+    /* Layer 4: Deep royal burgundy vertical gradient foundation */
+    linear-gradient(180deg, #3d0011 0%, #54021b 30%, #4a0116 70%, #35000c 100%);
+  color: var(--paper);
 }
 
 .hero-video-container {
@@ -575,104 +587,387 @@ button {
   height: 100%;
   z-index: 1;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .hero-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(0.8) contrast(1.1);
+  filter: brightness(0.9) contrast(1.05);
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, 
-    rgba(65, 0, 18, 0.75) 0%, 
-    rgba(40, 0, 10, 0.5) 40%, 
-    rgba(35, 0, 9, 0.85) 85%, 
-    rgba(35, 0, 9, 0.98) 100%);
+  background: radial-gradient(circle at 50% 48%, transparent 40%, rgba(28, 0, 7, 0.32) 100%);
   pointer-events: none;
+  z-index: 1;
+}
+
+/* Warm Champagne / Gold Ambient Glow behind names */
+.hero-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -46%);
+  width: min(580px, 92vw);
+  height: 380px;
+  background: radial-gradient(ellipse at 50% 50%, 
+    rgba(223, 190, 118, 0.20) 0%, 
+    rgba(247, 231, 196, 0.09) 38%, 
+    rgba(148, 14, 48, 0.12) 60%, 
+    transparent 80%);
+  filter: blur(42px);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.88;
+  will-change: transform, opacity;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+@keyframes heroGlowBreathe {
+  0% {
+    opacity: 0.76;
+    transform: translate(-50%, -46%) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -46%) scale(1.03);
+  }
+}
+
+.hero.is-revealed .hero-ambient-glow {
+  animation: heroGlowBreathe 7s ease-in-out infinite alternate;
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 80px 24px 50px;
+  padding: 85px 24px 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  will-change: transform, opacity;
 }
 
 .hero-ornament-top {
-  width: 68px;
+  width: 58px;
   height: auto;
-  margin-bottom: 22px;
-  filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
+  margin-bottom: 18px;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.55)) drop-shadow(0 0 12px rgba(223, 190, 118, 0.35));
 }
 
 .sub-greeting {
   font-family: var(--font-display);
-  font-size: 13px;
-  letter-spacing: 0.3em;
+  font-size: clamp(11.5px, 2.8vw, 13.5px);
+  letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: #dfbe76; /* Warm muted gold */
   margin-bottom: 12px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  font-weight: 500;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7), 0 0 16px rgba(223, 190, 118, 0.25);
+  opacity: 1;
 }
 
 .script-line {
   font-family: var(--font-script);
-  font-size: clamp(36px, 8vw, 52px);
-  color: var(--gold-light);
+  font-size: clamp(40px, 8.8vw, 58px);
+  color: #fffaf0; /* Warm champagne / ivory */
   line-height: 1.1;
-  margin-bottom: 6px;
-  text-shadow: 0 3px 15px rgba(0,0,0,0.6);
+  margin-bottom: 8px;
+  text-shadow: 
+    0 3px 18px rgba(0, 0, 0, 0.75), 
+    0 0 30px rgba(247, 231, 196, 0.35),
+    0 0 55px rgba(223, 190, 118, 0.22);
+  font-weight: 400;
+  opacity: 1;
+}
+
+.hero-date-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 3vw, 18px);
+  margin: 10px 0 16px;
+}
+
+.hero-date-line {
+  display: inline-block;
+  width: clamp(26px, 6vw, 44px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(223, 190, 118, 0.95), transparent);
+  transform-origin: center;
 }
 
 .hero-date {
   font-family: var(--font-display);
-  font-size: clamp(15px, 3.8vw, 20px);
-  letter-spacing: 0.3em;
-  color: var(--paper);
-  margin: 12px 0 25px;
+  font-size: clamp(14px, 3.6vw, 18px);
+  letter-spacing: 0.34em;
+  color: #fff9f2; /* Warm ivory */
   text-transform: uppercase;
-  border-top: 1px solid rgba(223, 190, 118, 0.5);
-  border-bottom: 1px solid rgba(223, 190, 118, 0.5);
-  padding: 8px 34px;
+  border-top: 1px solid rgba(223, 190, 118, 0.55);
+  border-bottom: 1px solid rgba(223, 190, 118, 0.55);
+  padding: 7px clamp(20px, 5vw, 32px);
   display: inline-block;
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(4px);
+  background: rgba(30, 1, 8, 0.40);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 0 12px rgba(223, 190, 118, 0.08);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+  opacity: 1;
+}
+
+.hero-flourish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 4px 0 12px;
+  opacity: 0.95;
+}
+
+.hero-flourish .flourish-bar {
+  width: clamp(22px, 5vw, 38px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(223, 190, 118, 0.85), transparent);
+}
+
+.hero-flourish .flourish-icon {
+  font-size: 11px;
+  color: var(--gold);
+  line-height: 1;
+  text-shadow: 0 0 10px rgba(223, 190, 118, 0.65);
 }
 
 .couple-names {
-  margin: 15px auto 10px;
+  margin: 10px auto 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: var(--font-script);
-  font-size: clamp(62px, 16vw, 92px);
+  font-size: clamp(66px, 17vw, 102px);
   line-height: 0.88;
-  color: #ffffff;
-  text-shadow: 0 4px 25px rgba(0, 0, 0, 0.8), 0 0 50px rgba(223, 190, 118, 0.4);
+  color: #fffdfa; /* Warm ivory / soft white — NOT grey! */
+  text-shadow: 
+    0 4px 22px rgba(0, 0, 0, 0.85),
+    0 2px 8px rgba(0, 0, 0, 0.9),
+    0 0 45px rgba(223, 190, 118, 0.38);
+  opacity: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.couple-names #partnerOne,
+.couple-names #partnerTwo {
+  display: inline-block;
+  color: #fffdfa;
+  will-change: transform, opacity;
 }
 
 .couple-names #connector {
-  font-size: 0.6em;
-  line-height: 0.7;
-  color: var(--gold);
-  margin: 6px 0;
+  font-size: 0.55em;
+  line-height: 0.72;
+  color: #f7e2b2; /* Brighter champagne/gold */
+  margin: 4px 0;
   font-family: var(--font-serif);
   font-style: italic;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7), 0 0 24px rgba(223, 190, 118, 0.45);
 }
 
 .hero-venue-tag {
-  margin-top: 25px;
+  margin-top: 18px;
   font-family: var(--font-serif);
-  font-size: 20px;
+  font-size: clamp(17px, 4vw, 21px);
   font-style: italic;
-  color: var(--gold-light);
-  text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  letter-spacing: 0.05em;
+  color: #f6edd9; /* Soft champagne/ivory — NOT low-opacity grey! */
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
+  opacity: 1;
+}
+
+/* Hero to Next Section Transition Bridge */
+.hero-bottom-transition {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.hero-bottom-transition .hero-transition-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: -1px;
+}
+
+.hero-bottom-transition .trans-line-half {
+  flex: 1;
+  max-width: 180px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(223, 190, 118, 0.5));
+}
+.hero-bottom-transition .trans-line-half.right {
+  background: linear-gradient(90deg, rgba(223, 190, 118, 0.5), transparent);
+}
+
+.hero-bottom-transition .trans-motif {
+  font-size: 12px;
+  color: var(--gold);
+  letter-spacing: 0.25em;
+  text-shadow: 0 0 8px rgba(223, 190, 118, 0.5);
+}
+
+/* ========================================================
+   SIGNATURE STAGED HERO ENTRANCE KEYFRAMES
+   ======================================================== */
+.hero.is-animating-entrance .hero-overlay {
+  animation: heroBgReveal 0.9s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+}
+
+.hero.is-animating-entrance .sub-greeting {
+  animation: heroEyebrowReveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+}
+
+.hero.is-animating-entrance .script-line {
+  animation: heroTitleReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.38s both;
+}
+
+.hero.is-animating-entrance .hero-date-line {
+  animation: heroDateLinesDraw 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.58s both;
+}
+
+.hero.is-animating-entrance .hero-date {
+  animation: heroDateFadeIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.68s both;
+}
+
+.hero.is-animating-entrance .hero-flourish {
+  animation: heroFlourishFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.82s both;
+}
+
+.hero.is-animating-entrance .couple-names #partnerOne {
+  animation: heroNameReveal 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.95s both;
+}
+
+.hero.is-animating-entrance .couple-names #connector {
+  animation: heroConnectorReveal 0.75s cubic-bezier(0.16, 1, 0.3, 1) 1.10s both;
+}
+
+.hero.is-animating-entrance .couple-names #partnerTwo {
+  animation: heroNameReveal 0.85s cubic-bezier(0.16, 1, 0.3, 1) 1.25s both;
+}
+
+.hero.is-animating-entrance .hero-venue-tag {
+  animation: heroVenueReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.45s both;
+}
+
+@keyframes heroBgReveal {
+  0% {
+    opacity: 0.65;
+    filter: brightness(0.85);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+}
+
+@keyframes heroEyebrowReveal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes heroTitleReveal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
+}
+
+@keyframes heroDateLinesDraw {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes heroDateFadeIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes heroFlourishFade {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes heroNameReveal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes heroConnectorReveal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes heroVenueReveal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 /* Letter Section */
@@ -2370,11 +2665,12 @@ button {
     letter-spacing: 0.15em;
   }
   .hero {
-    min-height: 560px;
-    padding-top: 60px;
+    min-height: 100dvh;
+    padding-top: 50px;
+    padding-bottom: 40px;
   }
   .couple-names {
-    font-size: 52px;
+    font-size: clamp(56px, 14.5vw, 76px);
   }
   .script-heading {
     font-size: 34px;
@@ -2441,11 +2737,25 @@ button {
   .wedding-ceremony-line,
   .floral-divider,
   .ceremony-transition-divider,
-  .transition-line {
+  .transition-line,
+  .hero-overlay,
+  .hero-ambient-glow,
+  .sub-greeting,
+  .script-line,
+  .hero-date-wrap,
+  .hero-date-line,
+  .hero-date,
+  .hero-flourish,
+  .couple-names,
+  .couple-names #partnerOne,
+  .couple-names #connector,
+  .couple-names #partnerTwo,
+  .hero-venue-tag {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important;
     filter: none !important;
+    animation: none !important;
   }
   .timeline::before {
     transform: none !important;
