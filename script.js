@@ -258,9 +258,10 @@
       return;
     }
 
-    events.forEach(function (ev) {
+    events.forEach(function (ev, idx) {
       var item = document.createElement("div");
-      item.className = "timeline-item motion-reveal is-visible";
+      item.className = "timeline-item motion-reveal";
+      item.style.setProperty("--item-index", idx);
 
       item.innerHTML =
         '<div class="timeline-time-col">' +
@@ -292,10 +293,23 @@
       return;
     }
 
-    events.forEach(function (ev) {
+    events.forEach(function (ev, index) {
+      // Subtle decorative transition divider between ceremonies
+      if (index > 0) {
+        var divider = document.createElement("div");
+        divider.className = "ceremony-transition-divider motion-reveal";
+        divider.setAttribute("aria-hidden", "true");
+        divider.innerHTML =
+          '<div class="transition-line left"></div>' +
+          '<div class="transition-motif">❦ ✦ ❦</div>' +
+          '<div class="transition-line right"></div>';
+        container.appendChild(divider);
+      }
+
       var section = document.createElement("section");
       section.id = "ceremony-" + ev.id;
-      section.className = "ceremony-detail-section paper-section motion-reveal is-visible";
+      section.className = "ceremony-detail-section ceremony-" + ev.id + " paper-section motion-reveal";
+      section.setAttribute("data-event-id", ev.id);
       section.setAttribute("aria-labelledby", "heading-" + ev.id);
 
       var ritualsHtml = "";
@@ -326,13 +340,55 @@
           '</div>';
       }
 
+      // Ceremony-specific decorative accents
+      var ceremonyDecorHtml = "";
+      var dividerHtml = "";
+
+      if (ev.id === "mehendi") {
+        ceremonyDecorHtml =
+          '<div class="mehendi-botanical-accents" aria-hidden="true">' +
+            '<svg class="mehendi-vine mehendi-vine-left" viewBox="0 0 100 100" fill="none">' +
+              '<path d="M10,90 Q30,60 50,50 Q70,40 90,10" stroke="rgba(184, 134, 40, 0.45)" stroke-width="1.5" stroke-linecap="round"/>' +
+              '<circle cx="35" cy="58" r="3" fill="rgba(92, 128, 70, 0.6)"/>' +
+              '<circle cx="65" cy="42" r="3" fill="rgba(92, 128, 70, 0.6)"/>' +
+              '<circle cx="85" cy="18" r="2.5" fill="rgba(184, 134, 40, 0.7)"/>' +
+            '</svg>' +
+            '<svg class="mehendi-vine mehendi-vine-right" viewBox="0 0 100 100" fill="none">' +
+              '<path d="M10,90 Q30,60 50,50 Q70,40 90,10" stroke="rgba(184, 134, 40, 0.45)" stroke-width="1.5" stroke-linecap="round"/>' +
+              '<circle cx="35" cy="58" r="3" fill="rgba(92, 128, 70, 0.6)"/>' +
+              '<circle cx="65" cy="42" r="3" fill="rgba(92, 128, 70, 0.6)"/>' +
+              '<circle cx="85" cy="18" r="2.5" fill="rgba(184, 134, 40, 0.7)"/>' +
+            '</svg>' +
+          '</div>';
+        dividerHtml = '<div class="floral-divider" aria-hidden="true"></div>';
+      } else if (ev.id === "wedding") {
+        ceremonyDecorHtml =
+          '<div class="wedding-glow-layer" aria-hidden="true"></div>' +
+          '<div class="mandap-arch-frame" aria-hidden="true">' +
+            '<div class="mandap-arch-curve"></div>' +
+          '</div>';
+        dividerHtml = '<div class="wedding-ceremony-line" aria-hidden="true"></div>';
+      } else if (ev.id === "reception") {
+        ceremonyDecorHtml =
+          '<div class="reception-light-canopy" aria-hidden="true">' +
+            '<span class="light-dot d1">✦</span>' +
+            '<span class="light-dot d2">✦</span>' +
+            '<span class="light-dot d3">✦</span>' +
+            '<span class="light-dot d4">✦</span>' +
+            '<span class="light-dot d5">✦</span>' +
+          '</div>';
+        dividerHtml = '<div class="wedding-ceremony-line" aria-hidden="true"></div>';
+      }
+
       section.innerHTML =
         '<img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="" aria-hidden="true">' +
+        ceremonyDecorHtml +
         '<div class="ceremony-card">' +
           '<div class="ceremony-card-ornament">' +
             '<img src="assets/images/flower.svg" alt="" class="ceremony-flower-icon" aria-hidden="true">' +
           '</div>' +
           '<h2 id="heading-' + ev.id + '" class="script-heading dark ceremony-title">' + (ev.name || "") + '</h2>' +
+          dividerHtml +
           '<div class="ceremony-meta-badge">' +
             '<span class="ceremony-date-long">' + (ev.dateLong || ev.date || "") + '</span>' +
             '<span class="ceremony-divider">•</span>' +
@@ -345,7 +401,7 @@
             '<p class="ceremony-venue-address">' + (ev.address || "") + '</p>' +
             (ev.googleMapsUrl ?
               '<a class="ceremony-map-button" href="' + ev.googleMapsUrl + '" target="_blank" rel="noopener noreferrer">' +
-                '📍 GET DIRECTIONS' +
+                '<span class="button-pin">📍</span> <span>GET DIRECTIONS</span>' +
               '</a>' : '') +
           '</div>' +
           ritualsHtml +
@@ -737,6 +793,12 @@
   // -------------------------------------------------------------
   // 6. SCROLL REVEAL ANIMATIONS
   // -------------------------------------------------------------
+  // -------------------------------------------------------------
+  // 6. GLOBAL SCROLL TRANSITION & REVERSIBLE MOTION SYSTEM
+  // -------------------------------------------------------------
+  var lastScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+  var scrollDirection = "down";
+  var isScrollTicking = false;
   var motionObserver = null;
 
   function observeMotionElements(root) {
@@ -746,24 +808,122 @@
       elements.forEach(function (el) { el.classList.add("is-visible"); });
       return;
     }
+
     if (!motionObserver) {
       motionObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
+          var target = entry.target;
+          var rect = entry.boundingClientRect;
+          var isIntersecting = entry.isIntersecting;
+
+          if (isIntersecting) {
+            target.classList.add("is-visible", "has-entered");
+            target.classList.remove("is-leaving-top", "is-leaving-bottom");
+            if (scrollDirection === "down") {
+              target.classList.add("scroll-in-down");
+              target.classList.remove("scroll-in-up");
+            } else {
+              target.classList.add("scroll-in-up");
+              target.classList.remove("scroll-in-down");
+            }
+          } else {
+            if (target.classList.contains("has-entered")) {
+              target.classList.remove("is-visible");
+              if (rect.top < 0) {
+                target.classList.add("is-leaving-top");
+                target.classList.remove("is-leaving-bottom");
+              } else {
+                target.classList.add("is-leaving-bottom");
+                target.classList.remove("is-leaving-top");
+              }
+            }
           }
         });
-      }, { threshold: 0.15 });
+      }, {
+        threshold: [0.08, 0.25],
+        rootMargin: "0px 0px -40px 0px"
+      });
     }
+
     elements.forEach(function (el) {
-      if (!el.classList.contains("is-visible")) {
-        motionObserver.observe(el);
-      }
+      motionObserver.observe(el);
     });
+  }
+
+  function onScrollTick() {
+    var currentScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    var delta = currentScrollY - lastScrollY;
+    if (Math.abs(delta) > 1) {
+      scrollDirection = delta > 0 ? "down" : "up";
+      document.body.classList.toggle("scrolling-down", scrollDirection === "down");
+      document.body.classList.toggle("scrolling-up", scrollDirection === "up");
+      lastScrollY = currentScrollY;
+    }
+
+    var winH = window.innerHeight || 800;
+    var isMobile = window.innerWidth <= 768;
+
+    // 1. Hero Content subtle depth as user scrolls away
+    var heroContent = document.querySelector(".hero-content");
+    if (heroContent && currentScrollY < winH * 1.5) {
+      var heroRatio = Math.min(1, Math.max(0, currentScrollY / (winH * 0.85)));
+      var heroTransY = heroRatio * (isMobile ? -14 : -24);
+      var heroScale = 1 - (heroRatio * 0.035);
+      var heroOpacity = 1 - (heroRatio * 0.55);
+      heroContent.style.transform = "translate3d(0, " + heroTransY.toFixed(1) + "px, 0) scale(" + heroScale.toFixed(3) + ")";
+      heroContent.style.opacity = heroOpacity.toFixed(2);
+    }
+
+    // 2. Wedding Section Ambient Gold Light Glow & Depth
+    var weddingSec = byId("ceremony-wedding");
+    if (weddingSec) {
+      var wRect = weddingSec.getBoundingClientRect();
+      if (wRect.top < winH && wRect.bottom > 0) {
+        var centerOffset = (wRect.top + wRect.height / 2) - (winH / 2);
+        var distRatio = Math.min(1, Math.abs(centerOffset) / (winH * 0.75));
+        var glowOpacity = 0.15 + (0.20 * (1 - distRatio)); // 0.15 to 0.35
+        weddingSec.style.setProperty("--wedding-glow-intensity", glowOpacity.toFixed(3));
+
+        var depthShift = (centerOffset * (isMobile ? -0.04 : -0.08)).toFixed(1);
+        weddingSec.style.setProperty("--wedding-depth-y", depthShift + "px");
+      }
+    }
+
+    // 3. Mehendi Botanical & Floral subtle depth
+    var mehendiSec = byId("ceremony-mehendi");
+    if (mehendiSec) {
+      var mRect = mehendiSec.getBoundingClientRect();
+      if (mRect.top < winH && mRect.bottom > 0) {
+        var mCenterOffset = (mRect.top + mRect.height / 2) - (winH / 2);
+        var mShift = (mCenterOffset * (isMobile ? -0.03 : -0.06)).toFixed(1);
+        mehendiSec.style.setProperty("--mehendi-depth-y", mShift + "px");
+      }
+    }
+
+    // 4. Reception subtle depth
+    var receptionSec = byId("ceremony-reception");
+    if (receptionSec) {
+      var rRect = receptionSec.getBoundingClientRect();
+      if (rRect.top < winH && rRect.bottom > 0) {
+        var rCenterOffset = (rRect.top + rRect.height / 2) - (winH / 2);
+        var rShift = (rCenterOffset * (isMobile ? -0.03 : -0.06)).toFixed(1);
+        receptionSec.style.setProperty("--reception-depth-y", rShift + "px");
+      }
+    }
+
+    isScrollTicking = false;
+  }
+
+  function handleScroll() {
+    if (!isScrollTicking) {
+      isScrollTicking = true;
+      window.requestAnimationFrame(onScrollTick);
+    }
   }
 
   function setupScrollAnimations() {
     observeMotionElements(document);
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     var frames = document.querySelectorAll(".frame");
     if (!("IntersectionObserver" in window)) return;
