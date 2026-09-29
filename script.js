@@ -13,6 +13,13 @@
   var accessGranted = false;
   var activeInvitation = null;
 
+  // Memory-only authentication lifecycle: unconditionally purge any legacy persistent keys
+  try {
+    localStorage.removeItem("wedding_guest_code");
+    sessionStorage.removeItem("wedding_guest_code");
+    sessionStorage.removeItem("wedding_guest_session_code");
+  } catch (e) {}
+
   // -------------------------------------------------------------
   // 0. DEFENSIVE VALIDATION & INVITATION ACCESS SYSTEM
   // -------------------------------------------------------------
@@ -145,14 +152,17 @@
     // 5. Remove locked CSS class from body
     document.body.classList.remove("invitation-locked");
 
-    // 6. Save only to sessionStorage for reload in the same browser session
-    try {
-      sessionStorage.setItem("wedding_guest_session_code", invitation.code);
-    } catch (e) {}
+    if ("scrollRestoration" in window.history) {
+      try {
+        window.history.scrollRestoration = "auto";
+      } catch (e) {}
+    }
 
-    // 7. Purge legacy persistent localStorage key
+    // Authorization is strictly memory-only: purge any legacy persistent keys
     try {
       localStorage.removeItem("wedding_guest_code");
+      sessionStorage.removeItem("wedding_guest_code");
+      sessionStorage.removeItem("wedding_guest_session_code");
     } catch (e) {}
 
     return true;
@@ -275,35 +285,12 @@
     var ceremonyContainer = byId("ceremonyDetailsContainer");
     if (ceremonyContainer) ceremonyContainer.innerHTML = "";
 
-    // Unconditionally purge any legacy localStorage access key
+    // Unconditionally purge any legacy authentication keys (authorization is strictly memory-only)
     try {
       localStorage.removeItem("wedding_guest_code");
+      sessionStorage.removeItem("wedding_guest_code");
+      sessionStorage.removeItem("wedding_guest_session_code");
     } catch (e) {}
-
-    // Check sessionStorage only (allows refresh in the SAME browser tab/session)
-    var sessionCode = null;
-    try {
-      sessionCode = sessionStorage.getItem("wedding_guest_session_code");
-    } catch (e) {}
-
-    if (sessionCode) {
-      var restored = resolveInvitation(sessionCode);
-      if (restored) {
-        unlockInvitation(restored);
-        // If restored from existing session, mark envelope as opened
-        isEnvelopeOpened = true;
-        var scene = byId("envelopeScene");
-        var wrapper = byId("envelopeWrapper");
-        var enterCta = byId("enterCtaWrap");
-        if (scene) scene.classList.add("is-opened");
-        if (wrapper) wrapper.setAttribute("aria-expanded", "true");
-        if (enterCta) enterCta.classList.add("is-visible");
-      } else {
-        try {
-          sessionStorage.removeItem("wedding_guest_session_code");
-        } catch (e) {}
-      }
-    }
   }
 
   // -------------------------------------------------------------
@@ -1347,10 +1334,15 @@
   }
 
   // -------------------------------------------------------------
-  // 8b. HASH & BACK/FORWARD DIRECT NAVIGATION GUARD
+  // 8b. HASH, SCROLL RESTORATION & NAVIGATION GUARD
   // -------------------------------------------------------------
-  function guardHashNavigation() {
+  function enforceLockedScroll() {
     if (!accessGranted) {
+      if ("scrollRestoration" in window.history) {
+        try {
+          window.history.scrollRestoration = "manual";
+        } catch (e) {}
+      }
       var hash = window.location.hash;
       if (hash && hash !== "#envelopeScene" && hash !== "#inviteCodeScreen") {
         try {
@@ -1358,19 +1350,20 @@
             window.history.replaceState(null, "", window.location.pathname + window.location.search);
           }
         } catch (e) {}
-        window.scrollTo(0, 0);
       }
+      window.scrollTo(0, 0);
     }
   }
 
-  window.addEventListener("hashchange", guardHashNavigation);
-  window.addEventListener("popstate", guardHashNavigation);
+  window.addEventListener("hashchange", enforceLockedScroll);
+  window.addEventListener("popstate", enforceLockedScroll);
+  window.addEventListener("load", enforceLockedScroll);
 
   // -------------------------------------------------------------
   // 9. INITIALIZE ON DOM READY
   // -------------------------------------------------------------
   document.addEventListener("DOMContentLoaded", function () {
-    guardHashNavigation();
+    enforceLockedScroll();
     bindData(data);
     startCountdown(data.event.countdownDate || "2026-11-20T15:30:00-05:00");
     setupEnvelopeOpening();
@@ -1384,6 +1377,6 @@
   });
 
   // Immediate guard on initial script execution
-  guardHashNavigation();
+  enforceLockedScroll();
 
 })();
