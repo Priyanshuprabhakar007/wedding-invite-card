@@ -10,6 +10,165 @@
   var audioCtx = null;
   var isMusicPlaying = false;
   var isEnvelopeOpened = false;
+  var activeInvitation = null;
+
+  // -------------------------------------------------------------
+  // 0. DEFENSIVE VALIDATION & INVITATION ACCESS SYSTEM
+  // -------------------------------------------------------------
+  function validateWeddingConfig(cfg) {
+    if (!cfg) {
+      console.error("[Wedding Config Error] Missing WEDDING_CONFIG object.");
+      return false;
+    }
+    var events = cfg.events || [];
+    var bundles = cfg.invitationBundles || {};
+    var codes = cfg.inviteCodes || {};
+    var universal = cfg.universalEventIds || [];
+
+    var eventIds = new Set();
+    events.forEach(function (ev, idx) {
+      if (!ev.id || typeof ev.id !== "string" || !ev.id.trim()) {
+        console.error("[Wedding Config Error] Event at index " + idx + " is missing a valid id: ", ev);
+      } else if (eventIds.has(ev.id)) {
+        console.error("[Wedding Config Error] Duplicate event id found: \"" + ev.id + "\"");
+      } else {
+        eventIds.add(ev.id);
+      }
+    });
+
+    universal.forEach(function (uId) {
+      if (!eventIds.has(uId)) {
+        console.error("[Wedding Config Error] universalEventId \"" + uId + "\" does not exist in events list.");
+      }
+    });
+
+    Object.keys(bundles).forEach(function (bKey) {
+      var list = bundles[bKey];
+      if (!Array.isArray(list)) {
+        console.error("[Wedding Config Error] Bundle \"" + bKey + "\" must be an array.");
+      } else {
+        list.forEach(function (eId) {
+          if (!eventIds.has(eId)) {
+            console.error("[Wedding Config Error] Bundle \"" + bKey + "\" references unknown event id: \"" + eId + "\".");
+          }
+        });
+      }
+    });
+
+    Object.keys(codes).forEach(function (cKey) {
+      var conf = codes[cKey];
+      if (!conf || !conf.bundle || !bundles[conf.bundle]) {
+        console.error("[Wedding Config Error] Invite code \"" + cKey + "\" references missing bundle: \"" + (conf ? conf.bundle : "undefined") + "\".");
+      }
+    });
+
+    return true;
+  }
+
+  function resolveInvitation(rawCode) {
+    if (!rawCode || typeof rawCode !== "string") return null;
+    var code = rawCode.trim().toUpperCase();
+    var cfg = window.WEDDING_CONFIG || data || {};
+    var inviteCodes = cfg.inviteCodes || {};
+    var bundles = cfg.invitationBundles || {};
+    var universalIds = Array.isArray(cfg.universalEventIds) ? cfg.universalEventIds : ["baraat"];
+    var allEvents = cfg.events || [];
+
+    if (!Object.prototype.hasOwnProperty.call(inviteCodes, code)) {
+      return null;
+    }
+
+    var codeConfig = inviteCodes[code] || {};
+    var bundleName = codeConfig.bundle;
+    var bundleEventIds = (bundles && Array.isArray(bundles[bundleName])) ? bundles[bundleName] : [];
+
+    // Merge bundle event IDs + universalEventIds, removing duplicates
+    var allowedIdsSet = new Set();
+    bundleEventIds.forEach(function (id) { allowedIdsSet.add(id); });
+    universalIds.forEach(function (id) { allowedIdsSet.add(id); });
+
+    // Filter against cfg.events preserving original chronological order
+    var allowedEvents = allEvents.filter(function (ev) {
+      return allowedIdsSet.has(ev.id);
+    });
+
+    var allowedEventIds = allowedEvents.map(function (ev) {
+      return ev.id;
+    });
+
+    return {
+      code: code,
+      label: codeConfig.label || "",
+      bundle: bundleName,
+      allowedEventIds: allowedEventIds,
+      allowedEvents: allowedEvents
+    };
+  }
+
+  function applyInvitation(invitation, persist) {
+    if (!invitation) return;
+    activeInvitation = invitation;
+    window.activeInvitation = invitation;
+
+    renderTimeline(invitation.allowedEvents);
+    updateRsvpFormEvents(invitation);
+
+    var screenInput = byId("inviteCodeScreenInput");
+    if (screenInput && !screenInput.value) {
+      screenInput.value = invitation.code;
+    }
+
+    if (persist !== false) {
+      try {
+        localStorage.setItem("wedding_guest_code", invitation.code);
+      } catch (e) {
+        console.warn("Could not save to localStorage", e);
+      }
+    }
+  }
+
+  function updateRsvpFormEvents(invitation) {
+    var container = byId("rsvpFunctionsList");
+    var badge = byId("rsvpInvitationBadge");
+    if (!container) return;
+
+    var eventsToDisplay = (invitation && invitation.allowedEvents) ?
+      invitation.allowedEvents :
+      ((data && data.events) || []);
+
+    if (badge) {
+      if (invitation && invitation.label) {
+        badge.textContent = "✨ " + invitation.label;
+        badge.hidden = false;
+      } else {
+        badge.hidden = true;
+      }
+    }
+
+    container.innerHTML = "";
+    eventsToDisplay.forEach(function (ev) {
+      var label = document.createElement("label");
+      label.className = "rsvp-function-item";
+
+      var checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.name = "attendingEvent";
+      checkbox.value = ev.name;
+      checkbox.checked = true;
+
+      var textSpan = document.createElement("span");
+      textSpan.className = "func-name";
+      textSpan.textContent = ev.name;
+
+      label.appendChild(checkbox);
+      label.appendChild(textSpan);
+      container.appendChild(label);
+    });
+  }
+
+  // Expose for testing & global inspection
+  window.resolveInvitation = resolveInvitation;
+  window.applyInvitation = applyInvitation;
 
   // -------------------------------------------------------------
   // 1. DATA BINDING
@@ -68,8 +227,30 @@
     if (byId("signoff")) byId("signoff").textContent = cfg.copy.signoff;
     if (byId("closingNames")) byId("closingNames").textContent = cfg.copy.closingNames;
 
-    renderTimeline(cfg.events || []);
+    validateWeddingConfig(cfg);
     buildRsvpForm(cfg);
+
+    // Restore previously unlocked invitation from localStorage if available
+    var savedCode = null;
+    try {
+      savedCode = localStorage.getItem("wedding_guest_code");
+    } catch (e) {}
+
+    if (savedCode) {
+      var restored = resolveInvitation(savedCode);
+      if (restored) {
+        applyInvitation(restored, false);
+      } else {
+        try {
+          localStorage.removeItem("wedding_guest_code");
+        } catch (e) {}
+        renderTimeline(cfg.events || []);
+        updateRsvpFormEvents(null);
+      }
+    } else {
+      renderTimeline(cfg.events || []);
+      updateRsvpFormEvents(null);
+    }
   }
 
   // -------------------------------------------------------------
@@ -80,9 +261,13 @@
     if (!host) return;
     host.innerHTML = "";
 
+    if (!events || events.length === 0) {
+      return;
+    }
+
     events.forEach(function (ev) {
       var item = document.createElement("div");
-      item.className = "timeline-item motion-reveal";
+      item.className = "timeline-item motion-reveal is-visible";
 
       item.innerHTML =
         '<div class="timeline-time-col">' +
@@ -98,6 +283,8 @@
 
       host.appendChild(item);
     });
+
+    observeMotionElements(host);
   }
 
   // -------------------------------------------------------------
@@ -374,7 +561,7 @@
           errorMsg.hidden = true;
           errorMsg.textContent = "";
         }
-        if (input) input.value = "";
+        if (input) input.value = activeInvitation ? activeInvitation.code : "";
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.classList.remove("is-pressed");
@@ -435,8 +622,9 @@
           return;
         }
 
-        // Validation 2: Check code validity (length check)
-        if (code.length < 2) {
+        // Validation 2: Resolve invite code from configuration
+        var invitation = resolveInvitation(code);
+        if (!invitation) {
           if (errorMsg) {
             errorMsg.textContent = "That invite code doesn’t seem to match. Please try again.";
             errorMsg.hidden = false;
@@ -446,17 +634,20 @@
         }
 
         // Code is valid
-        if (errorMsg) errorMsg.hidden = true;
+        if (errorMsg) {
+          errorMsg.hidden = true;
+          errorMsg.textContent = "";
+        }
         if (input) input.blur();
+
+        // Apply activeInvitation across the application
+        applyInvitation(invitation, true);
 
         // Button press animation feedback (1.0 -> 0.97 -> 1.0)
         if (submitBtn) {
           submitBtn.classList.add("is-pressed");
           submitBtn.disabled = true;
         }
-
-        // Save access in localStorage
-        localStorage.setItem("wedding_guest_code", code);
 
         // Directly and smoothly fade out invite screen and unseal envelope
         setTimeout(function () {
@@ -475,24 +666,36 @@
   // -------------------------------------------------------------
   // 6. SCROLL REVEAL ANIMATIONS
   // -------------------------------------------------------------
-  function setupScrollAnimations() {
-    var elements = document.querySelectorAll(".motion-reveal");
-    var frames = document.querySelectorAll(".frame");
+  var motionObserver = null;
 
+  function observeMotionElements(root) {
+    var scope = root || document;
+    var elements = scope.querySelectorAll(".motion-reveal");
     if (!("IntersectionObserver" in window)) {
       elements.forEach(function (el) { el.classList.add("is-visible"); });
       return;
     }
+    if (!motionObserver) {
+      motionObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      }, { threshold: 0.15 });
+    }
+    elements.forEach(function (el) {
+      if (!el.classList.contains("is-visible")) {
+        motionObserver.observe(el);
+      }
+    });
+  }
 
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-        }
-      });
-    }, { threshold: 0.15 });
+  function setupScrollAnimations() {
+    observeMotionElements(document);
 
-    elements.forEach(function (el) { observer.observe(el); });
+    var frames = document.querySelectorAll(".frame");
+    if (!("IntersectionObserver" in window)) return;
 
     var frameObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -664,19 +867,41 @@
       if (e.target === modal) closeModal();
     });
 
+    var attendanceSelect = byId("rsvpAttendanceSelect");
+    var functionsWrap = byId("rsvpFunctionsWrap");
+    if (attendanceSelect && functionsWrap) {
+      attendanceSelect.addEventListener("change", function () {
+        if (attendanceSelect.value.indexOf("Decline") !== -1) {
+          functionsWrap.style.display = "none";
+        } else {
+          functionsWrap.style.display = "block";
+        }
+      });
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var formData = new FormData(form);
       var name = formData.get("guestName") || "Guest";
+      var mobile = formData.get("mobileNumber") || "";
       var count = formData.get("familyGuestCount") || "1";
       var attendance = formData.get("attendance") || "Yes";
       var msg = formData.get("message") || "";
 
+      var checkedEvents = [];
+      form.querySelectorAll('input[name="attendingEvent"]:checked').forEach(function (cb) {
+        checkedEvents.push(cb.value);
+      });
+
       var responses = JSON.parse(localStorage.getItem("wedding_rsvps") || "[]");
       responses.push({
         name: name,
+        mobile: mobile,
         guests: count,
         attendance: attendance,
+        events: checkedEvents,
+        inviteCode: activeInvitation ? activeInvitation.code : null,
+        invitationLabel: activeInvitation ? activeInvitation.label : null,
         message: msg,
         timestamp: new Date().toISOString()
       });
@@ -695,11 +920,25 @@
         var attendance = formData.get("attendance") || "Joyfully Accept";
         var msg = formData.get("message") || "";
 
+        var checkedEvents = [];
+        form.querySelectorAll('input[name="attendingEvent"]:checked').forEach(function (cb) {
+          checkedEvents.push(cb.value);
+        });
+        var eventsText = checkedEvents.length > 0 ? checkedEvents.join(", ") : "None";
+
+        var invitedList = (activeInvitation && activeInvitation.allowedEvents) ?
+          activeInvitation.allowedEvents.map(function (e) { return e.name; }).join(", ") :
+          "All Functions";
+
         var text = "✨ *Wedding RSVP for Isha & Sagar's Wedding* ✨\n\n" +
           "👤 *Name:* " + (name || "Family & Friends") + "\n" +
+          (activeInvitation ? ("🏷️ *Invite Code:* " + activeInvitation.code + "\n") : "") +
+          (activeInvitation ? ("📜 *Invitation:* " + activeInvitation.label + "\n") : "") +
+          "🎊 *Invited Functions:* " + invitedList + "\n" +
           "✅ *Attendance:* " + attendance + "\n" +
           "👥 *Number of Guests:* " + count + "\n" +
-          (msg ? ("💌 *Message:* " + msg + "\n") : "") +
+          "💌 *Functions Attending:* " + eventsText + "\n" +
+          (msg ? ("✍️ *Message:* " + msg + "\n") : "") +
           "\nLooking forward to celebrating with you!";
 
         var phone = cfg.copy.organizerWhatsapp || "919876543210";

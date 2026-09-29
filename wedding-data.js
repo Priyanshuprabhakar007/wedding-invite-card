@@ -58,8 +58,61 @@ window.WEDDING_CONFIG = {
     playSymbol: "▶",
     pauseSymbol: "⏸"
   },
+  universalEventIds: [
+    "baraat"
+  ],
+  invitationBundles: {
+    allFunctions: [
+      "mehendi",
+      "sangeet",
+      "haldi",
+      "wedding",
+      "reception"
+    ],
+    familyFunctions: [
+      "sangeet",
+      "haldi",
+      "wedding",
+      "reception"
+    ],
+    friendsFunctions: [
+      "sangeet",
+      "wedding",
+      "reception"
+    ],
+    weddingFunctions: [
+      "wedding",
+      "reception"
+    ],
+    haldiFunctions: [
+      "haldi"
+    ]
+  },
+  inviteCodes: {
+    "LOVERS": {
+      label: "Complete Wedding Celebration",
+      bundle: "allFunctions"
+    },
+    "FAMILY": {
+      label: "Family Wedding Invitation",
+      bundle: "familyFunctions"
+    },
+    "FRIENDS": {
+      label: "Friends Celebration Invitation",
+      bundle: "friendsFunctions"
+    },
+    "PHERAS": {
+      label: "Wedding Ceremony Invitation",
+      bundle: "weddingFunctions"
+    },
+    "KESAR": {
+      label: "Haldi Celebration Invitation",
+      bundle: "haldiFunctions"
+    }
+  },
   events: [
     {
+      id: "mehendi",
       name: "Ganesh Sthapana & Mehendi",
       date: "17 December 2026",
       time: "03:00 PM",
@@ -67,6 +120,7 @@ window.WEDDING_CONFIG = {
       attire: "Vibrant Greens & Florals"
     },
     {
+      id: "sangeet",
       name: "Sangeet & Musical Night",
       date: "17 December 2026",
       time: "07:30 PM",
@@ -74,6 +128,7 @@ window.WEDDING_CONFIG = {
       attire: "Glamorous Evening & Shimmer"
     },
     {
+      id: "haldi",
       name: "Haldi & Phoolon Ki Holi",
       date: "18 December 2026",
       time: "10:30 AM",
@@ -81,6 +136,7 @@ window.WEDDING_CONFIG = {
       attire: "Sunny Yellows & Pastels"
     },
     {
+      id: "baraat",
       name: "Royal Baraat & Varmala",
       date: "18 December 2026",
       time: "05:30 PM",
@@ -88,6 +144,7 @@ window.WEDDING_CONFIG = {
       attire: "Royal & Traditional"
     },
     {
+      id: "wedding",
       name: "Wedding Ceremony (Pheras)",
       date: "18 December 2026",
       time: "07:30 PM",
@@ -95,6 +152,7 @@ window.WEDDING_CONFIG = {
       attire: "Traditional Luxury"
     },
     {
+      id: "reception",
       name: "Reception & Grand Dinner",
       date: "18 December 2026",
       time: "09:30 PM",

@@ -263,6 +263,7 @@
       
       <div id="formView">
         <h2 id="modalTitle">Confirm Your Attendance</h2>
+        <div id="rsvpInvitationBadge" class="modal-invitation-badge" hidden></div>
         <p class="modal-subtitle">We can't wait to celebrate together! Please let us know if you'll be joining us.</p>
         
         <form id="rsvpForm">
@@ -278,7 +279,7 @@
 
           <label class="field">
             <span>Will you be attending? *</span>
-            <select name="attendance" required>
+            <select name="attendance" id="rsvpAttendanceSelect" required>
               <option value="Joyfully Accept (Yes!)">Joyfully Accept (Yes! 🎉)</option>
               <option value="Regretfully Decline">Regretfully Decline (Cannot attend)</option>
             </select>
@@ -288,6 +289,11 @@
             <span>Number of Guests (including yourself) *</span>
             <input type="number" name="familyGuestCount" value="1" min="1" max="10" required>
           </label>
+
+          <div id="rsvpFunctionsWrap" class="field">
+            <span id="rsvpFunctionsLabel">Functions You Are Attending *</span>
+            <div id="rsvpFunctionsList" class="rsvp-functions-list"></div>
+          </div>
 
           <label class="field">
             <span>Wishes / Special Note for Isha &amp; Sagar</span>
