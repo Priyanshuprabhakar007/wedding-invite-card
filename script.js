@@ -511,7 +511,7 @@
     function scrollToCelebration() {
       document.body.classList.remove("envelope-closed-state");
       toggleMusic(); // Start background music if not playing
-      if (heroVideo) {
+      if (heroVideo && heroVideo.src) {
         heroVideo.play().catch(function () {});
       }
 
