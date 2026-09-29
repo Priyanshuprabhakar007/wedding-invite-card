@@ -33,13 +33,106 @@
         <img class="rear-flap-img" src="assets/images/envelope-open-reference.png" alt="">
       </div>
 
-      <!-- Layer 2: Standalone Isha & Sagar Invitation Card (Rises from Pocket) -->
-      <div id="invitationCard" class="invitation-card" aria-hidden="true">
-        <img class="card-art" src="assets/images/wedding-card.png" alt="Isha &amp; Sagar Wedding Card">
+      <!-- Layer 2: Standalone Isha & Sagar Wedding Card (Rises, Unfolds Code Form, Expands to Site) -->
+      <div id="invitationCard" class="invitation-card" aria-label="Wedding Invitation Card">
+        
+        <!-- Gold Trim Border & Warm Success Glow -->
+        <div class="card-gold-border" aria-hidden="true"></div>
+        <div id="cardSuccessGlow" class="card-success-glow" aria-hidden="true"></div>
+
+        <!-- 2A: Card Front Cover Face (Isha & Sagar Wedding Card Artwork) -->
+        <div id="cardCoverFace" class="card-cover-face">
+          <img class="card-art" src="assets/images/wedding-card.png" alt="Isha &amp; Sagar Wedding Card">
+        </div>
+
+        <!-- 2B: Central Gold Divider (Appears during unfolding) -->
+        <div id="cardGoldDivider" class="card-gold-divider" aria-hidden="true">
+          <span class="gold-divider-line left"></span>
+          <span class="gold-divider-gem">❖</span>
+          <span class="gold-divider-line right"></span>
+        </div>
+
+        <!-- 2C: Card Inner Panel (Unfolds to reveal embedded invite code entry) -->
+        <div id="cardInnerPanel" class="card-inner-panel" aria-hidden="true">
+          <!-- Inner Card Background Artwork -->
+          <img class="card-inner-bg-art" src="assets/images/invite-card-bg.png" alt="" aria-hidden="true">
+
+          <!-- Card Back Button (Smoothly folds back to closed envelope) -->
+          <button id="cardBackBtn" class="card-back-btn" type="button" aria-label="Back to closed envelope">
+            <span class="back-arrow" aria-hidden="true">←</span> <span>Envelope</span>
+          </button>
+
+          <!-- Interactive Code Form Inside Card -->
+          <form id="cardInviteForm" class="card-invite-form" autocomplete="off">
+            <h2 class="sr-only">Enter Your Invite Code</h2>
+
+            <!-- Form Content with Staggered Entrance -->
+            <div id="cardFormContent" class="card-form-content">
+              <!-- Title & Subtitle are printed directly in the stationery art (invite-card-bg.png) -->
+
+              <!-- Input Pill with Real Embedded Input -->
+              <div id="cardInputPillGroup" class="card-input-pill-group">
+                <img class="card-input-pill-img" src="assets/images/invite-input-pill.png" alt="" aria-hidden="true">
+                <input 
+                  type="text" 
+                  id="cardInviteCodeInput" 
+                  class="card-invite-code-input" 
+                  placeholder="ENTER YOUR INVITE CODE" 
+                  autocomplete="off" 
+                  autocorrect="off" 
+                  autocapitalize="characters" 
+                  spellcheck="false" 
+                  enterkeyhint="done"
+                  aria-label="Enter your invite code"
+                >
+              </div>
+
+              <!-- Error Validation Feedback -->
+              <div id="cardInviteErrorMsg" class="card-invite-error-msg" hidden role="alert"></div>
+
+              <!-- Submit CTA Button Pill -->
+              <button 
+                type="submit" 
+                id="cardInviteSubmitBtn" 
+                class="card-invite-submit-btn" 
+                aria-label="Enter the Celebration"
+              >
+                <img class="card-btn-pill-img" src="assets/images/invite-btn-pill.png" alt="Enter the Celebration">
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 2D: Expanding Content Stage (Revealed inside card during FLIP expansion) -->
+        <div id="cardExpandingHero" class="card-expanding-hero" aria-hidden="true">
+          <div class="card-expanding-glow" aria-hidden="true"></div>
+          <div class="card-expanding-content">
+            <img src="assets/images/flower.svg" class="expanding-ornament-top" alt="" aria-hidden="true">
+            <p class="expanding-sub-greeting">Together with their families</p>
+            <p class="expanding-script-line">The Wedding Celebration</p>
+            <div class="expanding-date-wrap">
+              <span class="expanding-date-line left" aria-hidden="true"></span>
+              <p class="expanding-date">NOVEMBER 2026</p>
+              <span class="expanding-date-line right" aria-hidden="true"></span>
+            </div>
+            <div class="expanding-flourish" aria-hidden="true">
+              <span class="expanding-flourish-bar left"></span>
+              <span class="expanding-flourish-icon">✦</span>
+              <span class="expanding-flourish-bar right"></span>
+            </div>
+            <h2 class="expanding-names">
+              <span class="expanding-name">Isha</span>
+              <span class="expanding-amp">&amp;</span>
+              <span class="expanding-name">Sagar</span>
+            </h2>
+            <p class="expanding-venue-tag">South Florida, Florida</p>
+          </div>
+        </div>
+
       </div>
 
       <!-- Layer 3: Envelope Pocket Base (Front layer over bottom of card) -->
-      <div class="envelope-pocket" aria-hidden="true">
+      <div id="envelopePocket" class="envelope-pocket" aria-hidden="true">
         <img class="pocket-art" src="assets/images/envelope-pocket.png" alt="Envelope Pocket">
       </div>
 
@@ -51,78 +144,6 @@
       <!-- Hit target for Unseal The Invitation -->
       <button id="unsealHitBtn" class="unseal-hit-btn" type="button" aria-label="Unseal the invitation"></button>
 
-      <!-- Enter Your Invite Code Button (Positioned directly below 'UNSEAL THE INVITATION') -->
-      <div id="inviteCodeBtnWrap" class="invite-code-btn-wrap">
-        <button id="inviteCodeBtn" class="invite-code-btn" type="button" aria-label="Enter your invite code">
-          <span class="invite-icon">🔑</span>
-          <span class="btn-text">ENTER YOUR INVITE CODE</span>
-        </button>
-      </div>
-
-    </div>
-
-    <!-- Enter Celebration CTA Button (Revealed after card rises) -->
-    <div id="enterCtaWrap" class="enter-cta-wrap">
-      <button id="enterCelebrationBtn" class="enter-celebration-btn" type="button">
-        <span class="btn-text">ENTER THE CELEBRATION</span>
-        <span class="btn-arrow" aria-hidden="true">↓</span>
-      </button>
-    </div>
-  </section>
-
-  <!-- ========================================================
-       FULL-SCREEN INVITE CODE SCREEN (MOBILE / ANDROID OPTIMIZED)
-       ======================================================== -->
-  <section id="inviteCodeScreen" class="invite-code-screen" aria-label="Enter Wedding Invite Code" hidden>
-    <div class="invite-screen-ambient" aria-hidden="true"></div>
-
-    <!-- Top Back Navigation -->
-    <button id="inviteCodeBackBtn" class="invite-screen-back-btn" type="button" aria-label="Back to Envelope">
-      <span aria-hidden="true">←</span> Back
-    </button>
-
-    <div class="invite-screen-scroll-container">
-      <div class="invite-screen-card-container">
-        <!-- Main Vertical Card (invite-card-bg) -->
-        <div id="inviteCardBgWrap" class="invite-card-bg-wrap">
-          <img class="invite-card-main-img" src="assets/images/invite-card-bg.png" alt="A Private Celebration Awaits">
-
-          <!-- Interactive Form Overlay -->
-          <form id="inviteCodeScreenForm" class="invite-screen-form" autocomplete="off">
-            <h2 class="sr-only">Enter Your Invite Code</h2>
-
-            <!-- Input Pill (invite-input-pill) with transparent EditText overlay -->
-            <div id="inviteInputPillGroup" class="invite-input-pill-group">
-              <img class="invite-input-pill-img" src="assets/images/invite-input-pill.png" alt="" aria-hidden="true">
-              <input 
-                type="text" 
-                id="inviteCodeScreenInput" 
-                class="invite-code-transparent-input" 
-                placeholder="ENTER YOUR INVITE CODE" 
-                autocomplete="off" 
-                autocorrect="off" 
-                autocapitalize="characters" 
-                spellcheck="false" 
-                enterkeyhint="done"
-                aria-label="Enter your invite code"
-              >
-            </div>
-
-            <!-- Error Validation Message -->
-            <div id="inviteCodeErrorMsg" class="invite-error-text" hidden></div>
-
-            <!-- CTA Button (invite-btn-pill) -->
-            <button 
-              type="submit" 
-              id="inviteScreenSubmitBtn" 
-              class="invite-btn-pill-action" 
-              aria-label="Enter the Celebration"
-            >
-              <img class="invite-btn-pill-img" src="assets/images/invite-btn-pill.png" alt="Enter the Celebration">
-            </button>
-          </form>
-        </div>
-      </div>
     </div>
   </section>
 
