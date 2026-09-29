@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" width="100%" height="100%">
+  <defs>
+    <linearGradient id="coupleBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#400b1a"/>
+      <stop offset="50%" stop-color="#2a050f"/>
+      <stop offset="100%" stop-color="#140107"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#e8c784" stop-opacity="0.3"/>
+      <stop offset="70%" stop-color="#b58739" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldText" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#fcedc7"/>
+      <stop offset="50%" stop-color="#dfbe76"/>
+      <stop offset="100%" stop-color="#9e7323"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#coupleBg)"/>
+  <circle cx="360" cy="200" r="220" fill="url(#halo)"/>
+
+  <!-- Ornate Arch -->
+  <path d="M220,480 L220,200 C220,120 360,60 360,60 C360,60 500,120 500,200 L500,480" fill="none" stroke="url(#goldText)" stroke-width="2" opacity="0.4"/>
+  <path d="M235,480 L235,205 C235,135 360,80 360,80 C360,80 485,135 485,205 L485,480" fill="none" stroke="url(#goldText)" stroke-width="1" stroke-dasharray="4,6" opacity="0.3"/>
+
+  <!-- Couple Silhouette Artwork -->
+  <g transform="translate(360, 240)">
+    <!-- Groom silhouette -->
+    <path d="M-60,180 C-50,110 -40,60 -40,10 C-40,-20 -20,-45 0,-45 C-10,-45 -25,-25 -25,10 C-25,60 -45,110 -55,180 Z" fill="#fff" opacity="0.15"/>
+    <!-- Bride silhouette -->
+    <path d="M20,180 C10,120 5,70 5,20 C5,-10 20,-35 40,-35 C25,-35 15,-15 15,20 C15,70 30,120 40,180 Z" fill="#fff" opacity="0.15"/>
+    <!-- Holding Hands / Heart Symbol -->
+    <circle cx="-1" cy="40" r="18" fill="url(#goldText)" opacity="0.6"/>
+    <path d="M-1,30 C-8,15 -25,25 -1,48 C23,25 6,15 -1,30 Z" fill="#66021f" stroke="url(#goldText)" stroke-width="1.5"/>
+  </g>
+
+  <!-- Typography -->
+  <text x="360" y="380" font-family="'Beau Rivage', 'Great Vibes', cursive" font-size="52" fill="url(#goldText)" text-anchor="middle">Together Forever</text>
+  <text x="360" y="420" font-family="'Cinzel', 'Playfair Display', serif" font-size="14" letter-spacing="6" fill="#dfbe76" text-anchor="middle" opacity="0.8">WE CANNOT WAIT TO CELEBRATE WITH YOU</text>
+</svg>

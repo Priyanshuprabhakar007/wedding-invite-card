@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="palaceBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f5ede3"/>
+      <stop offset="60%" stop-color="#ebe0d1"/>
+      <stop offset="100%" stop-color="#ded0be"/>
+    </linearGradient>
+    <linearGradient id="goldArch" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a67c33"/>
+      <stop offset="50%" stop-color="#dfbe76"/>
+      <stop offset="100%" stop-color="#8a611f"/>
+    </linearGradient>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="100%" height="100%" fill="url(#palaceBg)"/>
+  
+  <!-- Sky / Stars / Mood elements -->
+  <g opacity="0.35" stroke="#a67c33" stroke-width="0.75" fill="none">
+    <circle cx="400" cy="180" r="140" stroke-dasharray="2,4"/>
+    <circle cx="400" cy="180" r="160" stroke-dasharray="4,6"/>
+  </g>
+
+  <!-- Palace / Château architectural sketch -->
+  <g stroke="#591c28" stroke-width="1.6" fill="none" opacity="0.85">
+    <!-- Main Center Dome -->
+    <path d="M350,220 C350,140 400,100 400,80 C400,100 450,140 450,220 Z" fill="#fdfaf5" fill-opacity="0.9"/>
+    <!-- Dome Finial / Kalash -->
+    <line x1="400" y1="80" x2="400" y2="55" stroke="#b08d46" stroke-width="2.5"/>
+    <circle cx="400" cy="52" r="4" fill="#b08d46"/>
+    
+    <!-- Left Tower & Dome -->
+    <path d="M220,240 C220,180 255,140 255,120 C255,140 290,180 290,240 Z" fill="#fdfaf5" fill-opacity="0.9"/>
+    <line x1="255" y1="120" x2="255" y2="100" stroke="#b08d46" stroke-width="2"/>
+    <circle cx="255" cy="98" r="3" fill="#b08d46"/>
+
+    <!-- Right Tower & Dome -->
+    <path d="M510,240 C510,180 545,140 545,120 C545,140 580,180 580,240 Z" fill="#fdfaf5" fill-opacity="0.9"/>
+    <line x1="545" y1="120" x2="545" y2="100" stroke="#b08d46" stroke-width="2"/>
+    <circle cx="545" cy="98" r="3" fill="#b08d46"/>
+
+    <!-- Palace Façade Walls -->
+    <rect x="180" y="240" width="440" height="150" fill="#fcf9f2" fill-opacity="0.95"/>
+    
+    <!-- Grand Arches (Jharokhas / French Château Arches) -->
+    <!-- Center Grand Arch -->
+    <path d="M370,390 L370,280 C370,245 430,245 430,280 L430,390 Z" fill="#66021f" fill-opacity="0.12"/>
+    <path d="M370,280 C370,245 430,245 430,280" stroke="#66021f" stroke-width="3"/>
+    
+    <!-- Left Arch -->
+    <path d="M290,390 L290,300 C290,270 340,270 340,300 L340,390 Z" fill="#66021f" fill-opacity="0.08"/>
+    <!-- Right Arch -->
+    <path d="M460,390 L460,300 C460,270 510,270 510,300 L510,390 Z" fill="#66021f" fill-opacity="0.08"/>
+    
+    <!-- Outer Arches -->
+    <path d="M210,390 L210,310 C210,285 260,285 260,310 L260,390 Z" fill="#66021f" fill-opacity="0.08"/>
+    <path d="M540,390 L540,310 C540,285 590,285 590,310 L590,390 Z" fill="#66021f" fill-opacity="0.08"/>
+
+    <!-- Decorative Cornice & Pillars -->
+    <line x1="160" y1="240" x2="640" y2="240" stroke="#66021f" stroke-width="3"/>
+    <line x1="160" y1="246" x2="640" y2="246" stroke="#b08d46" stroke-width="1.5"/>
+    <line x1="140" y1="390" x2="660" y2="390" stroke="#66021f" stroke-width="3"/>
+    
+    <!-- Base Courtyard steps -->
+    <polygon points="120,430 680,430 660,390 140,390" fill="#ede2d2"/>
+    <line x1="130" y1="410" x2="670" y2="410" stroke="#66021f" stroke-width="1" stroke-dasharray="4,4"/>
+  </g>
+
+  <!-- Trees & Garden Vignette -->
+  <g fill="#42573d" opacity="0.35">
+    <path d="M120,390 C100,340 140,300 160,390 Z"/>
+    <path d="M80,390 C60,350 100,310 110,390 Z"/>
+    <path d="M680,390 C660,340 700,300 720,390 Z"/>
+    <path d="M640,390 C620,350 660,310 670,390 Z"/>
+  </g>
+</svg>

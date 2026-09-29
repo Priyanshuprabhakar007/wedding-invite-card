@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Isha &amp; Sagar — Wedding Invitation</title>
+  <meta name="description" content="You are cordially invited to celebrate the royal wedding of Isha &amp; Sagar.">
+  <meta name="theme-color" content="#66021f">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Beau+Rivage&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="envelope-closed-state">
+
+  <!-- Luxury Wedding Petal Shower Layer -->
+  <div id="petalShower" class="petal-shower" aria-hidden="true"></div>
+
+  <!-- ========================================================
+       1. LUXURY ENVELOPE OPENING SCENE
+       ======================================================== -->
+  <section id="envelopeScene" class="envelope-scene" aria-label="Interactive Wedding Invitation Envelope">
+    <div class="ambient-vignette" aria-hidden="true"></div>
+    <div class="ambient-light-glow" aria-hidden="true"></div>
+
+    <div id="envelopeWrapper" class="envelope-wrapper" tabindex="0" role="button" aria-label="Open Isha and Sagar's wedding invitation" aria-expanded="false">
+      
+      <!-- Layer 1: Rear Open Flap (Behind rising card) -->
+      <div class="rear-flap-layer" aria-hidden="true">
+        <img class="rear-flap-img" src="assets/images/envelope-open-reference.png" alt="">
+      </div>
+
+      <!-- Layer 2: Standalone Isha & Sagar Invitation Card (Rises from Pocket) -->
+      <div id="invitationCard" class="invitation-card" aria-hidden="true">
+        <img class="card-art" src="assets/images/wedding-card.png" alt="Isha &amp; Sagar Wedding Card">
+      </div>
+
+      <!-- Layer 3: Envelope Pocket Base (Front layer over bottom of card) -->
+      <div class="envelope-pocket" aria-hidden="true">
+        <img class="pocket-art" src="assets/images/envelope-pocket.png" alt="Envelope Pocket">
+      </div>
+
+      <!-- Layer 4: Closed Envelope (Initial Pristine Closed State with Flap & Seal) -->
+      <div id="closedEnvelopeLayer" class="closed-envelope-layer" aria-hidden="true">
+        <img class="closed-envelope-img" src="assets/images/envelope-closed.png" alt="Closed Envelope">
+      </div>
+
+      <!-- Hit target for Unseal The Invitation -->
+      <button id="unsealHitBtn" class="unseal-hit-btn" type="button" aria-label="Unseal the invitation"></button>
+
+      <!-- Enter Your Invite Code Button (Positioned directly below 'UNSEAL THE INVITATION') -->
+      <div id="inviteCodeBtnWrap" class="invite-code-btn-wrap">
+        <button id="inviteCodeBtn" class="invite-code-btn" type="button" aria-label="Enter your invite code">
+          <span class="invite-icon">🔑</span>
+          <span class="btn-text">ENTER YOUR INVITE CODE</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Enter Celebration CTA Button (Revealed after card rises) -->
+    <div id="enterCtaWrap" class="enter-cta-wrap">
+      <button id="enterCelebrationBtn" class="enter-celebration-btn" type="button">
+        <span class="btn-text">ENTER THE CELEBRATION</span>
+        <span class="btn-arrow" aria-hidden="true">↓</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       FULL-SCREEN INVITE CODE SCREEN (MOBILE / ANDROID OPTIMIZED)
+       ======================================================== -->
+  <section id="inviteCodeScreen" class="invite-code-screen" aria-label="Enter Wedding Invite Code" hidden>
+    <div class="invite-screen-ambient" aria-hidden="true"></div>
+
+    <!-- Top Back Navigation -->
+    <button id="inviteCodeBackBtn" class="invite-screen-back-btn" type="button" aria-label="Back to Envelope">
+      <span aria-hidden="true">←</span> Back
+    </button>
+
+    <div class="invite-screen-scroll-container">
+      <div class="invite-screen-card-container">
+        <!-- Main Vertical Card (invite-card-bg) -->
+        <div id="inviteCardBgWrap" class="invite-card-bg-wrap">
+          <img class="invite-card-main-img" src="assets/images/invite-card-bg.png" alt="A Private Celebration Awaits">
+
+          <!-- Interactive Form Overlay -->
+          <form id="inviteCodeScreenForm" class="invite-screen-form" autocomplete="off">
+            <h2 class="sr-only">Enter Your Invite Code</h2>
+
+            <!-- Input Pill (invite-input-pill) with transparent EditText overlay -->
+            <div id="inviteInputPillGroup" class="invite-input-pill-group">
+              <img class="invite-input-pill-img" src="assets/images/invite-input-pill.png" alt="" aria-hidden="true">
+              <input 
+                type="text" 
+                id="inviteCodeScreenInput" 
+                class="invite-code-transparent-input" 
+                placeholder="ENTER YOUR INVITE CODE" 
+                autocomplete="off" 
+                autocorrect="off" 
+                autocapitalize="characters" 
+                spellcheck="false" 
+                enterkeyhint="done"
+                aria-label="Enter your invite code"
+              >
+            </div>
+
+            <!-- Error Validation Message -->
+            <div id="inviteCodeErrorMsg" class="invite-error-text" hidden></div>
+
+            <!-- CTA Button (invite-btn-pill) -->
+            <button 
+              type="submit" 
+              id="inviteScreenSubmitBtn" 
+              class="invite-btn-pill-action" 
+              aria-label="Enter the Celebration"
+            >
+              <img class="invite-btn-pill-img" src="assets/images/invite-btn-pill.png" alt="Enter the Celebration">
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
+       2. MAIN WEDDING CELEBRATION WEBSITE
+       ======================================================== -->
+  <main id="mainSite" class="site-shell">
+    
+    <!-- HERO SECTION WITH CINEMATIC VIDEO -->
+    <section id="celebrationHero" class="hero section-burgundy" aria-labelledby="coupleNames">
+      <div class="hero-video-container">
+        <video id="heroVideo" class="hero-video" playsinline muted autoplay loop preload="auto" src="assets/1.mp4"></video>
+        <div class="hero-overlay"></div>
+      </div>
+      
+      <div class="hero-content">
+        <img src="assets/images/flower.svg" class="hero-ornament-top" alt="" aria-hidden="true">
+        <p id="subGreeting" class="sub-greeting">Together with their families</p>
+        <p id="weddingDay" class="script-line">The Wedding Celebration</p>
+        <p id="heroDate" class="hero-date">18.12.2026</p>
+        
+        <h1 id="coupleNames" class="couple-names">
+          <span id="partnerOne">Isha</span>
+          <span id="connector">&amp;</span>
+          <span id="partnerTwo">Sagar</span>
+        </h1>
+        
+        <p id="heroVenueTag" class="hero-venue-tag">Jaipur, Rajasthan</p>
+      </div>
+    </section>
+
+    <!-- WELCOME LETTER -->
+    <section class="letter section-burgundy motion-reveal" aria-labelledby="letterTitle">
+      <h2 id="letterTitle" class="script-heading">Dear Family &amp; Friends,</h2>
+      <p id="letterOne">Two souls, one heart, and a lifetime of love to share. As our beloved sister Isha begins her magical journey with Sagar, we feel immensely blessed and grateful.</p>
+      <p id="letterTwo">Your presence, warm blessings, and loving wishes mean the world to us as we come together to celebrate this unforgettable milestone of our family.</p>
+    </section>
+
+    <!-- COUNTDOWN TIMER SECTION -->
+    <section class="paper-section countdown-section motion-reveal" aria-labelledby="countdownTitle">
+      <img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
+      <h2 id="countdownTitle" class="script-heading dark">The Grand Celebration Begins In</h2>
+      <div id="countdown" class="countdown" role="timer"></div>
+      <img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
+    </section>
+
+    <!-- SCHEDULE OF EVENTS / TIMELINE -->
+    <section class="schedule section-burgundy motion-reveal" aria-labelledby="scheduleTitle">
+      <h2 id="scheduleTitle" class="script-heading">Schedule of Events</h2>
+      <div id="eventTimeline" class="timeline"></div>
+    </section>
+
+    <!-- LOCATION & VENUE -->
+    <section class="paper-section location motion-reveal" aria-labelledby="locationTitle">
+      <img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
+      <h2 id="locationTitle" class="script-heading dark">Location &amp; Venue</h2>
+      <h3 id="venueName">The Grand Royal Palace &amp; Château</h3>
+      <p id="venueAddress">Royal Heritage Greens, Jaipur, Rajasthan 302031</p>
+      
+      <div class="venue-image-wrap">
+        <img id="venueImage" class="venue-image" src="assets/images/venue-sketch.svg" alt="Palace Venue Illustration">
+      </div>
+
+      <a id="mapButton" class="map-button" href="https://maps.google.com/?q=Jaipur+Rajasthan" target="_blank" rel="noopener noreferrer">
+        📍 Get Directions on Map
+      </a>
+      <img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
+    </section>
+
+    <!-- DRESS CODE & ATTIRE INSPIRATION -->
+    <section class="dress-code section-burgundy motion-reveal" aria-labelledby="dressTitle">
+      <h2 id="dressTitle" class="script-heading">Dress Code &amp; Attire</h2>
+      <p id="dressIntro" class="dress-intro">We kindly invite you to grace this auspicious celebration in royal, vibrant &amp; elegant attire.</p>
+      
+      <div class="frames" aria-hidden="true">
+        <img id="dressPhotoOne" class="frame frame-one" src="assets/images/dress-photo-one.svg" alt="Gentlemen Attire">
+        <img id="dressPhotoTwo" class="frame frame-two" src="assets/images/dress-photo-two.svg" alt="Ladies Attire">
+      </div>
+
+      <div class="dress-grid">
+        <div class="dress-copy">
+          <strong id="gentlemenLabel">Gentlemen:</strong>
+          <span id="gentlemenText">Royal Sherwanis, Bandhgalas, Kurta Pajama with Nehru Jackets, or Classic Tuxedos.</span>
+        </div>
+        <div class="dress-copy">
+          <strong id="ladiesLabel">Ladies:</strong>
+          <span id="ladiesText">Graceful Lehengas, Designer Sarees, Anarkalis, or Elegant Evening Gowns.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMPORTANT DETAILS & CONTACTS -->
+    <section class="paper-section details motion-reveal" aria-labelledby="detailsTitle">
+      <img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
+      <div class="details-content">
+        <h2 id="detailsTitle" class="script-heading dark">Important Details</h2>
+        <p id="contactCopy">For any assistance regarding travel, accommodation, or queries, please feel free to reach out to the wedding coordinators.</p>
+        
+        <div class="organizer-card">
+          <div class="organizer-label">Coordinator &amp; RSVP</div>
+          <div id="organizerName" class="organizer-name">Goyal &amp; Gupta Family</div>
+          <a id="organizerPhone" class="organizer-phone" href="tel:+919876543210">📞 +91 98765 43210</a>
+        </div>
+
+        <p id="giftCopy" class="gift-note">No boxed gifts please. Your warm presence, smiles, and heartfelt blessings are the greatest gifts to Isha &amp; Sagar.</p>
+      </div>
+      <img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
+    </section>
+
+    <!-- RSVP & CELEBRATION SIGNOFF -->
+    <section class="rsvp-section section-burgundy motion-reveal" aria-labelledby="rsvpTitle">
+      <p id="rsvpIntro">Kindly confirm your presence by submitting the RSVP below or directly on WhatsApp to help us welcome you with warmth.</p>
+      <h2 id="rsvpTitle" class="script-heading">Confirm Your Attendance</h2>
+      
+      <div class="rsvp-button-group">
+        <button id="rsvpButton" class="rsvp-button" type="button">RSVP Now</button>
+        <a class="rsvp-whatsapp-direct" href="https://wa.me/919876543210?text=Hi%2C+I+would+like+to+confirm+my+RSVP+for+Isha+%26+Sagar%27s+wedding%21" target="_blank" rel="noopener noreferrer">
+          📲 Quick RSVP via WhatsApp
+        </a>
+      </div>
+
+      <p id="signoff" class="script-heading signoff">Looking forward to celebrating with you!</p>
+      <p id="closingNames" class="closing-names">With Best Compliments from Family</p>
+      
+      <img id="footerPhoto" class="footer-photo" src="assets/images/footer-photo.svg" alt="Together Forever">
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <span>Crafted with Love for Isha &amp; Sagar's Special Day ✨</span>
+    </footer>
+  </main>
+
+  <!-- Interactive RSVP Modal -->
+  <div id="rsvpModal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button id="modalClose" class="modal-close" type="button" aria-label="Close RSVP form">✕</button>
+      
+      <div id="formView">
+        <h2 id="modalTitle">Confirm Your Attendance</h2>
+        <p class="modal-subtitle">We can't wait to celebrate together! Please let us know if you'll be joining us.</p>
+        
+        <form id="rsvpForm">
+          <label class="field">
+            <span>Your Full Name *</span>
+            <input type="text" name="guestName" placeholder="Enter your full name" required>
+          </label>
+
+          <label class="field">
+            <span>Phone / WhatsApp Number *</span>
+            <input type="tel" name="mobileNumber" placeholder="+91 98765 43210" required>
+          </label>
+
+          <label class="field">
+            <span>Will you be attending? *</span>
+            <select name="attendance" required>
+              <option value="Joyfully Accept (Yes!)">Joyfully Accept (Yes! 🎉)</option>
+              <option value="Regretfully Decline">Regretfully Decline (Cannot attend)</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Number of Guests (including yourself) *</span>
+            <input type="number" name="familyGuestCount" value="1" min="1" max="10" required>
+          </label>
+
+          <label class="field">
+            <span>Wishes / Special Note for Isha &amp; Sagar</span>
+            <textarea name="message" placeholder="Share your heartfelt blessings or notes..."></textarea>
+          </label>
+
+          <button type="submit" class="submit-button">Submit RSVP</button>
+          <button type="button" id="rsvpWhatsappBtn" class="submit-button whatsapp-submit-btn">Send RSVP via WhatsApp 📲</button>
+        </form>
+      </div>
+
+      <div id="successView" class="success-view" hidden>
+        <h2>Thank You!</h2>
+        <p>Your RSVP response for Isha &amp; Sagar's wedding has been recorded with love. We cannot wait to celebrate this auspicious occasion with you!</p>
+        <button id="successDone" class="submit-button" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="wedding-data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

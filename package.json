@@ -1,0 +1,12 @@
+{
+  "name": "sister-wedding-invitation",
+  "version": "1.0.0",
+  "description": "Interactive Sister's Wedding Invitation Web App",
+  "scripts": {
+    "dev": "serve -l 3000",
+    "start": "serve -l 3000"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

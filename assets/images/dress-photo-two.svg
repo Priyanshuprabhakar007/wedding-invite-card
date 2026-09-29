@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="gownBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3d1822"/>
+      <stop offset="100%" stop-color="#1f0c12"/>
+    </linearGradient>
+    <linearGradient id="goldFrame2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5e0a3"/>
+      <stop offset="50%" stop-color="#c99738"/>
+      <stop offset="100%" stop-color="#734e0a"/>
+    </linearGradient>
+    <radialGradient id="lehengaGlow" cx="50%" cy="60%" r="60%">
+      <stop offset="0%" stop-color="#a8193a"/>
+      <stop offset="100%" stop-color="#540719"/>
+    </radialGradient>
+  </defs>
+  <!-- Gold Border Frame -->
+  <rect x="8" y="8" width="384" height="484" rx="12" fill="url(#gownBg)" stroke="url(#goldFrame2)" stroke-width="4"/>
+  <rect x="18" y="18" width="364" height="464" rx="8" fill="none" stroke="url(#goldFrame2)" stroke-width="1" stroke-dasharray="6,4" opacity="0.6"/>
+
+  <!-- Attire Art -->
+  <g transform="translate(200, 230)">
+    <!-- Gown / Lehenga Flare -->
+    <path d="M-25,10 C-30,50 -100,180 -110,200 L110,200 C100,180 30,50 25,10 Z" fill="url(#lehengaGlow)" stroke="#dfbe76" stroke-width="1.5"/>
+    
+    <!-- Gold Zari Embroidery details -->
+    <path d="M-90,185 C-30,175 30,175 90,185" stroke="#dfbe76" stroke-width="2" fill="none"/>
+    <path d="M-80,165 C-30,155 30,155 80,165" stroke="#dfbe76" stroke-width="1" stroke-dasharray="4,4" fill="none"/>
+    <path d="M-100,195 C-30,185 30,185 100,195" stroke="#dfbe76" stroke-width="3" fill="none"/>
+    
+    <!-- Blouse / Corset Bodice -->
+    <path d="M-28,10 C-25,-25 0,-30 0,-30 C0,-30 25,-25 28,10 Z" fill="#780e26" stroke="#dfbe76" stroke-width="1.5"/>
+    
+    <!-- Dupatta / Cape Drape -->
+    <path d="M-30,-20 C-60,40 -80,100 -70,170 C-50,120 -30,40 0,-15" fill="none" stroke="#e8cca0" stroke-width="2" opacity="0.85"/>
+    
+    <!-- Royal Necklace -->
+    <path d="M-15,-12 C-5,-2 5,-2 15,-12" stroke="#dfbe76" stroke-width="2.5" fill="none"/>
+    <circle cx="0" cy="0" r="3" fill="#dfbe76"/>
+  </g>
+  <text x="200" y="440" font-family="'Cormorant Garamond', serif" font-size="22" font-style="italic" fill="#dfbe76" text-anchor="middle" letter-spacing="2">Ladies Elegant Attire</text>
+</svg>
