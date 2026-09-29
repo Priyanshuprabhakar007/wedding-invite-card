@@ -36,12 +36,6 @@
       }
     });
 
-    universal.forEach(function (uId) {
-      if (!eventIds.has(uId)) {
-        console.error("[Wedding Config Error] universalEventId \"" + uId + "\" does not exist in events list.");
-      }
-    });
-
     Object.keys(bundles).forEach(function (bKey) {
       var list = bundles[bKey];
       if (!Array.isArray(list)) {
@@ -71,7 +65,6 @@
     var cfg = window.WEDDING_CONFIG || data || {};
     var inviteCodes = cfg.inviteCodes || {};
     var bundles = cfg.invitationBundles || {};
-    var universalIds = Array.isArray(cfg.universalEventIds) ? cfg.universalEventIds : ["baraat"];
     var allEvents = cfg.events || [];
 
     if (!Object.prototype.hasOwnProperty.call(inviteCodes, code)) {
@@ -82,10 +75,7 @@
     var bundleName = codeConfig.bundle;
     var bundleEventIds = (bundles && Array.isArray(bundles[bundleName])) ? bundles[bundleName] : [];
 
-    // Merge bundle event IDs + universalEventIds, removing duplicates
-    var allowedIdsSet = new Set();
-    bundleEventIds.forEach(function (id) { allowedIdsSet.add(id); });
-    universalIds.forEach(function (id) { allowedIdsSet.add(id); });
+    var allowedIdsSet = new Set(bundleEventIds);
 
     // Filter against cfg.events preserving original chronological order
     var allowedEvents = allEvents.filter(function (ev) {
@@ -111,6 +101,7 @@
     window.activeInvitation = invitation;
 
     renderTimeline(invitation.allowedEvents);
+    renderCeremonySections(invitation.allowedEvents);
     updateRsvpFormEvents(invitation);
 
     var screenInput = byId("inviteCodeScreenInput");
@@ -180,10 +171,10 @@
     if (byId("partnerOne")) byId("partnerOne").textContent = cfg.couple.partnerOne || "Isha";
     if (byId("connector")) byId("connector").textContent = cfg.couple.connector || "&";
     if (byId("partnerTwo")) byId("partnerTwo").textContent = cfg.couple.partnerTwo || "Sagar";
-    if (byId("heroDate")) byId("heroDate").textContent = cfg.event.dateDisplay || "18.12.2026";
+    if (byId("heroDate")) byId("heroDate").textContent = cfg.event.dateDisplay || "NOVEMBER 2026";
     if (byId("weddingDay")) byId("weddingDay").textContent = cfg.copy.weddingDay || "The Wedding Celebration";
     if (byId("subGreeting")) byId("subGreeting").textContent = cfg.couple.subGreeting || "Together with their families";
-    if (byId("heroVenueTag")) byId("heroVenueTag").textContent = cfg.event.city || "Jaipur, Rajasthan";
+    if (byId("heroVenueTag")) byId("heroVenueTag").textContent = cfg.event.city || "South Florida, Florida";
 
     // Welcome Letter
     if (byId("letterTitle")) byId("letterTitle").textContent = cfg.copy.dearFriends;
@@ -245,10 +236,12 @@
           localStorage.removeItem("wedding_guest_code");
         } catch (e) {}
         renderTimeline(cfg.events || []);
+        renderCeremonySections(cfg.events || []);
         updateRsvpFormEvents(null);
       }
     } else {
       renderTimeline(cfg.events || []);
+      renderCeremonySections(cfg.events || []);
       updateRsvpFormEvents(null);
     }
   }
@@ -285,6 +278,84 @@
     });
 
     observeMotionElements(host);
+  }
+
+  // -------------------------------------------------------------
+  // 2b. CEREMONY DETAILS SECTIONS RENDERER
+  // -------------------------------------------------------------
+  function renderCeremonySections(events) {
+    var container = byId("ceremonyDetailsContainer");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (!events || events.length === 0) {
+      return;
+    }
+
+    events.forEach(function (ev) {
+      var section = document.createElement("section");
+      section.id = "ceremony-" + ev.id;
+      section.className = "ceremony-detail-section paper-section motion-reveal is-visible";
+      section.setAttribute("aria-labelledby", "heading-" + ev.id);
+
+      var ritualsHtml = "";
+      if (Array.isArray(ev.rituals) && ev.rituals.length > 0) {
+        var heading = ev.detailsTitle || "Celebration Highlights";
+        var itemsHtml = ev.rituals.map(function (item) {
+          return '<li class="ceremony-program-item"><span class="program-bullet">✦</span><span class="program-text">' + item + '</span></li>';
+        }).join("");
+
+        ritualsHtml =
+          '<div class="ceremony-program-box">' +
+            '<div class="ceremony-program-header">' +
+              '<span class="program-flourish">❦</span>' +
+              '<h4 class="ceremony-program-heading">' + heading + '</h4>' +
+              '<span class="program-flourish">❦</span>' +
+            '</div>' +
+            '<ul class="ceremony-program-list">' +
+              itemsHtml +
+            '</ul>' +
+          '</div>';
+      }
+
+      var artworkHtml = "";
+      if (ev.image) {
+        artworkHtml =
+          '<div class="ceremony-artwork-wrap">' +
+            '<img class="ceremony-artwork" src="' + ev.image + '" alt="' + ev.name + '">' +
+          '</div>';
+      }
+
+      section.innerHTML =
+        '<img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="" aria-hidden="true">' +
+        '<div class="ceremony-card">' +
+          '<div class="ceremony-card-ornament">' +
+            '<img src="assets/images/flower.svg" alt="" class="ceremony-flower-icon" aria-hidden="true">' +
+          '</div>' +
+          '<h2 id="heading-' + ev.id + '" class="script-heading dark ceremony-title">' + (ev.name || "") + '</h2>' +
+          '<div class="ceremony-meta-badge">' +
+            '<span class="ceremony-date-long">' + (ev.dateLong || ev.date || "") + '</span>' +
+            '<span class="ceremony-divider">•</span>' +
+            '<span class="ceremony-time-range">' + (ev.time || "") + '</span>' +
+          '</div>' +
+          artworkHtml +
+          '<div class="ceremony-venue-box">' +
+            '<div class="ceremony-venue-label">Venue &amp; Location</div>' +
+            '<h3 class="ceremony-venue-name">' + (ev.venue || "") + '</h3>' +
+            '<p class="ceremony-venue-address">' + (ev.address || "") + '</p>' +
+            (ev.googleMapsUrl ?
+              '<a class="ceremony-map-button" href="' + ev.googleMapsUrl + '" target="_blank" rel="noopener noreferrer">' +
+                '📍 GET DIRECTIONS' +
+              '</a>' : '') +
+          '</div>' +
+          ritualsHtml +
+        '</div>' +
+        '<img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="" aria-hidden="true">';
+
+      container.appendChild(section);
+    });
+
+    observeMotionElements(container);
   }
 
   // -------------------------------------------------------------
@@ -953,7 +1024,7 @@
   // -------------------------------------------------------------
   document.addEventListener("DOMContentLoaded", function () {
     bindData(data);
-    startCountdown(data.event.countdownDate || "2026-12-18T17:00:00+05:30");
+    startCountdown(data.event.countdownDate || "2026-11-20T15:30:00-05:00");
     setupEnvelopeOpening();
     setupScrollAnimations();
     setupPetals();

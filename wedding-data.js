@@ -10,16 +10,16 @@ window.WEDDING_CONFIG = {
     subTagline: "invite you to celebrate the joyous union of love & togetherness"
   },
   event: {
-    day: "18",
-    month: "December",
+    day: "20",
+    month: "November",
     year: "2026",
-    dateDisplay: "DECEMBER 2026",
-    startDate: "2026-12-18T17:00:00+05:30",
-    countdownDate: "2026-12-18T17:00:00+05:30",
-    venue: "The Grand Royal Palace & Château",
-    city: "Jaipur, Rajasthan",
-    address: "Royal Heritage Greens, Jaipur, Rajasthan 302031",
-    googleMapsUrl: "https://maps.google.com/?q=Jaipur+Rajasthan"
+    dateDisplay: "NOVEMBER 2026",
+    startDate: "2026-11-20T15:30:00-05:00",
+    countdownDate: "2026-11-20T15:30:00-05:00",
+    venue: "South Florida Hindu Temple",
+    city: "South Florida, Florida",
+    address: "13010 Griffin Rd, Southwest Ranches, Fort Lauderdale, FL",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=South+Florida+Hindu+Temple+13010+Griffin+Rd+Southwest+Ranches+Florida"
   },
   copy: {
     introAriaLabel: "Open Isha and Sagar's Wedding Invitation",
@@ -34,7 +34,7 @@ window.WEDDING_CONFIG = {
     countdownMinutes: "Minutes",
     countdownSeconds: "Seconds",
     scheduleTitle: "Schedule of Events",
-    locationTitle: "Location & Venue",
+    locationTitle: "Location & Venues",
     addressPrefix: "Venue Address:",
     dressCodeTitle: "Dress Code & Attire",
     dressIntro: "We kindly invite you to grace this auspicious celebration in royal, vibrant & elegant attire.",
@@ -58,25 +58,18 @@ window.WEDDING_CONFIG = {
     playSymbol: "▶",
     pauseSymbol: "⏸"
   },
-  universalEventIds: [
-    "baraat"
-  ],
   invitationBundles: {
     allFunctions: [
       "mehendi",
-      "sangeet",
-      "haldi",
       "wedding",
       "reception"
     ],
     familyFunctions: [
-      "sangeet",
-      "haldi",
+      "mehendi",
       "wedding",
       "reception"
     ],
     friendsFunctions: [
-      "sangeet",
       "wedding",
       "reception"
     ],
@@ -84,8 +77,8 @@ window.WEDDING_CONFIG = {
       "wedding",
       "reception"
     ],
-    haldiFunctions: [
-      "haldi"
+    mehendiFunctions: [
+      "mehendi"
     ]
   },
   inviteCodes: {
@@ -94,7 +87,7 @@ window.WEDDING_CONFIG = {
       bundle: "allFunctions"
     },
     "FAMILY": {
-      label: "Family Wedding Invitation",
+      label: "Family Wedding Celebration",
       bundle: "familyFunctions"
     },
     "FRIENDS": {
@@ -106,58 +99,66 @@ window.WEDDING_CONFIG = {
       bundle: "weddingFunctions"
     },
     "KESAR": {
-      label: "Haldi Celebration Invitation",
-      bundle: "haldiFunctions"
+      label: "Mehendi Celebration Invitation",
+      bundle: "mehendiFunctions"
     }
   },
   events: [
     {
       id: "mehendi",
-      name: "Ganesh Sthapana & Mehendi",
-      date: "17 December 2026",
-      time: "03:00 PM",
-      venue: "Courtyard of Palms",
-      attire: "Vibrant Greens & Florals"
-    },
-    {
-      id: "sangeet",
-      name: "Sangeet & Musical Night",
-      date: "17 December 2026",
-      time: "07:30 PM",
-      venue: "The Grand Chateau Ballroom",
-      attire: "Glamorous Evening & Shimmer"
-    },
-    {
-      id: "haldi",
-      name: "Haldi & Phoolon Ki Holi",
-      date: "18 December 2026",
-      time: "10:30 AM",
-      venue: "Poolside Lawn",
-      attire: "Sunny Yellows & Pastels"
-    },
-    {
-      id: "baraat",
-      name: "Royal Baraat & Varmala",
-      date: "18 December 2026",
-      time: "05:30 PM",
-      venue: "The Grand Royal Arch",
-      attire: "Royal & Traditional"
+      name: "Mehendi",
+      date: "19 November 2026",
+      dateLong: "Thursday, November 19, 2026",
+      time: "5:00 PM – 10:00 PM",
+      venue: "Deccan Spice",
+      address: "1151 S Federal Hwy, Pompano Beach, FL 33062",
+      googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Deccan+Spice+1151+S+Federal+Hwy+Pompano+Beach+FL+33062",
+      detailsTitle: "Celebration Highlights",
+      rituals: [
+        "Mehendi application",
+        "Family welcome & blessings",
+        "Music and celebration",
+        "Dinner with family & friends"
+      ]
     },
     {
       id: "wedding",
-      name: "Wedding Ceremony (Pheras)",
-      date: "18 December 2026",
-      time: "07:30 PM",
-      venue: "Mandap by the Lotus Pond",
-      attire: "Traditional Luxury"
+      name: "Wedding Ceremony",
+      date: "20 November 2026",
+      dateLong: "Friday, November 20, 2026",
+      time: "3:30 PM – 8:00 PM",
+      venue: "South Florida Hindu Temple",
+      address: "13010 Griffin Rd, Southwest Ranches, Fort Lauderdale, FL",
+      googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=South+Florida+Hindu+Temple+13010+Griffin+Rd+Southwest+Ranches+Florida",
+      detailsTitle: "Wedding Rituals",
+      rituals: [
+        "Ganesh Puja",
+        "Couple & family welcome",
+        "Varmala",
+        "Kanyadaan",
+        "Mangal Pheras",
+        "Saptapadi",
+        "Sindoor & Mangalsutra",
+        "Family blessings"
+      ]
     },
     {
       id: "reception",
-      name: "Reception & Grand Dinner",
-      date: "18 December 2026",
-      time: "09:30 PM",
-      venue: "Royal Banquet Grounds",
-      attire: "Formal Luxury / Royal Ethnic"
+      name: "Reception",
+      date: "21 November 2026",
+      dateLong: "Saturday, November 21, 2026",
+      time: "5:00 PM – 11:00 PM",
+      venue: "The White Barn at Cielo Farms Nursery",
+      address: "4680 Volunteer Rd, Southwest Ranches, FL 33330",
+      googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=The+White+Barn+at+Cielo+Farms+Nursery+4680+Volunteer+Rd+Southwest+Ranches+FL+33330",
+      detailsTitle: "Evening Celebration",
+      rituals: [
+        "Couple's grand entrance",
+        "Family welcome",
+        "Dinner",
+        "Music & dancing",
+        "Celebration with family & friends"
+      ]
     }
   ],
   rsvpForm: {
@@ -168,7 +169,7 @@ window.WEDDING_CONFIG = {
       { key: "mobileNumber", label: "Phone / WhatsApp Number", placeholder: "+91 98765 43210", type: "tel", required: true },
       { key: "attendance", label: "Will you attend?", type: "select", options: ["Joyfully Accept (Yes! 🎉)", "Regretfully Decline"], required: true },
       { key: "familyGuestCount", label: "Number of Guests", placeholder: "1", type: "number", min: 1, max: 10, required: true },
-      { key: "eventsAttending", label: "Functions you'll attend", type: "text", placeholder: "All Functions / Sangeet & Wedding" },
+      { key: "eventsAttending", label: "Functions you'll attend", type: "text", placeholder: "Mehendi, Wedding Ceremony, Reception" },
       { key: "message", label: "Blessings / Message for Isha & Sagar", placeholder: "Write your blessings for the couple...", type: "textarea", required: false }
     ],
     submit: "Submit RSVP",
