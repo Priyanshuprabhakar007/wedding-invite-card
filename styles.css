@@ -48,6 +48,30 @@ body.envelope-closed-state {
   overflow: hidden;
 }
 
+/* ========================================================
+   GLOBAL ACCESS CONTROL & INVITATION LOCK
+   ======================================================== */
+[hidden] {
+  display: none !important;
+}
+
+body.invitation-locked {
+  overflow: hidden !important;
+  height: 100vh !important;
+  touch-action: none;
+}
+
+body.invitation-locked #mainSite {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.invitation-locked #rsvpModal {
+  display: none !important;
+  pointer-events: none !important;
+}
+
 button, input, textarea, select {
   font: inherit;
 }

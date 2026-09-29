@@ -10,6 +10,7 @@
   var audioCtx = null;
   var isMusicPlaying = false;
   var isEnvelopeOpened = false;
+  var accessGranted = false;
   var activeInvitation = null;
 
   // -------------------------------------------------------------
@@ -95,27 +96,70 @@
     };
   }
 
-  function applyInvitation(invitation, persist) {
-    if (!invitation) return;
+  // -------------------------------------------------------------
+  // CENTRALIZED INVITATION UNLOCK GATEWAY
+  // -------------------------------------------------------------
+  function unlockInvitation(invitation) {
+    if (!invitation || typeof invitation !== "object") {
+      console.warn("[Access Control] unlockInvitation called with empty or invalid payload.");
+      return false;
+    }
+    if (!invitation.code || typeof invitation.code !== "string") {
+      console.warn("[Access Control] unlockInvitation rejected: missing invitation code.");
+      return false;
+    }
+    if (!invitation.bundle || typeof invitation.bundle !== "string") {
+      console.warn("[Access Control] unlockInvitation rejected: missing bundle reference.");
+      return false;
+    }
+    if (!Array.isArray(invitation.allowedEvents) || invitation.allowedEvents.length === 0) {
+      console.warn("[Access Control] unlockInvitation rejected: no allowed events resolved.");
+      return false;
+    }
+
+    // 1. Authoritative access state
+    accessGranted = true;
     activeInvitation = invitation;
+    window.accessGranted = true;
     window.activeInvitation = invitation;
 
+    // 2. Render only the allowed dynamic content
     renderTimeline(invitation.allowedEvents);
     renderCeremonySections(invitation.allowedEvents);
     updateRsvpFormEvents(invitation);
 
+    // 3. Keep invite input field synchronized
     var screenInput = byId("inviteCodeScreenInput");
-    if (screenInput && !screenInput.value) {
+    if (screenInput) {
       screenInput.value = invitation.code;
     }
 
-    if (persist !== false) {
-      try {
-        localStorage.setItem("wedding_guest_code", invitation.code);
-      } catch (e) {
-        console.warn("Could not save to localStorage", e);
-      }
+    // 4. Reveal protected main invitation shell in DOM
+    var mainSite = byId("mainSite");
+    if (mainSite) {
+      mainSite.removeAttribute("hidden");
+      mainSite.removeAttribute("inert");
+      mainSite.setAttribute("aria-hidden", "false");
     }
+
+    // 5. Remove locked CSS class from body
+    document.body.classList.remove("invitation-locked");
+
+    // 6. Save only to sessionStorage for reload in the same browser session
+    try {
+      sessionStorage.setItem("wedding_guest_session_code", invitation.code);
+    } catch (e) {}
+
+    // 7. Purge legacy persistent localStorage key
+    try {
+      localStorage.removeItem("wedding_guest_code");
+    } catch (e) {}
+
+    return true;
+  }
+
+  function applyInvitation(invitation) {
+    return unlockInvitation(invitation);
   }
 
   function updateRsvpFormEvents(invitation) {
@@ -123,9 +167,9 @@
     var badge = byId("rsvpInvitationBadge");
     if (!container) return;
 
-    var eventsToDisplay = (invitation && invitation.allowedEvents) ?
+    var eventsToDisplay = (invitation && Array.isArray(invitation.allowedEvents)) ?
       invitation.allowedEvents :
-      ((data && data.events) || []);
+      [];
 
     if (badge) {
       if (invitation && invitation.label) {
@@ -159,7 +203,10 @@
 
   // Expose for testing & global inspection
   window.resolveInvitation = resolveInvitation;
+  window.unlockInvitation = unlockInvitation;
   window.applyInvitation = applyInvitation;
+  window.accessGranted = false;
+  window.activeInvitation = null;
 
   // -------------------------------------------------------------
   // 1. DATA BINDING
@@ -221,28 +268,41 @@
     validateWeddingConfig(cfg);
     buildRsvpForm(cfg);
 
-    // Restore previously unlocked invitation from localStorage if available
-    var savedCode = null;
+    // DYNAMIC CONTENT PROTECTION:
+    // Before authorization, clear ceremony and timeline hosts.
+    var timelineHost = byId("eventTimeline");
+    if (timelineHost) timelineHost.innerHTML = "";
+    var ceremonyContainer = byId("ceremonyDetailsContainer");
+    if (ceremonyContainer) ceremonyContainer.innerHTML = "";
+
+    // Unconditionally purge any legacy localStorage access key
     try {
-      savedCode = localStorage.getItem("wedding_guest_code");
+      localStorage.removeItem("wedding_guest_code");
     } catch (e) {}
 
-    if (savedCode) {
-      var restored = resolveInvitation(savedCode);
+    // Check sessionStorage only (allows refresh in the SAME browser tab/session)
+    var sessionCode = null;
+    try {
+      sessionCode = sessionStorage.getItem("wedding_guest_session_code");
+    } catch (e) {}
+
+    if (sessionCode) {
+      var restored = resolveInvitation(sessionCode);
       if (restored) {
-        applyInvitation(restored, false);
+        unlockInvitation(restored);
+        // If restored from existing session, mark envelope as opened
+        isEnvelopeOpened = true;
+        var scene = byId("envelopeScene");
+        var wrapper = byId("envelopeWrapper");
+        var enterCta = byId("enterCtaWrap");
+        if (scene) scene.classList.add("is-opened");
+        if (wrapper) wrapper.setAttribute("aria-expanded", "true");
+        if (enterCta) enterCta.classList.add("is-visible");
       } else {
         try {
-          localStorage.removeItem("wedding_guest_code");
+          sessionStorage.removeItem("wedding_guest_session_code");
         } catch (e) {}
-        renderTimeline(cfg.events || []);
-        renderCeremonySections(cfg.events || []);
-        updateRsvpFormEvents(null);
       }
-    } else {
-      renderTimeline(cfg.events || []);
-      renderCeremonySections(cfg.events || []);
-      updateRsvpFormEvents(null);
     }
   }
 
@@ -587,48 +647,63 @@
       }, 850);
     }
 
+    var openInviteScreen = setupInviteCodeScreen(startOpeningSequence);
+
     if (unsealBtn) {
       unsealBtn.addEventListener("click", function (e) {
         e.stopPropagation();
+        if (!accessGranted || !activeInvitation) {
+          if (typeof openInviteScreen === "function") {
+            openInviteScreen();
+          }
+          return;
+        }
         startOpeningSequence();
       });
     }
 
     if (cardEl) {
       cardEl.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (!accessGranted || !activeInvitation) {
+          if (typeof openInviteScreen === "function") {
+            openInviteScreen();
+          }
+          return;
+        }
         if (isEnvelopeOpened) {
-          e.stopPropagation();
           scrollToCelebration();
         }
       });
     }
 
-    var openInviteScreen = setupInviteCodeScreen(startOpeningSequence);
-
-    // Click on envelope wrapper (or image) -> Opens Invite Code Screen
+    // Click on envelope wrapper (or image) -> Guarded
     wrapper.addEventListener("click", function (e) {
-      if (!isEnvelopeOpened) {
+      if (!accessGranted || !activeInvitation) {
         if (typeof openInviteScreen === "function") {
           openInviteScreen();
-        } else {
-          startOpeningSequence();
         }
+        return;
+      }
+      if (!isEnvelopeOpened) {
+        startOpeningSequence();
       } else {
-        // If already opened, clicking card/envelope smoothly scrolls to celebration
         scrollToCelebration();
       }
     });
 
-    // Keyboard navigation (Enter or Space)
+    // Keyboard navigation (Enter or Space) -> Guarded
     wrapper.addEventListener("keydown", function (e) {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        if (!isEnvelopeOpened) {
+        if (!accessGranted || !activeInvitation) {
           if (typeof openInviteScreen === "function") {
             openInviteScreen();
-          } else {
-            startOpeningSequence();
           }
+          return;
+        }
+        if (!isEnvelopeOpened) {
+          startOpeningSequence();
         } else {
           scrollToCelebration();
         }
@@ -636,7 +711,15 @@
     });
 
     function scrollToCelebration() {
+      if (!accessGranted || !activeInvitation) {
+        if (typeof openInviteScreen === "function") {
+          openInviteScreen();
+        }
+        return;
+      }
+
       document.body.classList.remove("envelope-closed-state");
+      document.body.classList.remove("invitation-locked");
       toggleMusic(); // Start background music if not playing
       if (heroVideo && heroVideo.src) {
         heroVideo.play().catch(function () {});
@@ -648,10 +731,16 @@
       }
     }
 
-    // Enter Celebration Button click -> Smooth Scroll to Full Website & Auto-start Music
+    // Enter Celebration Button click -> Guarded
     if (enterBtn) {
       enterBtn.addEventListener("click", function (e) {
         e.stopPropagation();
+        if (!accessGranted || !activeInvitation) {
+          if (typeof openInviteScreen === "function") {
+            openInviteScreen();
+          }
+          return;
+        }
         scrollToCelebration();
       });
     }
@@ -751,7 +840,7 @@
 
         // Validation 2: Resolve invite code from configuration
         var invitation = resolveInvitation(code);
-        if (!invitation) {
+        if (!invitation || !invitation.bundle || !Array.isArray(invitation.allowedEvents) || invitation.allowedEvents.length === 0) {
           if (errorMsg) {
             errorMsg.textContent = "That invite code doesn’t seem to match. Please try again.";
             errorMsg.hidden = false;
@@ -767,8 +856,16 @@
         }
         if (input) input.blur();
 
-        // Apply activeInvitation across the application
-        applyInvitation(invitation, true);
+        // Authoritative unlock
+        var unlocked = unlockInvitation(invitation);
+        if (!unlocked) {
+          if (errorMsg) {
+            errorMsg.textContent = "That invite code doesn’t seem to match. Please try again.";
+            errorMsg.hidden = false;
+          }
+          if (input) input.focus();
+          return;
+        }
 
         // Button press animation feedback (1.0 -> 0.97 -> 1.0)
         if (submitBtn) {
@@ -1079,12 +1176,17 @@
     if (!modal || !openBtn || !form) return;
 
     openBtn.addEventListener("click", function () {
+      if (!accessGranted || !activeInvitation) return;
       modal.hidden = false;
+      modal.removeAttribute("inert");
+      modal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
     });
 
     function closeModal() {
       modal.hidden = true;
+      modal.setAttribute("inert", "");
+      modal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
       if (formContainer && successView) {
         formContainer.hidden = false;
@@ -1180,9 +1282,30 @@
   }
 
   // -------------------------------------------------------------
+  // 8b. HASH & BACK/FORWARD DIRECT NAVIGATION GUARD
+  // -------------------------------------------------------------
+  function guardHashNavigation() {
+    if (!accessGranted) {
+      var hash = window.location.hash;
+      if (hash && hash !== "#envelopeScene" && hash !== "#inviteCodeScreen") {
+        try {
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, "", window.location.pathname + window.location.search);
+          }
+        } catch (e) {}
+        window.scrollTo(0, 0);
+      }
+    }
+  }
+
+  window.addEventListener("hashchange", guardHashNavigation);
+  window.addEventListener("popstate", guardHashNavigation);
+
+  // -------------------------------------------------------------
   // 9. INITIALIZE ON DOM READY
   // -------------------------------------------------------------
   document.addEventListener("DOMContentLoaded", function () {
+    guardHashNavigation();
     bindData(data);
     startCountdown(data.event.countdownDate || "2026-11-20T15:30:00-05:00");
     setupEnvelopeOpening();
@@ -1194,5 +1317,8 @@
       musicBtn.addEventListener("click", toggleMusic);
     }
   });
+
+  // Immediate guard on initial script execution
+  guardHashNavigation();
 
 })();
