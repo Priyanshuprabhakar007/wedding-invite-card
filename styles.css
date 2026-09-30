@@ -2019,6 +2019,7 @@ button {
 }
 
 .countdown.scratch-countdown {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2027,15 +2028,55 @@ button {
   flex-wrap: nowrap;
 }
 
+/* Golden light wave moving across all four hearts */
+.countdown.scratch-countdown::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -25%;
+  width: 38%;
+  height: 140%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 245, 205, 0.05),
+    rgba(255, 224, 135, 0.65),
+    rgba(255, 245, 205, 0.08),
+    transparent
+  );
+  filter: blur(4px);
+  transform: translateY(-50%) translateX(0) skewX(-12deg);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 10;
+}
+
+.countdown.scratch-countdown.is-revealing::after {
+  opacity: 1;
+  animation: goldenLightSweep 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes goldenLightSweep {
+  0% {
+    transform: translateY(-50%) translateX(0) skewX(-12deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(-50%) translateX(440%) skewX(-12deg);
+    opacity: 0;
+  }
+}
+
+/* Heart-shaped Countdown Unit */
 .countdown-unit.scratch-unit {
   position: relative;
-  min-width: clamp(68px, 18vw, 84px);
-  height: clamp(82px, 21vw, 96px);
+  width: clamp(74px, 19.5vw, 92px);
+  height: clamp(74px, 19.5vw, 92px);
   padding: 0;
-  background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid rgba(184, 134, 40, 0.35);
-  box-shadow: 0 8px 22px rgba(90, 10, 30, 0.08), inset 0 0 12px rgba(223, 190, 118, 0.06);
+  background: radial-gradient(circle at 50% 35%, #fffdf8, #fcf4e4 72%);
+  clip-path: url(#countdownHeartClip);
+  -webkit-clip-path: url(#countdownHeartClip);
+  filter: drop-shadow(0 6px 14px rgba(102, 2, 31, 0.15));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2046,38 +2087,49 @@ button {
   touch-action: none;
   cursor: grab;
   outline: none;
-  transform-style: preserve-3d;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+  transform: scale(1);
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.22s ease;
 }
 
 .countdown-unit.scratch-unit:focus-visible {
-  box-shadow: 0 0 0 3px rgba(184, 134, 40, 0.45), 0 8px 22px rgba(90, 10, 30, 0.12);
+  filter: drop-shadow(0 0 10px rgba(184, 134, 40, 0.8)) drop-shadow(0 6px 14px rgba(102, 2, 31, 0.2));
 }
 
-.countdown-unit.scratch-unit:active {
+.countdown-unit.scratch-unit:active,
+.countdown-unit.scratch-unit.is-touching {
   cursor: grabbing;
+  transform: scale(0.975);
+  filter: drop-shadow(0 4px 12px rgba(184, 134, 40, 0.45));
+}
+
+/* Active Heart Reveal Moment Pulse */
+.countdown-unit.scratch-unit.is-activating {
+  animation: heartActivatingPulse 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes heartActivatingPulse {
+  0% {
+    transform: scale(0.975);
+    filter: drop-shadow(0 4px 12px rgba(184, 134, 40, 0.45));
+  }
+  50% {
+    transform: scale(1.045);
+    filter: drop-shadow(0 8px 24px rgba(223, 190, 118, 0.85)) drop-shadow(0 0 12px rgba(255, 235, 175, 0.6));
+  }
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 6px 14px rgba(102, 2, 31, 0.15));
+  }
 }
 
 .countdown-unit.scratch-unit.is-revealed {
   cursor: default;
-  animation: scratchCardRevealPulse 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  background: radial-gradient(circle at 50% 35%, #fffdf6, #fbf1da 72%);
+  filter: drop-shadow(0 6px 16px rgba(102, 2, 31, 0.12)) drop-shadow(0 0 8px rgba(223, 190, 118, 0.28));
 }
 
-@keyframes scratchCardRevealPulse {
-  0% {
-    transform: scale(0.97);
-    box-shadow: 0 8px 22px rgba(90, 10, 30, 0.08);
-  }
-  50% {
-    transform: scale(1.02);
-    box-shadow: 0 10px 28px rgba(184, 134, 40, 0.25), 0 0 20px rgba(223, 190, 118, 0.3);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 8px 22px rgba(90, 10, 30, 0.08);
-  }
-}
-
+/* Heart Interior Revealed Values */
 .countdown-content {
   position: relative;
   z-index: 1;
@@ -2087,25 +2139,22 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px 6px;
+  padding: 8px 6px 14px;
   box-sizing: border-box;
-  opacity: 0.95;
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.countdown-unit.scratch-unit:not(.is-revealed) .countdown-content {
-  opacity: 0.4;
-  transform: scale(0.95);
+  opacity: 0;
+  transform: translateY(8px) scale(0.92);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .countdown-unit.scratch-unit.is-revealed .countdown-content {
   opacity: 1;
-  transform: scale(1);
+  transform: translateY(0) scale(1);
 }
 
 .countdown-value {
   font-family: var(--font-display);
-  font-size: clamp(26px, 6.2vw, 34px);
+  font-size: clamp(24px, 5.8vw, 30px);
   font-weight: 700;
   color: var(--crimson);
   line-height: 1;
@@ -2115,14 +2164,15 @@ button {
 
 .countdown-label {
   font-family: var(--font-sans);
-  font-size: clamp(9.5px, 2.4vw, 11px);
+  font-size: clamp(8.5px, 2.2vw, 10px);
   text-transform: uppercase;
   letter-spacing: 0.16em;
   color: var(--ink-muted);
-  margin-top: 5px;
+  margin-top: 3px;
   font-weight: 600;
 }
 
+/* Heart Scratch Foil Overlay */
 .scratch-overlay {
   position: absolute;
   inset: 0;
@@ -2132,31 +2182,69 @@ button {
   display: block;
   touch-action: none;
   cursor: grab;
-  border-radius: 9px;
-  will-change: opacity;
+  clip-path: url(#countdownHeartClip);
+  -webkit-clip-path: url(#countdownHeartClip);
+  will-change: opacity, transform, filter;
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.6s ease;
 }
 
-.scratch-particle {
+.scratch-overlay.is-dissolving {
+  opacity: 0 !important;
+  transform: scale(1.06) !important;
+  filter: brightness(1.25) !important;
+  pointer-events: none !important;
+}
+
+/* Shimmer Particle Trail */
+.scratch-shimmer-particle {
   position: fixed;
   pointer-events: none;
-  z-index: 1000;
-  width: 5px;
-  height: 5px;
+  z-index: 1002;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  background: radial-gradient(circle, #fff7d6 0%, #dfbe76 70%, #b88628 100%);
-  box-shadow: 0 0 6px rgba(223, 190, 118, 0.8);
-  animation: goldDustFly 0.42s ease-out forwards;
+  background: #fff3c7;
+  box-shadow: 0 0 5px #dfbe76, 0 0 8px #b88628;
+  animation: shimmerTrailFly 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes goldDustFly {
+@keyframes shimmerTrailFly {
   0% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--dx, 6px), var(--dy, -10px), 0) scale(0.2);
+    transform: translate3d(var(--dx, 8px), var(--dy, -8px), 0) scale(0.2);
   }
+}
+
+/* Subtle Pointer Touch Glow */
+.scratch-touch-glow {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1001;
+  width: 42px;
+  height: 42px;
+  margin-left: -21px;
+  margin-top: -21px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 235, 175, 0.42),
+    rgba(223, 190, 118, 0.16) 45%,
+    transparent 72%
+  );
+  transform: scale(0);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+  opacity: 0;
+}
+
+.scratch-touch-glow.is-active {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .countdown-separator {
@@ -2171,17 +2259,17 @@ button {
 /* Mobile adjustments */
 @media (max-width: 480px) {
   .countdown.scratch-countdown {
-    gap: 6px;
+    gap: 4px;
   }
   
   .countdown-unit.scratch-unit {
-    min-width: 66px;
-    height: 80px;
-    border-radius: 8px;
+    width: clamp(66px, 20vw, 76px);
+    height: clamp(66px, 20vw, 76px);
   }
   
   .countdown-separator {
-    font-size: 18px;
+    font-size: 16px;
+    margin: 0 -4px;
   }
 }
 
@@ -2199,6 +2287,9 @@ button {
   .countdown-content {
     opacity: 1 !important;
     transform: none !important;
+  }
+  .countdown.scratch-countdown::after {
+    display: none !important;
   }
 }
 

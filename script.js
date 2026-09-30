@@ -454,46 +454,61 @@
       if (!units || units.length === 0) return;
 
       var isRevealed = false;
+      var isRevealingSequence = false;
       var hasReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      // Master synchronized reveal function
-      function revealAllCountdownCards() {
-        if (isRevealed) return;
-        isRevealed = true;
+      // Single shared touch glow indicator following the pointer
+      var touchGlow = document.createElement("div");
+      touchGlow.className = "scratch-touch-glow";
+      document.body.appendChild(touchGlow);
 
-        if (instruction) {
-          instruction.classList.add("is-hidden");
-        }
-
-        if (container) {
-          container.classList.add("is-revealed");
-        }
-
-        units.forEach(function (unit) {
-          unit.classList.add("is-revealed");
-          var canvas = unit.querySelector(".scratch-overlay");
-          if (canvas) {
-            canvas.style.pointerEvents = "none";
-            if (hasReducedMotion) {
-              canvas.style.display = "none";
-            } else {
-              canvas.style.transition = "opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1)";
-              canvas.style.opacity = "0";
-              setTimeout(function () {
-                if (canvas) canvas.style.display = "none";
-              }, 650);
-            }
-          }
-        });
+      function showTouchGlow(clientX, clientY) {
+        touchGlow.style.left = clientX + "px";
+        touchGlow.style.top = clientY + "px";
+        touchGlow.classList.add("is-active");
       }
 
-      // Draw royal wedding antique-gold foil coating
+      function updateTouchGlow(clientX, clientY) {
+        touchGlow.style.left = clientX + "px";
+        touchGlow.style.top = clientY + "px";
+      }
+
+      function hideTouchGlow() {
+        touchGlow.classList.remove("is-active");
+      }
+
+      // Shimmer sparkle emitter (2-4 lightweight particles per swipe)
+      function spawnShimmer(cx, cy) {
+        var count = Math.floor(Math.random() * 3) + 2;
+        var colors = ["#fff3c7", "#dfbe76", "#b88628"];
+        for (var i = 0; i < count; i++) {
+          var particle = document.createElement("span");
+          particle.className = "scratch-shimmer-particle";
+          var angle = Math.random() * Math.PI * 2;
+          var dist = 5 + Math.random() * 10;
+          var dx = Math.cos(angle) * dist;
+          var dy = Math.sin(angle) * dist - 3;
+          particle.style.setProperty("--dx", dx.toFixed(1) + "px");
+          particle.style.setProperty("--dy", dy.toFixed(1) + "px");
+          particle.style.left = (cx + (Math.random() * 10 - 5)) + "px";
+          particle.style.top = (cy + (Math.random() * 10 - 5)) + "px";
+          particle.style.background = colors[i % colors.length];
+          document.body.appendChild(particle);
+          (function (p) {
+            setTimeout(function () {
+              if (p.parentNode) p.parentNode.removeChild(p);
+            }, 420);
+          })(particle);
+        }
+      }
+
+      // Draw royal wedding antique-gold foil coating inside heart
       function drawFoilCover(canvas, unitLabel) {
         var parent = canvas.parentElement;
         if (!parent) return;
         var rect = parent.getBoundingClientRect();
-        var width = Math.round(rect.width) || 76;
-        var height = Math.round(rect.height) || 88;
+        var width = Math.round(rect.width) || 82;
+        var height = Math.round(rect.height) || 80;
         var dpr = window.devicePixelRatio || 1;
 
         canvas.width = Math.round(width * dpr);
@@ -505,6 +520,20 @@
         if (!ctx) return;
         ctx.save();
         ctx.scale(dpr, dpr);
+
+        // Define Heart Path
+        ctx.beginPath();
+        ctx.moveTo(0.50 * width, 0.90 * height);
+        ctx.bezierCurveTo(0.50 * width, 0.90 * height, 0.03 * width, 0.58 * height, 0.03 * width, 0.32 * height);
+        ctx.bezierCurveTo(0.03 * width, 0.13 * height, 0.17 * width, 0.02 * height, 0.33 * width, 0.02 * height);
+        ctx.bezierCurveTo(0.44 * width, 0.02 * height, 0.49 * width, 0.10 * height, 0.50 * width, 0.16 * height);
+        ctx.bezierCurveTo(0.51 * width, 0.10 * height, 0.56 * width, 0.02 * height, 0.67 * width, 0.02 * height);
+        ctx.bezierCurveTo(0.83 * width, 0.02 * height, 0.97 * width, 0.13 * height, 0.97 * width, 0.32 * height);
+        ctx.bezierCurveTo(0.97 * width, 0.58 * height, 0.50 * width, 0.90 * height, 0.50 * width, 0.90 * height);
+        ctx.closePath();
+
+        ctx.save();
+        ctx.clip();
 
         // A. Rich metallic gold foil background
         var grad = ctx.createLinearGradient(0, 0, width, height);
@@ -518,61 +547,104 @@
         ctx.fillRect(0, 0, width, height);
 
         // B. Subtle luxury gold speckles / fine grain
-        ctx.fillStyle = "rgba(255, 255, 255, 0.22)";
-        for (var i = 0; i < 75; i++) {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
+        for (var i = 0; i < 65; i++) {
           var gx = Math.abs(Math.sin(i * 997)) * width;
           var gy = Math.abs(Math.cos(i * 613)) * height;
           ctx.fillRect(gx, gy, 1.2, 1.2);
         }
-        ctx.fillStyle = "rgba(90, 10, 30, 0.08)";
-        for (var j = 0; j < 50; j++) {
+        ctx.fillStyle = "rgba(90, 10, 30, 0.09)";
+        for (var j = 0; j < 45; j++) {
           var bx = Math.abs(Math.cos(j * 431)) * width;
           var by = Math.abs(Math.sin(j * 853)) * height;
           ctx.fillRect(bx, by, 1, 1);
         }
 
-        // C. Elegant inner border
-        ctx.strokeStyle = "rgba(102, 2, 31, 0.24)";
-        ctx.lineWidth = 1;
-        ctx.strokeRect(3.5, 3.5, width - 7, height - 7);
+        // C. Elegant inner heart outline
+        ctx.strokeStyle = "rgba(102, 2, 31, 0.28)";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
 
-        // D. Corner star sparkles
+        // D. Top star sparkle
         ctx.font = "8px serif";
         ctx.fillStyle = "rgba(102, 2, 31, 0.45)";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("✦", 9, 10);
-        ctx.fillText("✦", width - 9, height - 10);
+        ctx.fillText("✦", width / 2, 14);
 
         // E. Foil Typography
-        ctx.font = "600 8.5px 'Montserrat', sans-serif";
-        ctx.fillStyle = "rgba(74, 1, 22, 0.65)";
-        ctx.fillText("SCRATCH", width / 2, height / 2 - 8);
+        ctx.font = "600 8px 'Montserrat', sans-serif";
+        ctx.fillStyle = "rgba(74, 1, 22, 0.70)";
+        ctx.fillText("SCRATCH", width / 2, height / 2 - 4);
 
-        ctx.font = "700 11.5px 'Cinzel', 'Playfair Display', serif";
+        ctx.font = "700 11px 'Cinzel', 'Playfair Display', serif";
         ctx.fillStyle = "#4a0116";
-        ctx.fillText((unitLabel || "").toUpperCase(), width / 2, height / 2 + 10);
+        ctx.fillText((unitLabel || "").toUpperCase(), width / 2, height / 2 + 12);
 
-        ctx.restore();
+        ctx.restore(); // restore clip
+        ctx.restore(); // restore scale
       }
 
-      // Micro gold dust sparkle emitter
-      function spawnGoldDust(cx, cy) {
-        var particle = document.createElement("span");
-        particle.className = "scratch-particle";
-        var dx = (Math.random() - 0.5) * 20;
-        var dy = (Math.random() * -14) - 4;
-        particle.style.setProperty("--dx", dx + "px");
-        particle.style.setProperty("--dy", dy + "px");
-        particle.style.left = cx + "px";
-        particle.style.top = cy + "px";
-        document.body.appendChild(particle);
+      // Master synchronized luxury wave reveal function
+      function startRevealSequence(triggerUnit) {
+        if (isRevealed || isRevealingSequence) return;
+        isRevealingSequence = true;
+        hideTouchGlow();
+
+        // 1. Soft glow pulse on active heart (0-220ms)
+        if (triggerUnit) {
+          triggerUnit.classList.add("is-activating");
+        }
+
+        // 2. Wave and foil dissolve (180ms)
         setTimeout(function () {
-          if (particle.parentNode) particle.parentNode.removeChild(particle);
-        }, 420);
+          if (instruction) {
+            instruction.classList.add("is-hidden");
+          }
+
+          if (container) {
+            container.classList.add("is-revealing");
+          }
+
+          // Staggered reveal across all 4 hearts
+          var staggerDelays = [0, 70, 140, 210];
+          units.forEach(function (unit, index) {
+            var delay = staggerDelays[index] || (index * 70);
+            setTimeout(function () {
+              unit.classList.add("is-revealed");
+              unit.classList.remove("is-activating");
+              unit.classList.remove("is-touching");
+
+              var canvas = unit.querySelector(".scratch-overlay");
+              if (canvas) {
+                canvas.classList.add("is-dissolving");
+                if (hasReducedMotion) {
+                  canvas.style.display = "none";
+                } else {
+                  // Sparkle burst around revealed heart
+                  var uRect = unit.getBoundingClientRect();
+                  spawnShimmer(uRect.left + uRect.width / 2, uRect.top + uRect.height / 2);
+                  setTimeout(function () {
+                    if (canvas) canvas.style.display = "none";
+                  }, 650);
+                }
+              }
+            }, delay);
+          });
+
+          // Conclude sequence and mark permanently revealed
+          setTimeout(function () {
+            isRevealed = true;
+            isRevealingSequence = false;
+            if (container) {
+              container.classList.add("is-revealed");
+              container.classList.remove("is-revealing");
+            }
+          }, 800);
+        }, hasReducedMotion ? 0 : 180);
       }
 
-      // Configure individual scratch tile
+      // Configure each scratch unit
       units.forEach(function (unit) {
         var canvas = unit.querySelector(".scratch-overlay");
         if (!canvas) return;
@@ -584,8 +656,7 @@
         var isScratching = false;
         var lastX = 0;
         var lastY = 0;
-        var moveCount = 0;
-        var lastCheckTime = 0;
+        var scratchDistance = 0;
 
         function getCanvasPos(e) {
           var rect = canvas.getBoundingClientRect();
@@ -599,7 +670,7 @@
           if (!ctx) return;
           var dpr = window.devicePixelRatio || 1;
           var isMobile = window.innerWidth <= 768;
-          var radius = (isMobile ? 20 : 16) * dpr;
+          var radius = (isMobile ? 24 : 20) * dpr;
 
           ctx.save();
           ctx.globalCompositeOperation = "destination-out";
@@ -613,71 +684,59 @@
           ctx.restore();
         }
 
-        function checkPercentage() {
-          if (isRevealed || !ctx) return 0;
-          try {
-            var w = canvas.width;
-            var h = canvas.height;
-            var imgData = ctx.getImageData(0, 0, w, h);
-            var pix = imgData.data;
-            var total = 0;
-            var transparent = 0;
-            // Sample every 4th pixel for performance
-            for (var i = 3; i < pix.length; i += 16) {
-              total++;
-              if (pix[i] < 128) {
-                transparent++;
-              }
-            }
-            return total > 0 ? (transparent / total) : 0;
-          } catch (err) {
-            return 0;
-          }
-        }
-
         canvas.addEventListener("pointerdown", function (e) {
-          if (isRevealed) return;
+          if (isRevealed || isRevealingSequence) return;
           isScratching = true;
+          unit.classList.add("is-touching");
           try {
             canvas.setPointerCapture(e.pointerId);
           } catch (err) {}
+
           var pos = getCanvasPos(e);
           lastX = pos.x;
           lastY = pos.y;
           eraseLine(lastX, lastY, lastX, lastY);
-          spawnGoldDust(e.clientX, e.clientY);
+          showTouchGlow(e.clientX, e.clientY);
+          spawnShimmer(e.clientX, e.clientY);
         });
 
         canvas.addEventListener("pointermove", function (e) {
-          if (!isScratching || isRevealed) return;
+          if (!isScratching || isRevealed || isRevealingSequence) return;
+          e.preventDefault();
+
           var pos = getCanvasPos(e);
+          var dx = pos.x - lastX;
+          var dy = pos.y - lastY;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+
+          scratchDistance += dist;
           eraseLine(lastX, lastY, pos.x, pos.y);
           lastX = pos.x;
           lastY = pos.y;
 
-          moveCount++;
-          if (moveCount % 3 === 0) {
-            spawnGoldDust(e.clientX, e.clientY);
+          updateTouchGlow(e.clientX, e.clientY);
+          if (dist > 5) {
+            spawnShimmer(e.clientX, e.clientY);
           }
 
-          var now = Date.now();
-          if (moveCount % 8 === 0 || (now - lastCheckTime > 90)) {
-            lastCheckTime = now;
-            if (checkPercentage() >= 0.32) {
-              revealAllCountdownCards();
-            }
+          var threshold = window.innerWidth <= 768 ? 95 : 125;
+          if (scratchDistance >= threshold) {
+            isScratching = false;
+            try {
+              canvas.releasePointerCapture(e.pointerId);
+            } catch (err) {}
+            startRevealSequence(unit);
           }
         });
 
         function endScratch(e) {
           if (!isScratching) return;
           isScratching = false;
+          unit.classList.remove("is-touching");
+          hideTouchGlow();
           try {
             canvas.releasePointerCapture(e.pointerId);
           } catch (err) {}
-          if (!isRevealed && checkPercentage() >= 0.30) {
-            revealAllCountdownCards();
-          }
         }
 
         canvas.addEventListener("pointerup", endScratch);
@@ -687,7 +746,7 @@
         unit.addEventListener("keydown", function (e) {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            revealAllCountdownCards();
+            startRevealSequence(unit);
           }
         });
       });
@@ -695,14 +754,14 @@
       // Redraw on window resize if not yet revealed
       var resizeTimeout = null;
       window.addEventListener("resize", function () {
-        if (isRevealed) return;
+        if (isRevealed || isRevealingSequence) return;
         if (resizeTimeout) clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(function () {
-          if (!isRevealed) {
+          if (!isRevealed && !isRevealingSequence) {
             units.forEach(function (unit) {
               var canvas = unit.querySelector(".scratch-overlay");
               var unitName = unit.getAttribute("data-unit") || "days";
-              if (canvas && canvas.style.display !== "none") {
+              if (canvas && canvas.style.display !== "none" && !canvas.classList.contains("is-dissolving")) {
                 drawFoilCover(canvas, unitName);
               }
             });

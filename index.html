@@ -231,6 +231,15 @@
       <h2 id="countdownTitle" class="script-heading dark">The Grand Celebration Begins In</h2>
       <p id="scratchInstruction" class="scratch-instruction">✦ Scratch to reveal the countdown ✦</p>
 
+      <!-- SVG ClipPath for Heart Shaped Countdown Cards -->
+      <svg width="0" height="0" style="position:absolute;visibility:hidden;" aria-hidden="true">
+        <defs>
+          <clipPath id="countdownHeartClip" clipPathUnits="objectBoundingBox">
+            <path d="M 0.5, 0.90 C 0.5, 0.90, 0.03, 0.58, 0.03, 0.32 C 0.03, 0.13, 0.17, 0.02, 0.33, 0.02 C 0.44, 0.02, 0.49, 0.10, 0.5, 0.16 C 0.51, 0.10, 0.56, 0.02, 0.67, 0.02 C 0.83, 0.02, 0.97, 0.13, 0.97, 0.32 C 0.97, 0.58, 0.5, 0.90, 0.5, 0.90 Z"/>
+          </clipPath>
+        </defs>
+      </svg>
+
       <div id="countdown" class="countdown scratch-countdown" role="region" aria-label="Wedding Countdown Timer">
         <div class="countdown-unit scratch-unit" data-unit="days" tabindex="0" role="button"
           aria-label="Scratch or press Enter to reveal wedding countdown">
