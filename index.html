@@ -1,140 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Isha &amp; Sagar — Wedding Invitation</title>
-  <meta name="description" content="You are cordially invited to celebrate the royal wedding of Isha &amp; Sagar.">
+  <title>Isha &amp; Sajan — Wedding Invitation</title>
+  <meta name="description" content="You are cordially invited to celebrate the royal wedding of Isha &amp; Sajan.">
   <meta name="theme-color" content="#66021f">
-  
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Beau+Rivage&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Pinyon+Script&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Beau+Rivage&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Pinyon+Script&display=swap"
+    rel="stylesheet">
+
   <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="envelope-closed-state invitation-locked">
 
   <!-- Luxury Wedding Petal Shower Layer -->
   <div id="petalShower" class="petal-shower" aria-hidden="true"></div>
 
   <!-- ========================================================
-       1. LUXURY ENVELOPE OPENING SCENE
+       1. LUXURY ENVELOPE OPENING SCENE (CANONICAL 3-CARD STACK)
        ======================================================== -->
   <section id="envelopeScene" class="envelope-scene state-closed" aria-label="Interactive Wedding Invitation Envelope">
     <div class="ambient-vignette" aria-hidden="true"></div>
     <div class="ambient-light-glow" aria-hidden="true"></div>
 
     <!-- 3D Perspective Stage -->
-    <div id="envelopeWrapper" class="envelope-wrapper" tabindex="0" role="button" aria-label="Open Isha and Sagar's wedding invitation" aria-expanded="false">
-      
-      <!-- Layer 1: Rear Envelope Body/Flap (Behind rising card) -->
-      <div class="envelope-back-layer" aria-hidden="true">
-        <img class="envelope-layer-img" src="assets/images/envelope-open-reference.png" alt="">
+    <div id="envelopeWrapper" class="envelope-wrapper" tabindex="0" role="button"
+      aria-label="Open Isha and Sajan's wedding invitation" aria-expanded="false">
+
+      <!-- Ambient Glow & Dust FX Behind/During Card Expansion -->
+      <div id="cardCenterGlow" class="card-center-glow" aria-hidden="true">
+        <img src="assets/images/08_center_glow.png" alt="" class="center-glow-img">
+      </div>
+      <div id="cardGoldDust" class="card-gold-dust" aria-hidden="true">
+        <img src="assets/images/07_floating_dust_particles.png" alt="" class="gold-dust-img">
       </div>
 
-      <!-- Layer 2: Inner Wedding Invitation Card (Rises, Transitions to Code Entry, Expands to Hero) -->
-      <div id="invitationCard" class="invitation-card" aria-label="Wedding Invitation Card">
-        
-        <!-- Gold Trim Border & Warm Glows -->
-        <div class="card-gold-border" aria-hidden="true"></div>
-        <div id="cardCenterGlow" class="card-center-glow" aria-hidden="true">
-          <img src="assets/images/08_center_glow.png" alt="" class="center-glow-img">
-        </div>
-        <div id="cardGoldDust" class="card-gold-dust" aria-hidden="true">
-          <img src="assets/images/07_floating_dust_particles.png" alt="" class="gold-dust-img">
-        </div>
-
-        <!-- 2A: Card Front Cover Artwork -->
-        <div id="cardCoverFace" class="card-cover-face">
-          <img class="card-art" src="assets/images/wedding-card.png" alt="Isha &amp; Sagar Wedding Card">
-        </div>
-
-        <!-- 2B: Card Inner Panel (Stationery for Code Entry) -->
-        <div id="cardInnerPanel" class="card-inner-panel" aria-hidden="true">
-          <img class="card-inner-bg-art" src="assets/images/invite-card-bg.png" alt="" aria-hidden="true">
-
-          <!-- Card Back to Envelope Button -->
-          <button id="cardBackBtn" class="card-back-btn" type="button" aria-label="Back to closed envelope">
-            <span class="back-arrow" aria-hidden="true">←</span> <span>Envelope</span>
-          </button>
-
-          <!-- Interactive Code Form Inside Card -->
-          <form id="cardInviteForm" class="card-invite-form" autocomplete="off">
-            <div id="cardFormContent" class="card-form-content">
-              
-              <div class="card-form-heading">
-                <span class="card-heading-flourish">❦ ✦ ❦</span>
-                <h2 class="card-form-title">A Private Celebration Awaits</h2>
-                <p class="card-form-subtitle">Please enter your invite code to continue.</p>
-              </div>
-
-              <!-- Input Pill -->
-              <div id="cardInputPillGroup" class="card-input-pill-group">
-                <img class="card-input-pill-img" src="assets/images/invite-input-pill.png" alt="" aria-hidden="true">
-                <input 
-                  type="text" 
-                  id="cardInviteCodeInput" 
-                  class="card-invite-code-input" 
-                  placeholder="Enter your invite code" 
-                  autocomplete="off" 
-                  autocorrect="off" 
-                  autocapitalize="characters" 
-                  spellcheck="false" 
-                  enterkeyhint="done"
-                  aria-label="Enter your invite code"
-                >
-              </div>
-
-              <!-- Error Validation Feedback -->
-              <div id="cardInviteErrorMsg" class="card-invite-error-msg" hidden role="alert"></div>
-
-              <!-- Submit CTA Button Pill -->
-              <button 
-                type="submit" 
-                id="cardInviteSubmitBtn" 
-                class="card-invite-submit-btn" 
-                aria-label="Enter the Celebration"
-              >
-                <img class="card-btn-pill-img" src="assets/images/invite-btn-pill.png" alt="Enter the Celebration">
-              </button>
-
-            </div>
-          </form>
-        </div>
-
+      <!-- 1. CANONICAL CLOSED STATE (Closed invitation artwork) -->
+      <div id="closedCard" class="card-canonical closed-card-layer" aria-hidden="false">
+        <img class="card-img" src="assets/images/ChatGPT Image Sep 26, 2026, 01_25_51 PM-1.png" alt="Closed Wedding Invitation">
       </div>
 
-      <!-- Layer 3: Envelope Pocket/Bottom (In front of lower part of card) -->
-      <div id="envelopePocket" class="envelope-pocket-layer" aria-hidden="true">
-        <img class="envelope-layer-img" src="assets/images/envelope-pocket.png" alt="">
-      </div>
-
-      <!-- Layer 4: Left Flap (3D Hinge Left) -->
-      <div id="envelopeFlapLeft" class="envelope-flap-left" aria-hidden="true">
-        <img class="envelope-layer-img" src="assets/images/envelope-left.webp" alt="">
-      </div>
-
-      <!-- Layer 5: Right Flap (3D Hinge Right) -->
-      <div id="envelopeFlapRight" class="envelope-flap-right" aria-hidden="true">
-        <img class="envelope-layer-img" src="assets/images/envelope-right.webp" alt="">
-      </div>
-
-      <!-- Layer 6: Top Flap (3D Hinge Top) -->
-      <div id="envelopeFlapTop" class="envelope-flap-top" aria-hidden="true">
-        <img class="envelope-layer-img" src="assets/images/envelope-flap.png" alt="">
-      </div>
-
-      <!-- Layer 7: Wax Seal & Sparkle/Glow FX -->
+      <!-- 2. WAX SEAL & PULSE GLOW -->
       <div id="waxSealWrapper" class="wax-seal-wrapper" aria-hidden="true">
         <div class="seal-glow-layer">
           <img src="assets/images/08_center_glow.png" alt="" class="seal-glow-img">
         </div>
-        <div class="seal-flare-layer">
-          <img src="assets/images/09_lens_flare.png" alt="" class="seal-flare-img">
-        </div>
         <img id="waxSealImg" class="wax-seal-img" src="assets/images/envelope-seal.png" alt="I&amp;S Royal Wax Seal">
+      </div>
+
+      <!-- 3. CANONICAL OPEN / REVEALED CARD (Artwork with Isha & Sajan) -->
+      <div id="openCard" class="card-canonical open-card-layer" aria-hidden="true">
+        <img class="card-img" src="assets/images/wedding-card.png" alt="Isha &amp; Sajan Wedding Invitation Artwork">
+      </div>
+
+      <!-- 4. CANONICAL CODE ENTRY CARD (Stationery with code form) -->
+      <div id="codeCard" class="card-canonical code-card-layer" aria-hidden="true">
+        <img class="card-bg-img" src="assets/images/invite-card-bg.png" alt="" aria-hidden="true">
+
+        <!-- Interactive Code Form Inside Card -->
+        <form id="cardInviteForm" class="card-invite-form" autocomplete="off">
+          <div id="cardFormContent" class="card-form-content">
+
+            <div class="card-form-heading">
+              <span class="card-heading-flourish">❦ ✦ ❦</span>
+              <h2 class="card-form-title">A Private Celebration Awaits</h2>
+              <p class="card-form-subtitle">Please enter your invite code to continue.</p>
+            </div>
+
+            <!-- Input Pill -->
+            <div id="cardInputPillGroup" class="card-input-pill-group">
+              <img class="card-input-pill-img" src="assets/images/invite-input-pill.png" alt="" aria-hidden="true">
+              <input type="text" id="cardInviteCodeInput" class="card-invite-code-input"
+                placeholder="Enter your invite code" autocomplete="off" autocorrect="off" autocapitalize="characters"
+                spellcheck="false" enterkeyhint="done" aria-label="Enter your invite code">
+            </div>
+
+            <!-- Error Validation Feedback -->
+            <div id="cardInviteErrorMsg" class="card-invite-error-msg" hidden role="alert"></div>
+
+            <!-- Submit CTA Button Pill -->
+            <button type="submit" id="cardInviteSubmitBtn" class="card-invite-submit-btn"
+              aria-label="Enter the Celebration">
+              <img class="card-btn-pill-img" src="assets/images/invite-btn-pill.png" alt="Enter the Celebration">
+            </button>
+
+          </div>
+        </form>
       </div>
 
       <!-- Subtle "Tap to open" prompt -->
@@ -144,7 +102,7 @@
         <span class="tap-gem">✦</span>
       </div>
 
-      <!-- Hit button for initial click -->
+      <!-- Hit button for initial click/tap -->
       <button id="unsealHitBtn" class="unseal-hit-btn" type="button" aria-label="Open wedding invitation"></button>
 
     </div>
@@ -154,7 +112,7 @@
        2. MAIN WEDDING CELEBRATION WEBSITE
        ======================================================== -->
   <main id="mainSite" class="site-shell" hidden inert aria-hidden="true">
-    
+
     <!-- HERO SECTION -->
     <section id="celebrationHero" class="hero section-burgundy" aria-labelledby="coupleNames">
       <!-- Background Canvas / Artwork Layer -->
@@ -164,61 +122,75 @@
         <div class="hero-bg-vignette"></div>
       </div>
 
+      <!-- Sacred Ganesh Ji Watermark Layer -->
+      <div id="heroGaneshLayer" class="hero-ganesh-layer" aria-hidden="true">
+        <img
+          src="assets/images/ganesh-hero.png"
+          class="hero-ganesh-img"
+          alt=""
+        >
+      </div>
+
       <!-- Floral Arrangement Stage (Layered independent animated flowers) -->
       <div id="heroFloralStage" class="hero-floral-stage" aria-hidden="true">
-        <!-- Rear Botanical Branches -->
-        <div class="floral-item floral-branch-gold layer-rear-branch" id="flowerGoldBranch">
+        <!-- PAIR 1: Upper Branches -->
+        <div class="floral-item floral-branch-gold" id="flowerGoldBranch">
           <img class="flower-asset flower-branch-gold-img" src="assets/images/branch-gold.png" alt="" data-type="white">
         </div>
-        <div class="floral-item floral-branch-ivory layer-rear-branch" id="flowerIvoryBranch">
-          <img class="flower-asset flower-branch-ivory-img" src="assets/images/branch-ivory.png" alt="" data-type="white">
+        <div class="floral-item floral-branch-ivory" id="flowerIvoryBranch">
+          <img class="flower-asset flower-branch-ivory-img" src="assets/images/branch-gold.png" alt="" data-type="white">
         </div>
 
-        <!-- Rear Flowers (Ivory & Red mid-layer) -->
-        <div class="floral-item floral-rose-rear-left layer-rear-flower" id="flowerRoseRearLeft">
+        <!-- PAIR 5: Rear Ivory Flowers (Behind mid/fg layers) -->
+        <div class="floral-item floral-rose-rear-left" id="flowerRoseRearLeft">
           <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
         </div>
-        <div class="floral-item floral-rose-rear-right layer-rear-flower" id="flowerRoseRearRight">
+        <div class="floral-item floral-rose-rear-right" id="flowerRoseRearRight">
           <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
         </div>
 
-        <!-- Foreground Blooming Red Peonies & Ivory Roses -->
-        <div class="floral-item floral-peony-bottom-left layer-fg-flower" id="flowerPeonyBottomLeft">
+        <!-- PAIR 4: Side Peonies -->
+        <div class="floral-item floral-peony-side-left" id="flowerPeonySideLeft">
           <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
         </div>
-        <div class="floral-item floral-peony-bottom-right layer-fg-flower" id="flowerPeonyBottomRight">
+        <div class="floral-item floral-peony-side-right" id="flowerPeonySideRight">
           <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
         </div>
-        <div class="floral-item floral-rose-bottom-center-left layer-fg-flower" id="flowerRoseBottomLeft">
+
+        <!-- PAIR 3: Bottom Ivory Roses -->
+        <div class="floral-item floral-rose-bottom-left" id="flowerRoseBottomLeft">
           <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
         </div>
-        <div class="floral-item floral-rose-bottom-center-right layer-fg-flower" id="flowerRoseBottomRight">
+        <div class="floral-item floral-rose-bottom-right" id="flowerRoseBottomRight">
           <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
         </div>
-        <div class="floral-item floral-peony-side-left layer-fg-flower" id="flowerPeonySideLeft">
+
+        <!-- PAIR 2: Bottom Red Peonies -->
+        <div class="floral-item floral-peony-bottom-left" id="flowerPeonyBottomLeft">
           <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
         </div>
-        <div class="floral-item floral-peony-side-right layer-fg-flower" id="flowerPeonySideRight">
+        <div class="floral-item floral-peony-bottom-right" id="flowerPeonyBottomRight">
           <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
         </div>
       </div>
-      
+
       <!-- Warm Champagne Ambient Glow -->
       <div class="hero-ambient-glow" aria-hidden="true"></div>
-      
+
       <!-- Hero Typography & Celebration Content -->
       <div class="hero-content">
-        <img src="assets/images/flower.svg" class="hero-ornament-top hero-stagger-item hero-ornament" alt="" aria-hidden="true">
+        <img src="assets/images/flower.svg" class="hero-ornament-top hero-stagger-item hero-ornament" alt=""
+          aria-hidden="true">
         <p id="subGreeting" class="sub-greeting hero-stagger-item hero-subgreeting">Together with their families</p>
-        
+
         <h1 id="coupleNames" class="couple-names">
           <span id="partnerOne" class="hero-stagger-item hero-name hero-name-isha">Isha</span>
           <span id="connector" class="hero-stagger-item hero-amp">&amp;</span>
-          <span id="partnerTwo" class="hero-stagger-item hero-name hero-name-sagar">Sagar</span>
+          <span id="partnerTwo" class="hero-stagger-item hero-name hero-name-sajan">Sajan</span>
         </h1>
-        
+
         <p id="weddingDay" class="script-line hero-stagger-item hero-wedding-day">The Wedding Celebration</p>
-        
+
         <div class="hero-date-wrap hero-stagger-item hero-date-wrapper">
           <span class="hero-date-line left" aria-hidden="true"></span>
           <p id="heroDate" class="hero-date">NOVEMBER 2026</p>
@@ -230,7 +202,7 @@
           <span class="flourish-icon">✦</span>
           <span class="flourish-bar right"></span>
         </div>
-        
+
         <p id="heroVenueTag" class="hero-venue-tag hero-stagger-item hero-venue-tag">South Florida, Florida</p>
       </div>
 
@@ -247,21 +219,82 @@
     <!-- WELCOME LETTER -->
     <section class="letter section-burgundy motion-reveal" aria-labelledby="letterTitle">
       <h2 id="letterTitle" class="script-heading">Dear Family &amp; Friends,</h2>
-      <p id="letterOne">Two souls, one heart, and a lifetime of love to share. As our beloved sister Isha begins her magical journey with Sagar, we feel immensely blessed and grateful.</p>
-      <p id="letterTwo">Your presence, warm blessings, and loving wishes mean the world to us as we come together to celebrate this unforgettable milestone of our family.</p>
+      <p id="letterOne">Two souls, one heart, and a lifetime of love to share. As our beloved sister Isha begins her
+        magical journey with Sajan, we feel immensely blessed and grateful.</p>
+      <p id="letterTwo">Your presence, warm blessings, and loving wishes mean the world to us as we come together to
+        celebrate this unforgettable milestone of our family.</p>
     </section>
 
     <!-- COUNTDOWN TIMER SECTION -->
     <section class="paper-section countdown-section motion-reveal" aria-labelledby="countdownTitle">
       <img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
       <h2 id="countdownTitle" class="script-heading dark">The Grand Celebration Begins In</h2>
-      <div id="countdown" class="countdown" role="timer"></div>
+      <p id="scratchInstruction" class="scratch-instruction">✦ Scratch to reveal the countdown ✦</p>
+
+      <div id="countdown" class="countdown scratch-countdown" role="region" aria-label="Wedding Countdown Timer">
+        <div class="countdown-unit scratch-unit" data-unit="days" tabindex="0" role="button"
+          aria-label="Scratch or press Enter to reveal wedding countdown">
+          <div class="countdown-content">
+            <span id="countdownDaysValue" class="countdown-value">00</span>
+            <span class="countdown-label">Days</span>
+          </div>
+          <canvas class="scratch-overlay" aria-hidden="true"></canvas>
+        </div>
+
+        <span class="countdown-separator" aria-hidden="true">:</span>
+
+        <div class="countdown-unit scratch-unit" data-unit="hours" tabindex="0" role="button"
+          aria-label="Scratch or press Enter to reveal wedding countdown">
+          <div class="countdown-content">
+            <span id="countdownHoursValue" class="countdown-value">00</span>
+            <span class="countdown-label">Hours</span>
+          </div>
+          <canvas class="scratch-overlay" aria-hidden="true"></canvas>
+        </div>
+
+        <span class="countdown-separator" aria-hidden="true">:</span>
+
+        <div class="countdown-unit scratch-unit" data-unit="minutes" tabindex="0" role="button"
+          aria-label="Scratch or press Enter to reveal wedding countdown">
+          <div class="countdown-content">
+            <span id="countdownMinutesValue" class="countdown-value">00</span>
+            <span class="countdown-label">Mins</span>
+          </div>
+          <canvas class="scratch-overlay" aria-hidden="true"></canvas>
+        </div>
+
+        <span class="countdown-separator" aria-hidden="true">:</span>
+
+        <div class="countdown-unit scratch-unit" data-unit="seconds" tabindex="0" role="button"
+          aria-label="Scratch or press Enter to reveal wedding countdown">
+          <div class="countdown-content">
+            <span id="countdownSecondsValue" class="countdown-value">00</span>
+            <span class="countdown-label">Secs</span>
+          </div>
+          <canvas class="scratch-overlay" aria-hidden="true"></canvas>
+        </div>
+      </div>
+
       <img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
     </section>
 
     <!-- SCHEDULE OF EVENTS / TIMELINE -->
     <section class="schedule section-burgundy motion-reveal" aria-labelledby="scheduleTitle">
-      <h2 id="scheduleTitle" class="script-heading">Schedule of Events</h2>
+      <div class="schedule-decor schedule-decor-left" aria-hidden="true">
+        <img src="assets/images/branch-gold.png" class="schedule-branch-img" alt="">
+      </div>
+      <div class="schedule-decor schedule-decor-right" aria-hidden="true">
+        <img src="assets/images/branch-gold.png" class="schedule-branch-img mirror" alt="">
+      </div>
+
+      <div class="schedule-header">
+        <h2 id="scheduleTitle" class="script-heading">Schedule of Events</h2>
+        <div class="schedule-flourish" aria-hidden="true">
+          <span class="schedule-flourish-line left"></span>
+          <span class="schedule-flourish-motif">❦ &nbsp;✦ &nbsp;❦</span>
+          <span class="schedule-flourish-line right"></span>
+        </div>
+      </div>
       <div id="eventTimeline" class="timeline"></div>
     </section>
 
@@ -271,8 +304,9 @@
     <!-- DRESS CODE & ATTIRE INSPIRATION -->
     <section class="dress-code section-burgundy motion-reveal" aria-labelledby="dressTitle">
       <h2 id="dressTitle" class="script-heading">Dress Code &amp; Attire</h2>
-      <p id="dressIntro" class="dress-intro">We kindly invite you to grace this auspicious celebration in royal, vibrant &amp; elegant attire.</p>
-      
+      <p id="dressIntro" class="dress-intro">We kindly invite you to grace this auspicious celebration in royal, vibrant
+        &amp; elegant attire.</p>
+
       <div class="frames" aria-hidden="true">
         <img id="dressPhotoOne" class="frame frame-one" src="assets/images/dress-photo-one.svg" alt="Gentlemen Attire">
         <img id="dressPhotoTwo" class="frame frame-two" src="assets/images/dress-photo-two.svg" alt="Ladies Attire">
@@ -281,7 +315,8 @@
       <div class="dress-grid">
         <div class="dress-copy">
           <strong id="gentlemenLabel">Gentlemen:</strong>
-          <span id="gentlemenText">Royal Sherwanis, Bandhgalas, Kurta Pajama with Nehru Jackets, or Classic Tuxedos.</span>
+          <span id="gentlemenText">Royal Sherwanis, Bandhgalas, Kurta Pajama with Nehru Jackets, or Classic
+            Tuxedos.</span>
         </div>
         <div class="dress-copy">
           <strong id="ladiesLabel">Ladies:</strong>
@@ -295,40 +330,45 @@
       <img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
       <div class="details-content">
         <h2 id="detailsTitle" class="script-heading dark">Important Details</h2>
-        <p id="contactCopy">For any assistance regarding travel, accommodation, or queries, please feel free to reach out to the wedding coordinators.</p>
-        
+        <p id="contactCopy">For any assistance regarding travel, accommodation, or queries, please feel free to reach
+          out to the wedding coordinators.</p>
+
         <div class="organizer-card">
           <div class="organizer-label">Coordinator &amp; RSVP</div>
           <div id="organizerName" class="organizer-name">Goyal &amp; Gupta Family</div>
           <a id="organizerPhone" class="organizer-phone" href="tel:+919876543210">📞 +91 98765 43210</a>
         </div>
 
-        <p id="giftCopy" class="gift-note">No boxed gifts please. Your warm presence, smiles, and heartfelt blessings are the greatest gifts to Isha &amp; Sagar.</p>
+        <p id="giftCopy" class="gift-note">No boxed gifts please. Your warm presence, smiles, and heartfelt blessings
+          are the greatest gifts to Isha &amp; Sajan.</p>
       </div>
       <img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
     </section>
 
     <!-- RSVP & CELEBRATION SIGNOFF -->
     <section class="rsvp-section section-burgundy motion-reveal" aria-labelledby="rsvpTitle">
-      <p id="rsvpIntro">Kindly confirm your presence by submitting the RSVP below or directly on WhatsApp to help us welcome you with warmth.</p>
+      <p id="rsvpIntro">Kindly confirm your presence by submitting the RSVP below or directly on WhatsApp to help us
+        welcome you with warmth.</p>
       <h2 id="rsvpTitle" class="script-heading">Confirm Your Attendance</h2>
-      
+
       <div class="rsvp-button-group">
         <button id="rsvpButton" class="rsvp-button" type="button">RSVP Now</button>
-        <a class="rsvp-whatsapp-direct" href="https://wa.me/919876543210?text=Hi%2C+I+would+like+to+confirm+my+RSVP+for+Isha+%26+Sagar%27s+wedding%21" target="_blank" rel="noopener noreferrer">
+        <a class="rsvp-whatsapp-direct"
+          href="https://wa.me/919876543210?text=Hi%2C+I+would+like+to+confirm+my+RSVP+for+Isha+%26+Sajan%27s+wedding%21"
+          target="_blank" rel="noopener noreferrer">
           📲 Quick RSVP via WhatsApp
         </a>
       </div>
 
       <p id="signoff" class="script-heading signoff">Looking forward to celebrating with you!</p>
       <p id="closingNames" class="closing-names">With Best Compliments from Family</p>
-      
+
       <img id="footerPhoto" class="footer-photo" src="assets/images/footer-photo.svg" alt="Together Forever">
     </section>
 
     <!-- FOOTER -->
     <footer class="site-footer">
-      <span>Crafted with Love for Isha &amp; Sagar's Special Day ✨</span>
+      <span>Crafted with Love for Isha &amp; Sajan's Special Day ✨</span>
     </footer>
   </main>
 
@@ -336,12 +376,12 @@
   <div id="rsvpModal" class="modal" hidden inert aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <button id="modalClose" class="modal-close" type="button" aria-label="Close RSVP form">✕</button>
-      
+
       <div id="formView">
         <h2 id="modalTitle">Confirm Your Attendance</h2>
         <div id="rsvpInvitationBadge" class="modal-invitation-badge" hidden></div>
         <p class="modal-subtitle">We can't wait to celebrate together! Please let us know if you'll be joining us.</p>
-        
+
         <form id="rsvpForm">
           <label class="field">
             <span>Your Full Name *</span>
@@ -372,18 +412,20 @@
           </div>
 
           <label class="field">
-            <span>Wishes / Special Note for Isha &amp; Sagar</span>
+            <span>Wishes / Special Note for Isha &amp; Sajan</span>
             <textarea name="message" placeholder="Share your heartfelt blessings or notes..."></textarea>
           </label>
 
           <button type="submit" class="submit-button">Submit RSVP</button>
-          <button type="button" id="rsvpWhatsappBtn" class="submit-button whatsapp-submit-btn">Send RSVP via WhatsApp 📲</button>
+          <button type="button" id="rsvpWhatsappBtn" class="submit-button whatsapp-submit-btn">Send RSVP via WhatsApp
+            📲</button>
         </form>
       </div>
 
       <div id="successView" class="success-view" hidden>
         <h2>Thank You!</h2>
-        <p>Your RSVP response for Isha &amp; Sagar's wedding has been recorded with love. We cannot wait to celebrate this auspicious occasion with you!</p>
+        <p>Your RSVP response for Isha &amp; Sajan's wedding has been recorded with love. We cannot wait to celebrate
+          this auspicious occasion with you!</p>
         <button id="successDone" class="submit-button" type="button">Close</button>
       </div>
     </div>
@@ -392,4 +434,5 @@
   <script src="wedding-data.js"></script>
   <script src="script.js"></script>
 </body>
+
 </html>
