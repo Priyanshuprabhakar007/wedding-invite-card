@@ -1,5 +1,5 @@
 /**
- * Isha & Sagar Luxury Wedding Invitation Engine
+ * Isha & Sajan Luxury Wedding Invitation Engine
  * Layered Envelope Unsealing & Full Celebration Experience
  */
 (function () {
@@ -227,7 +227,7 @@
     // Couple & Date
     if (byId("partnerOne")) byId("partnerOne").textContent = cfg.couple.partnerOne || "Isha";
     if (byId("connector")) byId("connector").textContent = cfg.couple.connector || "&";
-    if (byId("partnerTwo")) byId("partnerTwo").textContent = cfg.couple.partnerTwo || "Sagar";
+    if (byId("partnerTwo")) byId("partnerTwo").textContent = cfg.couple.partnerTwo || "Sajan";
     if (byId("heroDate")) byId("heroDate").textContent = cfg.event.dateDisplay || "NOVEMBER 2026";
     if (byId("weddingDay")) byId("weddingDay").textContent = cfg.copy.weddingDay || "The Wedding Celebration";
     if (byId("subGreeting")) byId("subGreeting").textContent = cfg.couple.subGreeting || "Together with their families";
@@ -312,14 +312,20 @@
 
       item.innerHTML =
         '<div class="timeline-time-col">' +
-          '<div class="timeline-time">' + (ev.time || "") + '</div>' +
-          (ev.date ? '<div class="timeline-date-small">' + ev.date + '</div>' : '') +
+          '<div class="timeline-time-box">' +
+            '<div class="timeline-time">' + (ev.time || "") + '</div>' +
+            (ev.date ? '<div class="timeline-date-small">' + ev.date + '</div>' : '') +
+          '</div>' +
         '</div>' +
-        '<div class="timeline-dot-col"><div class="timeline-dot"></div></div>' +
+        '<div class="timeline-flower-col" aria-hidden="true">' +
+          '<img src="assets/images/flower.svg" class="timeline-flower-marker" alt="" aria-hidden="true">' +
+        '</div>' +
         '<div class="timeline-content">' +
-          '<div class="timeline-name">' + (ev.name || "") + '</div>' +
-          (ev.venue ? '<div class="timeline-venue">📍 ' + ev.venue + '</div>' : '') +
-          (ev.attire ? '<div class="timeline-attire">👗 ' + ev.attire + '</div>' : '') +
+          '<div class="timeline-card">' +
+            '<div class="timeline-name">' + (ev.name || "") + '</div>' +
+            (ev.venue ? '<div class="timeline-venue"><span class="venue-mark">✦</span><span>' + ev.venue + '</span></div>' : '') +
+            (ev.attire ? '<div class="timeline-attire"><span class="attire-mark">✦</span><span>' + ev.attire + '</span></div>' : '') +
+          '</div>' +
         '</div>';
 
       host.appendChild(item);
@@ -355,7 +361,7 @@
 
       var section = document.createElement("section");
       section.id = "ceremony-" + ev.id;
-      section.className = "ceremony-detail-section ceremony-" + ev.id + " paper-section motion-reveal";
+      section.className = "ceremony-detail-section ceremony-" + ev.id + " motion-reveal";
       section.setAttribute("data-event-id", ev.id);
       section.setAttribute("aria-labelledby", "heading-" + ev.id);
 
@@ -379,69 +385,18 @@
           '</div>';
       }
 
-      var artworkHtml = "";
-      if (ev.image) {
-        artworkHtml =
-          '<div class="ceremony-artwork-wrap">' +
-            '<img class="ceremony-artwork" src="' + ev.image + '" alt="' + ev.name + '">' +
-          '</div>';
-      }
-
-      // Ceremony-specific decorative accents
-      var ceremonyDecorHtml = "";
-      var dividerHtml = "";
-
-      if (ev.id === "mehendi") {
-        ceremonyDecorHtml =
-          '<div class="mehendi-botanical-accents" aria-hidden="true">' +
-            '<svg class="mehendi-vine mehendi-vine-left" viewBox="0 0 100 100" fill="none">' +
-              '<path d="M10,90 Q30,60 50,50 Q70,40 90,10" stroke="rgba(184, 134, 40, 0.45)" stroke-width="1.5" stroke-linecap="round"/>' +
-              '<circle cx="35" cy="58" r="3" fill="rgba(92, 128, 70, 0.6)"/>' +
-              '<circle cx="65" cy="42" r="3" fill="rgba(92, 128, 70, 0.6)"/>' +
-              '<circle cx="85" cy="18" r="2.5" fill="rgba(184, 134, 40, 0.7)"/>' +
-            '</svg>' +
-            '<svg class="mehendi-vine mehendi-vine-right" viewBox="0 0 100 100" fill="none">' +
-              '<path d="M10,90 Q30,60 50,50 Q70,40 90,10" stroke="rgba(184, 134, 40, 0.45)" stroke-width="1.5" stroke-linecap="round"/>' +
-              '<circle cx="35" cy="58" r="3" fill="rgba(92, 128, 70, 0.6)"/>' +
-              '<circle cx="65" cy="42" r="3" fill="rgba(92, 128, 70, 0.6)"/>' +
-              '<circle cx="85" cy="18" r="2.5" fill="rgba(184, 134, 40, 0.7)"/>' +
-            '</svg>' +
-          '</div>';
-        dividerHtml = '<div class="floral-divider" aria-hidden="true"></div>';
-      } else if (ev.id === "wedding") {
-        ceremonyDecorHtml =
-          '<div class="wedding-glow-layer" aria-hidden="true"></div>' +
-          '<div class="mandap-arch-frame" aria-hidden="true">' +
-            '<div class="mandap-arch-curve"></div>' +
-          '</div>';
-        dividerHtml = '<div class="wedding-ceremony-line" aria-hidden="true"></div>';
-      } else if (ev.id === "reception") {
-        ceremonyDecorHtml =
-          '<div class="reception-light-canopy" aria-hidden="true">' +
-            '<span class="light-dot d1">✦</span>' +
-            '<span class="light-dot d2">✦</span>' +
-            '<span class="light-dot d3">✦</span>' +
-            '<span class="light-dot d4">✦</span>' +
-            '<span class="light-dot d5">✦</span>' +
-          '</div>';
-        dividerHtml = '<div class="wedding-ceremony-line" aria-hidden="true"></div>';
-      }
-
       section.innerHTML =
-        '<img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="" aria-hidden="true">' +
-        ceremonyDecorHtml +
+        '<div class="ceremony-bg-layer" aria-hidden="true"></div>' +
         '<div class="ceremony-card">' +
           '<div class="ceremony-card-ornament">' +
             '<img src="assets/images/flower.svg" alt="" class="ceremony-flower-icon" aria-hidden="true">' +
           '</div>' +
           '<h2 id="heading-' + ev.id + '" class="script-heading dark ceremony-title">' + (ev.name || "") + '</h2>' +
-          dividerHtml +
           '<div class="ceremony-meta-badge">' +
             '<span class="ceremony-date-long">' + (ev.dateLong || ev.date || "") + '</span>' +
             '<span class="ceremony-divider">•</span>' +
             '<span class="ceremony-time-range">' + (ev.time || "") + '</span>' +
           '</div>' +
-          artworkHtml +
           '<div class="ceremony-venue-box">' +
             '<div class="ceremony-venue-label">Venue &amp; Location</div>' +
             '<h3 class="ceremony-venue-name">' + (ev.venue || "") + '</h3>' +
@@ -452,8 +407,7 @@
               '</a>' : '') +
           '</div>' +
           ritualsHtml +
-        '</div>' +
-        '<img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="" aria-hidden="true">';
+        '</div>';
 
       container.appendChild(section);
     });
@@ -462,13 +416,18 @@
   }
 
   // -------------------------------------------------------------
-  // 3. COUNTDOWN TIMER
+  // 3. INTERACTIVE WEDDING SCRATCH-CARD COUNTDOWN
   // -------------------------------------------------------------
   function startCountdown(targetDateStr) {
     var target = new Date(targetDateStr).getTime();
-    var host = byId("countdown");
-    if (!host) return;
+    var daysVal = byId("countdownDaysValue");
+    var hoursVal = byId("countdownHoursValue");
+    var minsVal = byId("countdownMinutesValue");
+    var secsVal = byId("countdownSecondsValue");
+    var container = byId("countdown");
+    var instruction = byId("scratchInstruction");
 
+    // 1. Continuous Live Timer (Updates values without destroying DOM)
     function tick() {
       var now = Date.now();
       var distance = Math.max(0, target - now);
@@ -478,18 +437,279 @@
       var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      host.innerHTML =
-        '<div class="countdown-unit"><span class="countdown-value">' + String(days).padStart(2, "0") + '</span><span class="countdown-label">Days</span></div>' +
-        '<span class="countdown-separator">:</span>' +
-        '<div class="countdown-unit"><span class="countdown-value">' + String(hours).padStart(2, "0") + '</span><span class="countdown-label">Hours</span></div>' +
-        '<span class="countdown-separator">:</span>' +
-        '<div class="countdown-unit"><span class="countdown-value">' + String(minutes).padStart(2, "0") + '</span><span class="countdown-label">Mins</span></div>' +
-        '<span class="countdown-separator">:</span>' +
-        '<div class="countdown-unit"><span class="countdown-value">' + String(seconds).padStart(2, "0") + '</span><span class="countdown-label">Secs</span></div>';
+      if (daysVal) daysVal.textContent = String(days).padStart(2, "0");
+      if (hoursVal) hoursVal.textContent = String(hours).padStart(2, "0");
+      if (minsVal) minsVal.textContent = String(minutes).padStart(2, "0");
+      if (secsVal) secsVal.textContent = String(seconds).padStart(2, "0");
     }
 
     tick();
     setInterval(tick, 1000);
+
+    // 2. Interactive Scratch Cards Logic
+    initScratchCards();
+
+    function initScratchCards() {
+      var units = document.querySelectorAll(".scratch-unit");
+      if (!units || units.length === 0) return;
+
+      var isRevealed = false;
+      var hasReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Master synchronized reveal function
+      function revealAllCountdownCards() {
+        if (isRevealed) return;
+        isRevealed = true;
+
+        if (instruction) {
+          instruction.classList.add("is-hidden");
+        }
+
+        if (container) {
+          container.classList.add("is-revealed");
+        }
+
+        units.forEach(function (unit) {
+          unit.classList.add("is-revealed");
+          var canvas = unit.querySelector(".scratch-overlay");
+          if (canvas) {
+            canvas.style.pointerEvents = "none";
+            if (hasReducedMotion) {
+              canvas.style.display = "none";
+            } else {
+              canvas.style.transition = "opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1)";
+              canvas.style.opacity = "0";
+              setTimeout(function () {
+                if (canvas) canvas.style.display = "none";
+              }, 650);
+            }
+          }
+        });
+      }
+
+      // Draw royal wedding antique-gold foil coating
+      function drawFoilCover(canvas, unitLabel) {
+        var parent = canvas.parentElement;
+        if (!parent) return;
+        var rect = parent.getBoundingClientRect();
+        var width = Math.round(rect.width) || 76;
+        var height = Math.round(rect.height) || 88;
+        var dpr = window.devicePixelRatio || 1;
+
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+
+        var ctx = canvas.getContext("2d", { willReadFrequently: true });
+        if (!ctx) return;
+        ctx.save();
+        ctx.scale(dpr, dpr);
+
+        // A. Rich metallic gold foil background
+        var grad = ctx.createLinearGradient(0, 0, width, height);
+        grad.addColorStop(0, "#d6b56d");
+        grad.addColorStop(0.25, "#f5e6c4");
+        grad.addColorStop(0.50, "#cf9f46");
+        grad.addColorStop(0.75, "#f4e4be");
+        grad.addColorStop(1, "#b88a32");
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, width, height);
+
+        // B. Subtle luxury gold speckles / fine grain
+        ctx.fillStyle = "rgba(255, 255, 255, 0.22)";
+        for (var i = 0; i < 75; i++) {
+          var gx = Math.abs(Math.sin(i * 997)) * width;
+          var gy = Math.abs(Math.cos(i * 613)) * height;
+          ctx.fillRect(gx, gy, 1.2, 1.2);
+        }
+        ctx.fillStyle = "rgba(90, 10, 30, 0.08)";
+        for (var j = 0; j < 50; j++) {
+          var bx = Math.abs(Math.cos(j * 431)) * width;
+          var by = Math.abs(Math.sin(j * 853)) * height;
+          ctx.fillRect(bx, by, 1, 1);
+        }
+
+        // C. Elegant inner border
+        ctx.strokeStyle = "rgba(102, 2, 31, 0.24)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(3.5, 3.5, width - 7, height - 7);
+
+        // D. Corner star sparkles
+        ctx.font = "8px serif";
+        ctx.fillStyle = "rgba(102, 2, 31, 0.45)";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("✦", 9, 10);
+        ctx.fillText("✦", width - 9, height - 10);
+
+        // E. Foil Typography
+        ctx.font = "600 8.5px 'Montserrat', sans-serif";
+        ctx.fillStyle = "rgba(74, 1, 22, 0.65)";
+        ctx.fillText("SCRATCH", width / 2, height / 2 - 8);
+
+        ctx.font = "700 11.5px 'Cinzel', 'Playfair Display', serif";
+        ctx.fillStyle = "#4a0116";
+        ctx.fillText((unitLabel || "").toUpperCase(), width / 2, height / 2 + 10);
+
+        ctx.restore();
+      }
+
+      // Micro gold dust sparkle emitter
+      function spawnGoldDust(cx, cy) {
+        var particle = document.createElement("span");
+        particle.className = "scratch-particle";
+        var dx = (Math.random() - 0.5) * 20;
+        var dy = (Math.random() * -14) - 4;
+        particle.style.setProperty("--dx", dx + "px");
+        particle.style.setProperty("--dy", dy + "px");
+        particle.style.left = cx + "px";
+        particle.style.top = cy + "px";
+        document.body.appendChild(particle);
+        setTimeout(function () {
+          if (particle.parentNode) particle.parentNode.removeChild(particle);
+        }, 420);
+      }
+
+      // Configure individual scratch tile
+      units.forEach(function (unit) {
+        var canvas = unit.querySelector(".scratch-overlay");
+        if (!canvas) return;
+        var unitName = unit.getAttribute("data-unit") || "days";
+
+        drawFoilCover(canvas, unitName);
+
+        var ctx = canvas.getContext("2d", { willReadFrequently: true });
+        var isScratching = false;
+        var lastX = 0;
+        var lastY = 0;
+        var moveCount = 0;
+        var lastCheckTime = 0;
+
+        function getCanvasPos(e) {
+          var rect = canvas.getBoundingClientRect();
+          return {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+          };
+        }
+
+        function eraseLine(x0, y0, x1, y1) {
+          if (!ctx) return;
+          var dpr = window.devicePixelRatio || 1;
+          var isMobile = window.innerWidth <= 768;
+          var radius = (isMobile ? 20 : 16) * dpr;
+
+          ctx.save();
+          ctx.globalCompositeOperation = "destination-out";
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          ctx.lineWidth = radius * 2;
+          ctx.beginPath();
+          ctx.moveTo(x0 * dpr, y0 * dpr);
+          ctx.lineTo(x1 * dpr, y1 * dpr);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        function checkPercentage() {
+          if (isRevealed || !ctx) return 0;
+          try {
+            var w = canvas.width;
+            var h = canvas.height;
+            var imgData = ctx.getImageData(0, 0, w, h);
+            var pix = imgData.data;
+            var total = 0;
+            var transparent = 0;
+            // Sample every 4th pixel for performance
+            for (var i = 3; i < pix.length; i += 16) {
+              total++;
+              if (pix[i] < 128) {
+                transparent++;
+              }
+            }
+            return total > 0 ? (transparent / total) : 0;
+          } catch (err) {
+            return 0;
+          }
+        }
+
+        canvas.addEventListener("pointerdown", function (e) {
+          if (isRevealed) return;
+          isScratching = true;
+          try {
+            canvas.setPointerCapture(e.pointerId);
+          } catch (err) {}
+          var pos = getCanvasPos(e);
+          lastX = pos.x;
+          lastY = pos.y;
+          eraseLine(lastX, lastY, lastX, lastY);
+          spawnGoldDust(e.clientX, e.clientY);
+        });
+
+        canvas.addEventListener("pointermove", function (e) {
+          if (!isScratching || isRevealed) return;
+          var pos = getCanvasPos(e);
+          eraseLine(lastX, lastY, pos.x, pos.y);
+          lastX = pos.x;
+          lastY = pos.y;
+
+          moveCount++;
+          if (moveCount % 3 === 0) {
+            spawnGoldDust(e.clientX, e.clientY);
+          }
+
+          var now = Date.now();
+          if (moveCount % 8 === 0 || (now - lastCheckTime > 90)) {
+            lastCheckTime = now;
+            if (checkPercentage() >= 0.32) {
+              revealAllCountdownCards();
+            }
+          }
+        });
+
+        function endScratch(e) {
+          if (!isScratching) return;
+          isScratching = false;
+          try {
+            canvas.releasePointerCapture(e.pointerId);
+          } catch (err) {}
+          if (!isRevealed && checkPercentage() >= 0.30) {
+            revealAllCountdownCards();
+          }
+        }
+
+        canvas.addEventListener("pointerup", endScratch);
+        canvas.addEventListener("pointercancel", endScratch);
+
+        // Accessibility: Keyboard trigger on focusable card
+        unit.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            revealAllCountdownCards();
+          }
+        });
+      });
+
+      // Redraw on window resize if not yet revealed
+      var resizeTimeout = null;
+      window.addEventListener("resize", function () {
+        if (isRevealed) return;
+        if (resizeTimeout) clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(function () {
+          if (!isRevealed) {
+            units.forEach(function (unit) {
+              var canvas = unit.querySelector(".scratch-overlay");
+              var unitName = unit.getAttribute("data-unit") || "days";
+              if (canvas && canvas.style.display !== "none") {
+                drawFoilCover(canvas, unitName);
+              }
+            });
+          }
+        }, 150);
+      });
+    }
   }
 
   // -------------------------------------------------------------
@@ -595,19 +815,28 @@
     var hero = byId("celebrationHero");
     if (!hero) return;
 
-    if (heroEntranceTimer) clearTimeout(heroEntranceTimer);
+    if (heroEntranceTimer) {
+      clearTimeout(heroEntranceTimer);
+      heroEntranceTimer = null;
+    }
 
-    // 1. Trigger synchronized staggered entrance
-    hero.classList.remove("is-revealed");
-    hero.classList.add("is-animating-entrance");
+    // 1. Cleanly remove previous animation & resting classes
+    hero.classList.remove("is-revealed", "is-animating-entrance");
+    void hero.offsetWidth; // Force layout reflow so initial hidden transforms are applied
 
-    // 2. At 4.3s (matching the full entrance timeline ~4.8s from code submit), transition into ambient resting state
-    heroEntranceTimer = setTimeout(function () {
-      if (hero) {
-        hero.classList.remove("is-animating-entrance");
-        hero.classList.add("is-revealed");
-      }
-    }, 4400);
+    // 2. On next animation frame, trigger the synchronized timeline
+    requestAnimationFrame(function () {
+      if (!hero) return;
+      hero.classList.add("is-animating-entrance");
+
+      // 3. At 3.85s, transition smoothly into ambient living resting state
+      heroEntranceTimer = setTimeout(function () {
+        if (hero) {
+          hero.classList.remove("is-animating-entrance");
+          hero.classList.add("is-revealed");
+        }
+      }, 3850);
+    });
   }
 
   window.playHeroEntrance = playHeroEntrance;
@@ -704,11 +933,7 @@
 
   function preloadCriticalAssets() {
     var criticalUrls = [
-      "assets/images/envelope-open-reference.png",
-      "assets/images/envelope-flap.png",
-      "assets/images/envelope-left.webp",
-      "assets/images/envelope-right.webp",
-      "assets/images/envelope-pocket.png",
+      "assets/images/ChatGPT Image Sep 26, 2026, 01_25_51 PM-1.png",
       "assets/images/envelope-seal.png",
       "assets/images/wedding-card.png",
       "assets/images/invite-card-bg.png",
@@ -716,7 +941,15 @@
       "assets/images/invite-btn-pill.png",
       "assets/images/08_center_glow.png",
       "assets/images/07_floating_dust_particles.png",
-      "assets/images/hero-burgundy-bg.png"
+      "assets/images/hero-burgundy-bg.png",
+      "assets/images/branch-gold.png",
+      "assets/images/branch-ivory.png",
+      "assets/images/peony-red.jpg",
+      "assets/images/rose-ivory.jpg",
+      "assets/images/ganesh-hero.png",
+      "assets/images/mehendi.png",
+      "assets/images/marriage.png",
+      "assets/images/reception.png"
     ];
 
     criticalUrls.forEach(function (url) {
@@ -731,18 +964,16 @@
   function setupUnifiedInvitationExperience() {
     var scene = byId("envelopeScene");
     var wrapper = byId("envelopeWrapper");
-    var card = byId("invitationCard");
     var unsealBtn = byId("unsealHitBtn");
-    var backBtn = byId("cardBackBtn");
     var form = byId("cardInviteForm");
     var input = byId("cardInviteCodeInput");
     var errorMsg = byId("cardInviteErrorMsg");
     var submitBtn = byId("cardInviteSubmitBtn");
     var inputPill = byId("cardInputPillGroup");
     var mainSite = byId("mainSite");
-    var heroVideo = byId("heroVideo");
+    var hero = byId("celebrationHero");
 
-    if (!scene || !wrapper || !card) return;
+    if (!scene || !wrapper) return;
 
     preloadCriticalAssets();
 
@@ -752,7 +983,7 @@
     wrapper.setAttribute("aria-expanded", "false");
 
     // ========================================================
-    // STAGE 2: TAP TO OPEN (CLOSED -> OPENING -> CODE_ENTRY)
+    // TAP TO OPEN (CLOSED -> OPENING -> CODE_ENTRY)
     // ========================================================
     function handleTapToOpen() {
       if (currentState !== ANIM_STATES.CLOSED) return;
@@ -765,11 +996,15 @@
       // Play soft unseal wax sound
       playUnsealSound();
 
-      // At 2.6s: Card settles into position -> transition to CODE_ENTRY
+      // At 1.85s: Open card settled -> Morph seamlessly to CODE_ENTRY
       stateTimers.push(setTimeout(function () {
         if (currentState === ANIM_STATES.OPENING) {
           currentState = ANIM_STATES.CODE_ENTRY;
           scene.className = "envelope-scene state-code-entry";
+
+          // Fade out petals during code entry
+          var petalLayer = byId("petalShower");
+          if (petalLayer) petalLayer.style.opacity = "0";
 
           if (errorMsg) {
             errorMsg.hidden = true;
@@ -779,27 +1014,14 @@
             submitBtn.disabled = false;
           }
 
-          // Auto-focus input after form elements arrive (~700ms)
+          // Auto-focus input after form elements arrive (~600ms)
           stateTimers.push(setTimeout(function () {
             if (currentState === ANIM_STATES.CODE_ENTRY && input) {
               input.focus();
             }
-          }, 700));
+          }, 600));
         }
-      }, 2600));
-    }
-
-    // ========================================================
-    // BACK BUTTON: REVERSE TO CLOSED ENVELOPE
-    // ========================================================
-    function handleBackToEnvelope() {
-      if (currentState !== ANIM_STATES.CODE_CARD && currentState !== ANIM_STATES.CODE_ENTRY) return;
-      clearStateTimers();
-      currentState = ANIM_STATES.CLOSED;
-
-      if (input) input.blur();
-      scene.className = "envelope-scene state-closed";
-      wrapper.setAttribute("aria-expanded", "false");
+      }, 1850));
     }
 
     if (unsealBtn) {
@@ -822,15 +1044,8 @@
       }
     });
 
-    if (backBtn) {
-      backBtn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        handleBackToEnvelope();
-      });
-    }
-
     // ========================================================
-    // STAGE 4: CODE SUBMISSION (CODE_ENTRY -> UNLOCKING -> HERO_REVEAL -> COMPLETE)
+    // CODE SUBMISSION (CODE_ENTRY -> UNLOCKING -> HERO_REVEAL -> COMPLETE)
     // ========================================================
     if (form) {
       form.addEventListener("submit", function (e) {
@@ -854,7 +1069,7 @@
           return;
         }
 
-        // Validate code
+        // Validate code using existing authorization engine
         var invitation = resolveInvitation(code);
         if (!invitation || !invitation.bundle || !Array.isArray(invitation.allowedEvents) || invitation.allowedEvents.length === 0) {
           if (errorMsg) {
@@ -877,35 +1092,55 @@
         clearStateTimers();
 
         if (submitBtn) submitBtn.disabled = true;
-        if (input) input.blur();
+        if (input) {
+          input.disabled = true;
+          input.blur();
+        }
         if (errorMsg) {
           errorMsg.hidden = true;
           errorMsg.textContent = "";
         }
 
-        // Authoritative unlock (memory-only)
+        // 1. Authoritative memory-only unlock
         unlockInvitation(invitation);
 
-        // Update CSS state for UI fade and glow
-        scene.className = "envelope-scene state-unlocking";
+        // 2. Immediately prepare mainSite directly underneath the fixed envelope overlay
+        if (mainSite) {
+          mainSite.removeAttribute("hidden");
+          mainSite.removeAttribute("inert");
+          mainSite.setAttribute("aria-hidden", "false");
+          mainSite.classList.add("hero-reveal-prep");
+          mainSite.classList.remove("hero-reveal-active");
+        }
 
-        // At 1.2s: Begin Hero Reveal
-        stateTimers.push(setTimeout(function () {
-          currentState = ANIM_STATES.HERO_REVEAL;
+        // 3. Reset hero animation state before starting
+        var hero = byId("celebrationHero");
+        if (hero) {
+          hero.classList.remove("is-revealed", "is-animating-entrance");
+          void hero.offsetWidth; // force browser layout paint of initial hidden state
+        }
 
-          // Prepare main site in DOM
-          if (mainSite) {
-            mainSite.removeAttribute("hidden");
-            mainSite.removeAttribute("inert");
-            mainSite.setAttribute("aria-hidden", "false");
-          }
-          document.body.classList.remove("invitation-locked");
+        // 4. Double requestAnimationFrame to ensure browser paints hidden state before triggering animations
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            // Activate crossfade on mainSite & envelope overlay simultaneously
+            if (mainSite) {
+              mainSite.classList.remove("hero-reveal-prep");
+              mainSite.classList.add("hero-reveal-active");
+            }
+            scene.className = "envelope-scene state-unlocking";
+            document.body.classList.remove("invitation-locked");
 
-          // Start staggered floral & typography entrance
-          playHeroEntrance();
-        }, 1200));
+            // Trigger hero entrance (staggered floral bloom & names)
+            playHeroEntrance();
 
-        // At 3.6s: Complete transition -> COMPLETE state
+            // Resume celebratory petals
+            var petalLayer = byId("petalShower");
+            if (petalLayer) petalLayer.style.opacity = "0.75";
+          });
+        });
+
+        // 5. At 1.55s: Envelope overlay is fully transparent -> remove overlay & enable scroll
         stateTimers.push(setTimeout(function () {
           currentState = ANIM_STATES.COMPLETE;
 
@@ -922,10 +1157,7 @@
 
           // Start background music
           toggleMusic();
-          if (heroVideo && heroVideo.src) {
-            heroVideo.play().catch(function () {});
-          }
-        }, 3600));
+        }, 1550));
       });
     }
   }
@@ -1151,8 +1383,8 @@
     container.innerHTML = "";
 
     var isMobile = window.innerWidth <= 768;
-    // Mobile: 14 petals, Desktop: 24 petals
-    var count = isMobile ? 14 : 24;
+    // Requirement 20: 4-6 petals moving slowly during initial state
+    var count = isMobile ? 5 : 6;
 
     function rand(min, max) {
       return Math.random() * (max - min) + min;
@@ -1354,7 +1586,7 @@
           activeInvitation.allowedEvents.map(function (e) { return e.name; }).join(", ") :
           "All Functions";
 
-        var text = "✨ *Wedding RSVP for Isha & Sagar's Wedding* ✨\n\n" +
+        var text = "✨ *Wedding RSVP for Isha & Sajan's Wedding* ✨\n\n" +
           "👤 *Name:* " + (name || "Family & Friends") + "\n" +
           (activeInvitation ? ("🏷️ *Invite Code:* " + activeInvitation.code + "\n") : "") +
           (activeInvitation ? ("📜 *Invitation:* " + activeInvitation.label + "\n") : "") +
