@@ -2414,25 +2414,37 @@ button {
 .timeline-time-box {
   position: relative;
   display: inline-block;
+  text-align: right;
+  width: 100%;
 }
 
-.timeline-time {
+.timeline-date-highlight {
   font-family: var(--font-display);
-  font-size: 13.5px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
   color: #f7e7c4;
-  letter-spacing: 0.04em;
-  line-height: 1.35;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.03em;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  margin-bottom: 5px;
 }
 
-.timeline-date-small {
+.timeline-date-highlight::after {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 1px;
+  margin: 5px 0 4px auto;
+  background: linear-gradient(90deg, transparent, rgba(223, 190, 118, 0.75));
+}
+
+.timeline-time-secondary {
   font-family: var(--font-serif);
   font-size: 12.5px;
-  font-style: italic;
-  color: rgba(247, 231, 196, 0.82);
-  margin-top: 3px;
-  letter-spacing: 0.03em;
+  font-weight: 500;
+  color: rgba(247, 231, 196, 0.88);
+  line-height: 1.35;
+  letter-spacing: 0.02em;
 }
 
 /* Real Flower Marker Column */
@@ -2587,29 +2599,30 @@ button {
   }
 
   .timeline::before {
-    left: 103px;
+    left: 118px;
     top: 15px;
     bottom: 15px;
   }
 
   .timeline-item:not(:last-child)::after {
-    left: 103px;
+    left: 118px;
     bottom: -21px;
     font-size: 11px;
   }
 
   .timeline-time-col {
-    width: 80px;
+    width: 96px;
     padding-right: 10px;
     padding-top: 8px;
   }
 
-  .timeline-time {
-    font-size: 12px;
+  .timeline-date-highlight {
+    font-size: 13px;
+    line-height: 1.3;
   }
 
-  .timeline-date-small {
-    font-size: 11px;
+  .timeline-time-secondary {
+    font-size: 11.5px;
   }
 
   .timeline-flower-col {
@@ -2642,24 +2655,24 @@ button {
 
 @media (max-width: 400px) {
   .timeline::before {
-    left: 95px;
+    left: 110px;
   }
 
   .timeline-item:not(:last-child)::after {
-    left: 95px;
+    left: 110px;
   }
 
   .timeline-time-col {
-    width: 75px;
+    width: 90px;
     padding-right: 8px;
   }
 
-  .timeline-time {
-    font-size: 11px;
+  .timeline-date-highlight {
+    font-size: 12.5px;
   }
 
-  .timeline-date-small {
-    font-size: 10.5px;
+  .timeline-time-secondary {
+    font-size: 11px;
   }
 
   .timeline-flower-col {
@@ -4081,15 +4094,6 @@ button {
   }
   .dress-grid {
     grid-template-columns: 1fr;
-  }
-  .timeline::before {
-    left: 95px;
-  }
-  .timeline-time-col {
-    width: 85px;
-  }
-  .timeline-time {
-    font-size: 11px;
   }
   .ceremony-detail-section {
     padding: 70px 16px 65px;

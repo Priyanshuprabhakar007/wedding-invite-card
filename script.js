@@ -313,8 +313,8 @@
       item.innerHTML =
         '<div class="timeline-time-col">' +
           '<div class="timeline-time-box">' +
-            '<div class="timeline-time">' + (ev.time || "") + '</div>' +
-            (ev.date ? '<div class="timeline-date-small">' + ev.date + '</div>' : '') +
+            (ev.date ? '<div class="timeline-date-highlight">' + ev.date + '</div>' : '') +
+            '<div class="timeline-time-secondary">' + (ev.time || "") + '</div>' +
           '</div>' +
         '</div>' +
         '<div class="timeline-flower-col" aria-hidden="true">' +
