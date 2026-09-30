@@ -590,30 +590,143 @@
   // -------------------------------------------------------------
   // 4b. SIGNATURE STAGED HERO ENTRANCE
   // -------------------------------------------------------------
+  var heroEntranceTimer = null;
   function playHeroEntrance() {
     var hero = byId("celebrationHero");
     if (!hero) return;
-    hero.classList.remove("is-animating-entrance");
-    hero.classList.add("is-revealed");
+
+    if (heroEntranceTimer) clearTimeout(heroEntranceTimer);
+
+    // 1. Trigger synchronized staggered entrance
+    hero.classList.remove("is-revealed");
+    hero.classList.add("is-animating-entrance");
+
+    // 2. At 4.3s (matching the full entrance timeline ~4.8s from code submit), transition into ambient resting state
+    heroEntranceTimer = setTimeout(function () {
+      if (hero) {
+        hero.classList.remove("is-animating-entrance");
+        hero.classList.add("is-revealed");
+      }
+    }, 4400);
   }
 
   window.playHeroEntrance = playHeroEntrance;
 
   // -------------------------------------------------------------
-  // 5. UNIFIED INVITATION EXPERIENCE & STATE MACHINE
-  // "THE WEDDING CARD BECOMES THE WEBSITE"
+  // 4c. CLIENT-SIDE TRANSPARENT FLORAL ASSET PROCESSOR
   // -------------------------------------------------------------
-  var INVITATION_STATES = {
-    LOCKED_ENVELOPE: "LOCKED_ENVELOPE",
-    OPENING_ENVELOPE: "OPENING_ENVELOPE",
-    CODE_CARD: "CODE_CARD",
-    VALIDATING: "VALIDATING",
-    EXPANDING_CARD: "EXPANDING_CARD",
-    SITE_READY: "SITE_READY"
+  function prepareFloralAssets() {
+    var images = document.querySelectorAll(".flower-asset");
+    images.forEach(function (img) {
+      var type = img.getAttribute("data-type");
+      if (!type) return;
+
+      var process = function () {
+        try {
+          var canvas = document.createElement("canvas");
+          var w = img.naturalWidth || img.width;
+          var h = img.naturalHeight || img.height;
+          if (!w || !h) return;
+          canvas.width = w;
+          canvas.height = h;
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+          var imgData = ctx.getImageData(0, 0, w, h);
+          var d = imgData.data;
+
+          if (type === "black") {
+            // Peony & Rose (convert solid black background to clean transparent alpha)
+            for (var i = 0; i < d.length; i += 4) {
+              var r = d[i], g = d[i+1], b = d[i+2];
+              var maxV = Math.max(r, g, b);
+              if (maxV <= 12) {
+                d[i+3] = 0;
+              } else if (maxV < 45) {
+                var a = (maxV - 12) / 33;
+                d[i+3] = Math.round(a * 255);
+                d[i] = Math.min(255, Math.round(r / a));
+                d[i+1] = Math.min(255, Math.round(g / a));
+                d[i+2] = Math.min(255, Math.round(b / a));
+              }
+            }
+          } else if (type === "white") {
+            // Gold & Ivory Branches (convert solid white background to clean transparent alpha)
+            for (var j = 0; j < d.length; j += 4) {
+              var r2 = d[j], g2 = d[j+1], b2 = d[j+2];
+              var minV = Math.min(r2, g2, b2);
+              if (minV >= 246) {
+                d[j+3] = 0;
+              } else if (minV >= 205) {
+                var a2 = (246 - minV) / 41;
+                d[j+3] = Math.round(a2 * 255);
+                d[j] = Math.max(0, Math.min(255, Math.round((r2 - (1 - a2) * 255) / a2)));
+                d[j+1] = Math.max(0, Math.min(255, Math.round((g2 - (1 - a2) * 255) / a2)));
+                d[j+2] = Math.max(0, Math.min(255, Math.round((b2 - (1 - a2) * 255) / a2)));
+              }
+            }
+          }
+          ctx.putImageData(imgData, 0, 0);
+          img.src = canvas.toDataURL("image/png");
+          img.removeAttribute("data-type");
+        } catch (err) {
+          console.warn("[Floral Asset Processing]", err);
+        }
+      };
+
+      if (img.complete && img.naturalWidth) {
+        process();
+      } else {
+        img.addEventListener("load", process, { once: true });
+      }
+    });
+  }
+
+  // -------------------------------------------------------------
+  // 5. UNIFIED INVITATION STATE MACHINE
+  // CLOSED -> OPENING -> CODE_ENTRY -> UNLOCKING -> HERO_REVEAL -> COMPLETE
+  // -------------------------------------------------------------
+  var ANIM_STATES = {
+    CLOSED: "CLOSED",
+    OPENING: "OPENING",
+    CODE_ENTRY: "CODE_ENTRY",
+    UNLOCKING: "UNLOCKING",
+    HERO_REVEAL: "HERO_REVEAL",
+    COMPLETE: "COMPLETE"
   };
 
-  var currentState = INVITATION_STATES.LOCKED_ENVELOPE;
-  var isOpeningOrClosing = false;
+  var currentState = ANIM_STATES.CLOSED;
+  var stateTimers = [];
+
+  function clearStateTimers() {
+    stateTimers.forEach(function (t) { clearTimeout(t); });
+    stateTimers = [];
+  }
+
+  function preloadCriticalAssets() {
+    var criticalUrls = [
+      "assets/images/envelope-open-reference.png",
+      "assets/images/envelope-flap.png",
+      "assets/images/envelope-left.webp",
+      "assets/images/envelope-right.webp",
+      "assets/images/envelope-pocket.png",
+      "assets/images/envelope-seal.png",
+      "assets/images/wedding-card.png",
+      "assets/images/invite-card-bg.png",
+      "assets/images/invite-input-pill.png",
+      "assets/images/invite-btn-pill.png",
+      "assets/images/08_center_glow.png",
+      "assets/images/07_floating_dust_particles.png",
+      "assets/images/hero-burgundy-bg.png"
+    ];
+
+    criticalUrls.forEach(function (url) {
+      var img = new Image();
+      img.src = url;
+      if (typeof img.decode === "function") {
+        img.decode().catch(function () {});
+      }
+    });
+  }
 
   function setupUnifiedInvitationExperience() {
     var scene = byId("envelopeScene");
@@ -631,129 +744,98 @@
 
     if (!scene || !wrapper || !card) return;
 
-    // Subtle idle float when locked
-    setTimeout(function () {
-      if (currentState === INVITATION_STATES.LOCKED_ENVELOPE) {
-        scene.classList.add("is-idle");
-      }
-    }, 1100);
+    preloadCriticalAssets();
+
+    // Set Initial State
+    currentState = ANIM_STATES.CLOSED;
+    scene.className = "envelope-scene state-closed";
+    wrapper.setAttribute("aria-expanded", "false");
 
     // ========================================================
-    // STAGE 2: UNSEAL ENVELOPE & RISE CARD
+    // STAGE 2: TAP TO OPEN (CLOSED -> OPENING -> CODE_ENTRY)
     // ========================================================
-    function openEnvelopeAndRiseCard() {
-      if (currentState !== INVITATION_STATES.LOCKED_ENVELOPE || isOpeningOrClosing) return;
-      isOpeningOrClosing = true;
-      currentState = INVITATION_STATES.OPENING_ENVELOPE;
+    function handleTapToOpen() {
+      if (currentState !== ANIM_STATES.CLOSED) return;
+      currentState = ANIM_STATES.OPENING;
+      clearStateTimers();
 
-      scene.classList.remove("is-idle");
+      scene.className = "envelope-scene state-opening";
       wrapper.setAttribute("aria-expanded", "true");
 
       // Play soft unseal wax sound
       playUnsealSound();
 
-      // 0ms - 180ms: Wax seal subtle press
-      scene.classList.add("is-pressing");
+      // At 2.6s: Card settles into position -> transition to CODE_ENTRY
+      stateTimers.push(setTimeout(function () {
+        if (currentState === ANIM_STATES.OPENING) {
+          currentState = ANIM_STATES.CODE_ENTRY;
+          scene.className = "envelope-scene state-code-entry";
 
-      // 180ms - 700ms: Seal release, flap opens, card begins rising
-      setTimeout(function () {
-        scene.classList.remove("is-pressing");
-        scene.classList.add("is-opening");
-      }, 180);
+          if (errorMsg) {
+            errorMsg.hidden = true;
+            errorMsg.textContent = "";
+          }
+          if (submitBtn) {
+            submitBtn.disabled = false;
+          }
 
-      // 850ms: Card reaches full rise, unfold into code card
-      setTimeout(function () {
-        unfoldCardToCodeStage();
-      }, 850);
-    }
-
-    // ========================================================
-    // STAGE 3: CARD UNFOLDS TO REVEAL EMBEDDED CODE FORM
-    // ========================================================
-    function unfoldCardToCodeStage() {
-      currentState = INVITATION_STATES.CODE_CARD;
-      isOpeningOrClosing = false;
-      card.classList.add("is-unfolded");
-      scene.classList.add("is-unfolded");
-
-      if (errorMsg) {
-        errorMsg.hidden = true;
-        errorMsg.textContent = "";
-      }
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.classList.remove("is-pressed");
-      }
-
-      // Auto-focus input after unfold choreography finishes (~800ms)
-      setTimeout(function () {
-        if (currentState === INVITATION_STATES.CODE_CARD && input) {
-          input.focus();
+          // Auto-focus input after form elements arrive (~700ms)
+          stateTimers.push(setTimeout(function () {
+            if (currentState === ANIM_STATES.CODE_ENTRY && input) {
+              input.focus();
+            }
+          }, 700));
         }
-      }, 800);
+      }, 2600));
     }
 
     // ========================================================
-    // BACK BUTTON: REVERSE CHOREOGRAPHY TO CLOSED ENVELOPE
+    // BACK BUTTON: REVERSE TO CLOSED ENVELOPE
     // ========================================================
-    function foldCardBackToEnvelope() {
-      if (currentState !== INVITATION_STATES.CODE_CARD || isOpeningOrClosing) return;
-      isOpeningOrClosing = true;
+    function handleBackToEnvelope() {
+      if (currentState !== ANIM_STATES.CODE_CARD && currentState !== ANIM_STATES.CODE_ENTRY) return;
+      clearStateTimers();
+      currentState = ANIM_STATES.CLOSED;
 
-      // 1. Fade form elements and fold inner panel
-      card.classList.remove("is-unfolded");
-      scene.classList.remove("is-unfolded");
       if (input) input.blur();
-
-      // 2. Lower card back into pocket and close envelope flap
-      setTimeout(function () {
-        scene.classList.remove("is-opening");
-        wrapper.setAttribute("aria-expanded", "false");
-      }, 350);
-
-      // 3. Reset back to LOCKED_ENVELOPE
-      setTimeout(function () {
-        currentState = INVITATION_STATES.LOCKED_ENVELOPE;
-        isOpeningOrClosing = false;
-        scene.classList.add("is-idle");
-      }, 950);
+      scene.className = "envelope-scene state-closed";
+      wrapper.setAttribute("aria-expanded", "false");
     }
 
-    // Click on unseal button or envelope wrapper
     if (unsealBtn) {
       unsealBtn.addEventListener("click", function (e) {
         e.stopPropagation();
-        openEnvelopeAndRiseCard();
+        handleTapToOpen();
       });
     }
 
     wrapper.addEventListener("click", function (e) {
-      if (currentState === INVITATION_STATES.LOCKED_ENVELOPE) {
-        openEnvelopeAndRiseCard();
+      if (currentState === ANIM_STATES.CLOSED) {
+        handleTapToOpen();
       }
     });
 
     wrapper.addEventListener("keydown", function (e) {
-      if ((e.key === "Enter" || e.key === " ") && currentState === INVITATION_STATES.LOCKED_ENVELOPE) {
+      if ((e.key === "Enter" || e.key === " ") && currentState === ANIM_STATES.CLOSED) {
         e.preventDefault();
-        openEnvelopeAndRiseCard();
+        handleTapToOpen();
       }
     });
 
     if (backBtn) {
       backBtn.addEventListener("click", function (e) {
         e.stopPropagation();
-        foldCardBackToEnvelope();
+        handleBackToEnvelope();
       });
     }
 
     // ========================================================
-    // STAGE 4 & 5: VALID CODE SUBMISSION & CARD EXPANSION
+    // STAGE 4: CODE SUBMISSION (CODE_ENTRY -> UNLOCKING -> HERO_REVEAL -> COMPLETE)
     // ========================================================
     if (form) {
       form.addEventListener("submit", function (e) {
         e.preventDefault();
-        if (currentState !== INVITATION_STATES.CODE_CARD) return;
+        if (currentState !== ANIM_STATES.CODE_ENTRY) return;
 
         var rawCode = (input ? input.value : "").trim();
         var code = rawCode.toUpperCase();
@@ -772,7 +854,7 @@
           return;
         }
 
-        // Validate code against configuration
+        // Validate code
         var invitation = resolveInvitation(code);
         if (!invitation || !invitation.bundle || !Array.isArray(invitation.allowedEvents) || invitation.allowedEvents.length === 0) {
           if (errorMsg) {
@@ -789,9 +871,11 @@
         }
 
         // ========================================================
-        // VALID CODE ACCEPTED
+        // VALID CODE ACCEPTED -> START UNLOCKING SEQUENCE
         // ========================================================
-        currentState = INVITATION_STATES.VALIDATING;
+        currentState = ANIM_STATES.UNLOCKING;
+        clearStateTimers();
+
         if (submitBtn) submitBtn.disabled = true;
         if (input) input.blur();
         if (errorMsg) {
@@ -799,89 +883,50 @@
           errorMsg.textContent = "";
         }
 
-        // Authoritative unlock
+        // Authoritative unlock (memory-only)
         unlockInvitation(invitation);
 
-        // Micro-animation 0-350ms: thin warm-gold light traces inner border
-        card.classList.add("has-success-glow");
+        // Update CSS state for UI fade and glow
+        scene.className = "envelope-scene state-unlocking";
 
-        setTimeout(function () {
-          performCardExpansion(invitation);
-        }, 350);
+        // At 1.2s: Begin Hero Reveal
+        stateTimers.push(setTimeout(function () {
+          currentState = ANIM_STATES.HERO_REVEAL;
+
+          // Prepare main site in DOM
+          if (mainSite) {
+            mainSite.removeAttribute("hidden");
+            mainSite.removeAttribute("inert");
+            mainSite.setAttribute("aria-hidden", "false");
+          }
+          document.body.classList.remove("invitation-locked");
+
+          // Start staggered floral & typography entrance
+          playHeroEntrance();
+        }, 1200));
+
+        // At 3.6s: Complete transition -> COMPLETE state
+        stateTimers.push(setTimeout(function () {
+          currentState = ANIM_STATES.COMPLETE;
+
+          // Hide envelope scene and enable standard page scrolling
+          scene.className = "envelope-scene state-complete";
+          document.body.classList.remove("envelope-closed-state");
+          document.body.style.overflow = "";
+
+          if ("scrollRestoration" in window.history) {
+            try {
+              window.history.scrollRestoration = "auto";
+            } catch (e) {}
+          }
+
+          // Start background music
+          toggleMusic();
+          if (heroVideo && heroVideo.src) {
+            heroVideo.play().catch(function () {});
+          }
+        }, 3600));
       });
-    }
-
-    function performCardExpansion(invitation) {
-      currentState = INVITATION_STATES.EXPANDING_CARD;
-
-      // 1. Measure initial card bounding rect
-      var firstRect = card.getBoundingClientRect();
-
-      // 2. Prepare main site shell (remove hidden/inert before animation)
-      if (mainSite) {
-        mainSite.removeAttribute("hidden");
-        mainSite.removeAttribute("inert");
-        mainSite.setAttribute("aria-hidden", "false");
-      }
-      document.body.classList.remove("invitation-locked");
-
-      // 3. Compute target dimensions
-      var isMobile = window.innerWidth <= 760;
-      var targetWidth = isMobile ? window.innerWidth : Math.min(window.innerWidth, 760);
-      var targetLeft = isMobile ? 0 : Math.round((window.innerWidth - targetWidth) / 2);
-      var targetHeight = window.innerHeight;
-      var targetRadius = isMobile ? 0 : 8;
-
-      // 4. Set initial fixed position on expanding card
-      card.style.position = "fixed";
-      card.style.top = Math.round(firstRect.top) + "px";
-      card.style.left = Math.round(firstRect.left) + "px";
-      card.style.width = Math.round(firstRect.width) + "px";
-      card.style.height = Math.round(firstRect.height) + "px";
-      card.style.borderRadius = "20px";
-      card.classList.add("is-expanding");
-
-      scene.classList.add("is-expanding");
-      scene.classList.add("is-expanding-bg");
-
-      // 5. Trigger smooth FLIP transition in next frame
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          card.style.top = "0px";
-          card.style.left = targetLeft + "px";
-          card.style.width = targetWidth + "px";
-          card.style.height = targetHeight + "px";
-          card.style.borderRadius = targetRadius + "px";
-        });
-      });
-
-      // 6. At 75% expansion (~850ms), reveal hero content inside mainSite
-      setTimeout(function () {
-        playHeroEntrance();
-      }, 850);
-
-      // 7. Transition completion at 1250ms -> SITE_READY
-      setTimeout(function () {
-        currentState = INVITATION_STATES.SITE_READY;
-
-        // Cleanly hide envelope scene and unlock normal scrolling
-        scene.classList.add("is-hidden-done");
-        scene.hidden = true;
-        document.body.classList.remove("envelope-closed-state");
-        document.body.style.overflow = "";
-
-        if ("scrollRestoration" in window.history) {
-          try {
-            window.history.scrollRestoration = "auto";
-          } catch (e) {}
-        }
-
-        // Start background music & video
-        toggleMusic();
-        if (heroVideo && heroVideo.src) {
-          heroVideo.play().catch(function () {});
-        }
-      }, 1250);
     }
   }
 
@@ -1359,6 +1404,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     enforceLockedScroll();
     bindData(data);
+    prepareFloralAssets();
     startCountdown(data.event.countdownDate || "2026-11-20T15:30:00-05:00");
     setupUnifiedInvitationExperience();
     setupScrollAnimations();

@@ -22,62 +22,62 @@
   <!-- ========================================================
        1. LUXURY ENVELOPE OPENING SCENE
        ======================================================== -->
-  <section id="envelopeScene" class="envelope-scene" aria-label="Interactive Wedding Invitation Envelope">
+  <section id="envelopeScene" class="envelope-scene state-closed" aria-label="Interactive Wedding Invitation Envelope">
     <div class="ambient-vignette" aria-hidden="true"></div>
     <div class="ambient-light-glow" aria-hidden="true"></div>
 
+    <!-- 3D Perspective Stage -->
     <div id="envelopeWrapper" class="envelope-wrapper" tabindex="0" role="button" aria-label="Open Isha and Sagar's wedding invitation" aria-expanded="false">
       
-      <!-- Layer 1: Rear Open Flap (Behind rising card) -->
-      <div class="rear-flap-layer" aria-hidden="true">
-        <img class="rear-flap-img" src="assets/images/envelope-open-reference.png" alt="">
+      <!-- Layer 1: Rear Envelope Body/Flap (Behind rising card) -->
+      <div class="envelope-back-layer" aria-hidden="true">
+        <img class="envelope-layer-img" src="assets/images/envelope-open-reference.png" alt="">
       </div>
 
-      <!-- Layer 2: Standalone Isha & Sagar Wedding Card (Rises, Unfolds Code Form, Expands to Site) -->
+      <!-- Layer 2: Inner Wedding Invitation Card (Rises, Transitions to Code Entry, Expands to Hero) -->
       <div id="invitationCard" class="invitation-card" aria-label="Wedding Invitation Card">
         
-        <!-- Gold Trim Border & Warm Success Glow -->
+        <!-- Gold Trim Border & Warm Glows -->
         <div class="card-gold-border" aria-hidden="true"></div>
-        <div id="cardSuccessGlow" class="card-success-glow" aria-hidden="true"></div>
+        <div id="cardCenterGlow" class="card-center-glow" aria-hidden="true">
+          <img src="assets/images/08_center_glow.png" alt="" class="center-glow-img">
+        </div>
+        <div id="cardGoldDust" class="card-gold-dust" aria-hidden="true">
+          <img src="assets/images/07_floating_dust_particles.png" alt="" class="gold-dust-img">
+        </div>
 
-        <!-- 2A: Card Front Cover Face (Isha & Sagar Wedding Card Artwork) -->
+        <!-- 2A: Card Front Cover Artwork -->
         <div id="cardCoverFace" class="card-cover-face">
           <img class="card-art" src="assets/images/wedding-card.png" alt="Isha &amp; Sagar Wedding Card">
         </div>
 
-        <!-- 2B: Central Gold Divider (Appears during unfolding) -->
-        <div id="cardGoldDivider" class="card-gold-divider" aria-hidden="true">
-          <span class="gold-divider-line left"></span>
-          <span class="gold-divider-gem">❖</span>
-          <span class="gold-divider-line right"></span>
-        </div>
-
-        <!-- 2C: Card Inner Panel (Unfolds to reveal embedded invite code entry) -->
+        <!-- 2B: Card Inner Panel (Stationery for Code Entry) -->
         <div id="cardInnerPanel" class="card-inner-panel" aria-hidden="true">
-          <!-- Inner Card Background Artwork -->
           <img class="card-inner-bg-art" src="assets/images/invite-card-bg.png" alt="" aria-hidden="true">
 
-          <!-- Card Back Button (Smoothly folds back to closed envelope) -->
+          <!-- Card Back to Envelope Button -->
           <button id="cardBackBtn" class="card-back-btn" type="button" aria-label="Back to closed envelope">
             <span class="back-arrow" aria-hidden="true">←</span> <span>Envelope</span>
           </button>
 
           <!-- Interactive Code Form Inside Card -->
           <form id="cardInviteForm" class="card-invite-form" autocomplete="off">
-            <h2 class="sr-only">Enter Your Invite Code</h2>
-
-            <!-- Form Content with Staggered Entrance -->
             <div id="cardFormContent" class="card-form-content">
-              <!-- Title & Subtitle are printed directly in the stationery art (invite-card-bg.png) -->
+              
+              <div class="card-form-heading">
+                <span class="card-heading-flourish">❦ ✦ ❦</span>
+                <h2 class="card-form-title">A Private Celebration Awaits</h2>
+                <p class="card-form-subtitle">Please enter your invite code to continue.</p>
+              </div>
 
-              <!-- Input Pill with Real Embedded Input -->
+              <!-- Input Pill -->
               <div id="cardInputPillGroup" class="card-input-pill-group">
                 <img class="card-input-pill-img" src="assets/images/invite-input-pill.png" alt="" aria-hidden="true">
                 <input 
                   type="text" 
                   id="cardInviteCodeInput" 
                   class="card-invite-code-input" 
-                  placeholder="ENTER YOUR INVITE CODE" 
+                  placeholder="Enter your invite code" 
                   autocomplete="off" 
                   autocorrect="off" 
                   autocapitalize="characters" 
@@ -99,50 +99,53 @@
               >
                 <img class="card-btn-pill-img" src="assets/images/invite-btn-pill.png" alt="Enter the Celebration">
               </button>
+
             </div>
           </form>
         </div>
 
-        <!-- 2D: Expanding Content Stage (Revealed inside card during FLIP expansion) -->
-        <div id="cardExpandingHero" class="card-expanding-hero" aria-hidden="true">
-          <div class="card-expanding-glow" aria-hidden="true"></div>
-          <div class="card-expanding-content">
-            <img src="assets/images/flower.svg" class="expanding-ornament-top" alt="" aria-hidden="true">
-            <p class="expanding-sub-greeting">Together with their families</p>
-            <p class="expanding-script-line">The Wedding Celebration</p>
-            <div class="expanding-date-wrap">
-              <span class="expanding-date-line left" aria-hidden="true"></span>
-              <p class="expanding-date">NOVEMBER 2026</p>
-              <span class="expanding-date-line right" aria-hidden="true"></span>
-            </div>
-            <div class="expanding-flourish" aria-hidden="true">
-              <span class="expanding-flourish-bar left"></span>
-              <span class="expanding-flourish-icon">✦</span>
-              <span class="expanding-flourish-bar right"></span>
-            </div>
-            <h2 class="expanding-names">
-              <span class="expanding-name">Isha</span>
-              <span class="expanding-amp">&amp;</span>
-              <span class="expanding-name">Sagar</span>
-            </h2>
-            <p class="expanding-venue-tag">South Florida, Florida</p>
-          </div>
+      </div>
+
+      <!-- Layer 3: Envelope Pocket/Bottom (In front of lower part of card) -->
+      <div id="envelopePocket" class="envelope-pocket-layer" aria-hidden="true">
+        <img class="envelope-layer-img" src="assets/images/envelope-pocket.png" alt="">
+      </div>
+
+      <!-- Layer 4: Left Flap (3D Hinge Left) -->
+      <div id="envelopeFlapLeft" class="envelope-flap-left" aria-hidden="true">
+        <img class="envelope-layer-img" src="assets/images/envelope-left.webp" alt="">
+      </div>
+
+      <!-- Layer 5: Right Flap (3D Hinge Right) -->
+      <div id="envelopeFlapRight" class="envelope-flap-right" aria-hidden="true">
+        <img class="envelope-layer-img" src="assets/images/envelope-right.webp" alt="">
+      </div>
+
+      <!-- Layer 6: Top Flap (3D Hinge Top) -->
+      <div id="envelopeFlapTop" class="envelope-flap-top" aria-hidden="true">
+        <img class="envelope-layer-img" src="assets/images/envelope-flap.png" alt="">
+      </div>
+
+      <!-- Layer 7: Wax Seal & Sparkle/Glow FX -->
+      <div id="waxSealWrapper" class="wax-seal-wrapper" aria-hidden="true">
+        <div class="seal-glow-layer">
+          <img src="assets/images/08_center_glow.png" alt="" class="seal-glow-img">
         </div>
-
+        <div class="seal-flare-layer">
+          <img src="assets/images/09_lens_flare.png" alt="" class="seal-flare-img">
+        </div>
+        <img id="waxSealImg" class="wax-seal-img" src="assets/images/envelope-seal.png" alt="I&amp;S Royal Wax Seal">
       </div>
 
-      <!-- Layer 3: Envelope Pocket Base (Front layer over bottom of card) -->
-      <div id="envelopePocket" class="envelope-pocket" aria-hidden="true">
-        <img class="pocket-art" src="assets/images/envelope-pocket.png" alt="Envelope Pocket">
+      <!-- Subtle "Tap to open" prompt -->
+      <div id="tapPrompt" class="tap-open-prompt" aria-hidden="true">
+        <span class="tap-gem">✦</span>
+        <span class="tap-text">Tap to open</span>
+        <span class="tap-gem">✦</span>
       </div>
 
-      <!-- Layer 4: Closed Envelope (Initial Pristine Closed State with Flap & Seal) -->
-      <div id="closedEnvelopeLayer" class="closed-envelope-layer" aria-hidden="true">
-        <img class="closed-envelope-img" src="assets/images/envelope-closed.png" alt="Closed Envelope">
-      </div>
-
-      <!-- Hit target for Unseal The Invitation -->
-      <button id="unsealHitBtn" class="unseal-hit-btn" type="button" aria-label="Unseal the invitation"></button>
+      <!-- Hit button for initial click -->
+      <button id="unsealHitBtn" class="unseal-hit-btn" type="button" aria-label="Open wedding invitation"></button>
 
     </div>
   </section>
@@ -154,38 +157,81 @@
     
     <!-- HERO SECTION -->
     <section id="celebrationHero" class="hero section-burgundy" aria-labelledby="coupleNames">
-      <div class="hero-video-container">
-        <video id="heroVideo" class="hero-video" playsinline muted autoplay loop preload="auto"></video>
-        <div class="hero-overlay"></div>
+      <!-- Background Canvas / Artwork Layer -->
+      <div class="hero-bg-layer" aria-hidden="true">
+        <img class="hero-bg-img" src="assets/images/hero-burgundy-bg.png" alt="" id="heroBgImg">
+        <div class="hero-bg-glow"></div>
+        <div class="hero-bg-vignette"></div>
+      </div>
+
+      <!-- Floral Arrangement Stage (Layered independent animated flowers) -->
+      <div id="heroFloralStage" class="hero-floral-stage" aria-hidden="true">
+        <!-- Rear Botanical Branches -->
+        <div class="floral-item floral-branch-gold layer-rear-branch" id="flowerGoldBranch">
+          <img class="flower-asset flower-branch-gold-img" src="assets/images/branch-gold.png" alt="" data-type="white">
+        </div>
+        <div class="floral-item floral-branch-ivory layer-rear-branch" id="flowerIvoryBranch">
+          <img class="flower-asset flower-branch-ivory-img" src="assets/images/branch-ivory.png" alt="" data-type="white">
+        </div>
+
+        <!-- Rear Flowers (Ivory & Red mid-layer) -->
+        <div class="floral-item floral-rose-rear-left layer-rear-flower" id="flowerRoseRearLeft">
+          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
+        </div>
+        <div class="floral-item floral-rose-rear-right layer-rear-flower" id="flowerRoseRearRight">
+          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
+        </div>
+
+        <!-- Foreground Blooming Red Peonies & Ivory Roses -->
+        <div class="floral-item floral-peony-bottom-left layer-fg-flower" id="flowerPeonyBottomLeft">
+          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
+        </div>
+        <div class="floral-item floral-peony-bottom-right layer-fg-flower" id="flowerPeonyBottomRight">
+          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
+        </div>
+        <div class="floral-item floral-rose-bottom-center-left layer-fg-flower" id="flowerRoseBottomLeft">
+          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
+        </div>
+        <div class="floral-item floral-rose-bottom-center-right layer-fg-flower" id="flowerRoseBottomRight">
+          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
+        </div>
+        <div class="floral-item floral-peony-side-left layer-fg-flower" id="flowerPeonySideLeft">
+          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
+        </div>
+        <div class="floral-item floral-peony-side-right layer-fg-flower" id="flowerPeonySideRight">
+          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
+        </div>
       </div>
       
       <!-- Warm Champagne Ambient Glow -->
       <div class="hero-ambient-glow" aria-hidden="true"></div>
       
+      <!-- Hero Typography & Celebration Content -->
       <div class="hero-content">
-        <img src="assets/images/flower.svg" class="hero-ornament-top" alt="" aria-hidden="true">
-        <p id="subGreeting" class="sub-greeting">Together with their families</p>
-        <p id="weddingDay" class="script-line">The Wedding Celebration</p>
+        <img src="assets/images/flower.svg" class="hero-ornament-top hero-stagger-item hero-ornament" alt="" aria-hidden="true">
+        <p id="subGreeting" class="sub-greeting hero-stagger-item hero-subgreeting">Together with their families</p>
         
-        <div class="hero-date-wrap">
+        <h1 id="coupleNames" class="couple-names">
+          <span id="partnerOne" class="hero-stagger-item hero-name hero-name-isha">Isha</span>
+          <span id="connector" class="hero-stagger-item hero-amp">&amp;</span>
+          <span id="partnerTwo" class="hero-stagger-item hero-name hero-name-sagar">Sagar</span>
+        </h1>
+        
+        <p id="weddingDay" class="script-line hero-stagger-item hero-wedding-day">The Wedding Celebration</p>
+        
+        <div class="hero-date-wrap hero-stagger-item hero-date-wrapper">
           <span class="hero-date-line left" aria-hidden="true"></span>
           <p id="heroDate" class="hero-date">NOVEMBER 2026</p>
           <span class="hero-date-line right" aria-hidden="true"></span>
         </div>
 
-        <div class="hero-flourish" aria-hidden="true">
+        <div class="hero-flourish hero-stagger-item hero-flourish-wrapper" aria-hidden="true">
           <span class="flourish-bar left"></span>
           <span class="flourish-icon">✦</span>
           <span class="flourish-bar right"></span>
         </div>
         
-        <h1 id="coupleNames" class="couple-names">
-          <span id="partnerOne">Isha</span>
-          <span id="connector">&amp;</span>
-          <span id="partnerTwo">Sagar</span>
-        </h1>
-        
-        <p id="heroVenueTag" class="hero-venue-tag">South Florida, Florida</p>
+        <p id="heroVenueTag" class="hero-venue-tag hero-stagger-item hero-venue-tag">South Florida, Florida</p>
       </div>
 
       <!-- Hero to Next Section Transition Bridge -->
