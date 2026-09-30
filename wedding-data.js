@@ -3,9 +3,9 @@ window.WEDDING_CONFIG = {
   theme: "crimson-chateau",
   couple: {
     partnerOne: "Isha",
-    partnerTwo: "Sajan",
+    partnerTwo: "Sagar",
     connector: "&",
-    shortNames: "Isha & Sajan",
+    shortNames: "Isha & Sagar",
     subGreeting: "Together with their families",
     subTagline: "invite you to celebrate the joyous union of love & togetherness"
   },
@@ -22,11 +22,11 @@ window.WEDDING_CONFIG = {
     googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=South+Florida+Hindu+Temple+13010+Griffin+Rd+Southwest+Ranches+Florida"
   },
   copy: {
-    introAriaLabel: "Open Isha and Sajan's Wedding Invitation",
+    introAriaLabel: "Open Isha and Sagar's Wedding Invitation",
     openInvitation: "Click to Open",
     weddingDay: "The Wedding Celebration",
     dearFriends: "Dear Family & Friends,",
-    letterOne: "Two souls, one heart, and a lifetime of love to share. As our beloved sister Isha begins her magical journey with Sajan, we feel immensely blessed and grateful.",
+    letterOne: "Two souls, one heart, and a lifetime of love to share. As our beloved sister Isha begins her magical journey with Sagar, we feel immensely blessed and grateful.",
     letterTwo: "Your presence, warm blessings, and loving wishes mean the world to us as we come together to celebrate this unforgettable milestone of our family.",
     countdownTitle: "The Grand Celebration Begins In",
     countdownDays: "Days",
@@ -47,7 +47,7 @@ window.WEDDING_CONFIG = {
     organizerName: "Goyal & Gupta Family",
     organizerPhone: "+91 98765 43210",
     organizerWhatsapp: "919876543210",
-    giftCopy: "No boxed gifts please. Your warm presence, smiles, and heartfelt blessings are the greatest gifts to Isha & Sajan.",
+    giftCopy: "No boxed gifts please. Your warm presence, smiles, and heartfelt blessings are the greatest gifts to Isha & Sagar.",
     rsvpIntro: "Kindly confirm your presence by submitting the RSVP below or directly on WhatsApp to help us welcome you with warmth.",
     rsvpTitle: "Confirm Your Attendance",
     rsvpButton: "RSVP Now",
@@ -170,14 +170,14 @@ window.WEDDING_CONFIG = {
       { key: "attendance", label: "Will you attend?", type: "select", options: ["Joyfully Accept (Yes! 🎉)", "Regretfully Decline"], required: true },
       { key: "familyGuestCount", label: "Number of Guests", placeholder: "1", type: "number", min: 1, max: 10, required: true },
       { key: "eventsAttending", label: "Functions you'll attend", type: "text", placeholder: "Mehendi, Wedding Ceremony, Reception" },
-      { key: "message", label: "Blessings / Message for Isha & Sajan", placeholder: "Write your blessings for the couple...", type: "textarea", required: false }
+      { key: "message", label: "Blessings / Message for Isha & Sagar", placeholder: "Write your blessings for the couple...", type: "textarea", required: false }
     ],
     submit: "Submit RSVP",
     submitWhatsapp: "Send RSVP via WhatsApp 📲",
     close: "Close",
     closeSymbol: "✕",
     successTitle: "Thank You So Much!",
-    successMessage: "Your RSVP response for Isha & Sajan's wedding has been recorded with love. We look forward to welcoming you!",
+    successMessage: "Your RSVP response for Isha & Sagar's wedding has been recorded with love. We look forward to welcoming you!",
     done: "Close"
   },
   assets: {

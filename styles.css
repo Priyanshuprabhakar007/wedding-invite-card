@@ -1,5 +1,5 @@
 /* ========================================================
-   ISHA & SAJAN LUXURY WEDDING INVITATION STYLESHEET
+   ISHA & SAGAR LUXURY WEDDING INVITATION STYLESHEET
    ======================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Beau+Rivage&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Pinyon+Script&display=swap');
@@ -21,18 +21,6 @@
   --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   --font-display: 'Cinzel', 'Playfair Display', serif;
   --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
-
-  /* Symmetrical Hero Floral Dimensions */
-  --hero-branch-w-mobile: clamp(120px, 34vw, 175px);
-  --hero-branch-w-desktop: clamp(190px, 22vw, 290px);
-  --hero-peony-bottom-w-mobile: clamp(130px, 38vw, 195px);
-  --hero-peony-bottom-w-desktop: clamp(210px, 25vw, 310px);
-  --hero-rose-bottom-w-mobile: clamp(85px, 25vw, 130px);
-  --hero-rose-bottom-w-desktop: clamp(135px, 16vw, 195px);
-  --hero-peony-side-w-mobile: clamp(78px, 22vw, 115px);
-  --hero-peony-side-w-desktop: clamp(125px, 14vw, 175px);
-  --hero-rose-rear-w-mobile: clamp(68px, 19vw, 95px);
-  --hero-rose-rear-w-desktop: clamp(105px, 12vw, 145px);
 }
 
 * {
@@ -195,14 +183,12 @@ button {
 }
 
 /* ========================================================
-   1. CANONICAL LUXURY ENVELOPE ENTRY SCENE (FIXED OVERLAY)
+   1. LUXURY ENVELOPE ENTRY SCENE
    ======================================================== */
 .envelope-scene {
-  position: fixed;
-  inset: 0;
+  position: relative;
   width: 100%;
-  height: 100dvh;
-  height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -213,17 +199,6 @@ button {
   overflow: hidden;
   z-index: 50;
   box-sizing: border-box;
-  will-change: opacity, transform;
-}
-
-.envelope-scene.state-unlocking {
-  pointer-events: none;
-  animation: envelopeToHeroExit 1.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.envelope-scene.state-complete,
-.envelope-scene.is-hidden-done {
-  display: none !important;
 }
 
 .ambient-vignette {
@@ -245,11 +220,50 @@ button {
   filter: blur(40px);
 }
 
+/* ========================================================
+   ENVELOPE MASTER CONTAINER & Z-INDEX HIERARCHY
+   Petal background: 10
+   Ambient background: 20
+   Rear envelope flap: 30
+   Envelope pocket (front): 45
+   Invitation card: 50
+   Closed envelope layer (initial): 52
+   Unseal hit button (initial): 55
+   Active form / inner card content: 60
+   Expanding card morph shell: 80
+   Petals foreground: 95
+   ======================================================== */
+.envelope-scene {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 45%, #fefcf9 0%, #f7f1e6 60%, #eee4d4 100%);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  z-index: 50;
+  box-sizing: border-box;
+  transition: opacity 0.6s ease;
+}
+
+.envelope-scene.state-unlocking {
+  background: radial-gradient(circle at 50% 45%, #fefcf9 0%, #f4eae0 50%, #e0d0be 100%);
+}
+
+.envelope-scene.state-complete,
+.envelope-scene.is-hidden-done {
+  display: none !important;
+}
+
 /* Master Envelope 3D Sizing & Perspective Stage */
 .envelope-wrapper {
   position: relative;
-  width: min(88vw, 470px);
-  max-height: 88svh;
+  width: min(88vw, 460px);
   aspect-ratio: 1122 / 1402;
   margin: 0 auto;
   perspective: 1400px;
@@ -274,24 +288,7 @@ button {
   }
 }
 
-/* Canonical Card Base */
-.card-canonical {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  box-sizing: border-box;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  will-change: transform, opacity, filter;
-  box-shadow: 0 14px 40px rgba(60, 40, 20, 0.22);
-}
-
-.card-img,
-.card-bg-img {
+.envelope-layer-img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -300,264 +297,105 @@ button {
   -webkit-user-drag: none;
 }
 
-/* ========================================================
-   STATE A: CLOSED CARD LAYER
-   ======================================================== */
-.closed-card-layer {
-  z-index: 20;
-  opacity: 1;
-  transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
-  transition: transform 0.4s ease;
+/* Layer 1: Rear Envelope Back/Pocket Interior */
+.envelope-back-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
 }
 
-.envelope-scene.state-opening .closed-card-layer {
-  animation: closedCardExit 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+/* Layer 2: Standalone Inner Wedding Card (Stationery) */
+.invitation-card {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 25;
+  border-radius: 16px;
+  overflow: hidden;
+  box-sizing: border-box;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  box-shadow: 0 12px 35px rgba(60, 40, 20, 0.22);
 }
 
-@keyframes closedCardExit {
+/* State: Closed */
+.envelope-scene.state-closed .invitation-card {
+  transform: translate3d(0, 75px, 0) scale(0.95);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* State: Opening — Card Rises */
+.envelope-scene.state-opening .invitation-card {
+  animation: cardRiseFromPocket 1.35s cubic-bezier(0.22, 1, 0.36, 1) 1.05s forwards;
+  pointer-events: none;
+}
+
+@keyframes cardRiseFromPocket {
   0% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
+    transform: translate3d(0, 75px, 0) scale(0.95);
+    opacity: 0.6;
   }
   100% {
-    opacity: 0;
-    transform: translate3d(0, -8px, 0) scale(1.035) rotateX(-4deg);
+    transform: translate3d(0, -20px, 0) scale(1);
+    opacity: 1;
   }
 }
 
-.envelope-scene.state-code-entry .closed-card-layer,
-.envelope-scene.state-unlocking .closed-card-layer,
-.envelope-scene.state-complete .closed-card-layer {
-  opacity: 0;
+/* State: Code Entry — Settled */
+.envelope-scene.state-code-entry .invitation-card {
+  transform: translate3d(0, 0, 0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* State: Unlocking — Expands outward into burgundy website */
+.envelope-scene.state-unlocking .invitation-card {
+  animation: cardExpandIntoSite 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
   pointer-events: none;
-  display: none;
 }
 
-/* ========================================================
-   WAX SEAL & GLOW (0-550ms ON TAP)
-   ======================================================== */
-.wax-seal-wrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1);
-  width: 110px;
-  height: 110px;
-  z-index: 35;
-  pointer-events: none;
-  transform-origin: center center;
-  transition: transform 0.5s ease, opacity 0.4s ease;
-}
-
-.wax-seal-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 6px 16px rgba(74, 1, 22, 0.45));
-}
-
-.seal-glow-layer {
-  position: absolute;
-  inset: -30%;
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(0.75);
-}
-
-.seal-glow-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  mix-blend-mode: screen;
-}
-
-.envelope-scene.state-opening .wax-seal-wrapper {
-  animation: sealReleaseAndFade 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.envelope-scene.state-opening .seal-glow-layer {
-  animation: sealGlowPulse 0.55s ease-out forwards;
-}
-
-@keyframes sealReleaseAndFade {
+@keyframes cardExpandIntoSite {
   0% {
-    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(1);
     opacity: 1;
+    border-radius: 16px;
   }
   40% {
-    transform: translate(-50%, -50%) scale(1.07) rotate(1.5deg);
+    transform: translate3d(0, 0, 0) scale(1.04);
     opacity: 0.95;
+    border-radius: 12px;
   }
   100% {
-    transform: translate(-50%, -50%) scale(0.88) rotate(0deg);
+    transform: translate3d(0, 0, 0) scale(1.35);
     opacity: 0;
+    border-radius: 0;
   }
 }
 
-@keyframes sealGlowPulse {
-  0% {
-    opacity: 0;
-    transform: scale(0.75);
-  }
-  50% {
-    opacity: 0.55;
-    transform: scale(1.0);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.2);
-  }
-}
-
-.envelope-scene.state-code-entry .wax-seal-wrapper,
-.envelope-scene.state-unlocking .wax-seal-wrapper,
-.envelope-scene.state-complete .wax-seal-wrapper {
-  opacity: 0;
-  display: none;
+/* Card Gold Border & Center Glow FX */
+.card-gold-border {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(223, 190, 118, 0.65);
+  border-radius: inherit;
   pointer-events: none;
+  z-index: 65;
 }
 
-/* ========================================================
-   STATE B: OPEN / REVEALED CARD LAYER
-   ======================================================== */
-.open-card-layer {
-  z-index: 15;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate3d(0, 18px, 0) scale(0.96) rotateX(-4deg);
-  filter: blur(3px);
-}
-
-.envelope-scene.state-opening .open-card-layer {
-  animation: openCardEnter 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
-}
-
-@keyframes openCardEnter {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 18px, 0) scale(0.96) rotateX(-4deg);
-    filter: blur(3px);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1) rotateX(0deg);
-    filter: blur(0);
-  }
-}
-
-.envelope-scene.state-code-entry .open-card-layer {
-  animation: openCardMorphExit 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-@keyframes openCardMorphExit {
-  0% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0) scale(0.985);
-  }
-}
-
-.envelope-scene.state-unlocking .open-card-layer,
-.envelope-scene.state-complete .open-card-layer {
-  opacity: 0;
-  display: none;
-}
-
-/* ========================================================
-   STATE C: CODE ENTRY CARD LAYER
-   ======================================================== */
-.code-card-layer {
-  z-index: 25;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate3d(0, 14px, 0) scale(0.97);
-}
-
-.envelope-scene.state-code-entry .code-card-layer {
-  animation: codeCardMorphEnter 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  pointer-events: auto;
-}
-
-@keyframes codeCardMorphEnter {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 14px, 0) scale(0.97);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
-@keyframes envelopeToHeroExit {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  35% {
-    opacity: 1;
-    transform: scale(1.005);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.97);
-  }
-}
-
-/* Phase A & B: Card confirmation glow & gentle retreat */
-.envelope-scene.state-unlocking .code-card-layer {
-  animation: cardConfirmationGlow 1.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  pointer-events: none;
-}
-
-@keyframes cardConfirmationGlow {
-  0% {
-    transform: translate3d(0, 0, 0) scale(1);
-    box-shadow: 0 14px 40px rgba(60, 40, 20, 0.22);
-  }
-  25% {
-    transform: translate3d(0, 0, 0) scale(1.015);
-    box-shadow: 0 16px 50px rgba(223, 190, 118, 0.45), 0 0 30px rgba(223, 190, 118, 0.35);
-  }
-  100% {
-    transform: translate3d(0, 0, 0) scale(0.97);
-    box-shadow: 0 8px 24px rgba(60, 40, 20, 0.1);
-  }
-}
-
-/* Main Site Overlay Reveal Prep & Active States */
-#mainSite {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-}
-
-#mainSite.hero-reveal-prep {
-  opacity: 0;
-  transform: scale(1.025);
-  will-change: transform, opacity;
-}
-
-#mainSite.hero-reveal-active {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 1.15s ease, transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, opacity;
-}
-
-/* ========================================================
-   GLOW & DUST FX FOR UNLOCKING SEQUENCE
-   ======================================================== */
 .card-center-glow {
   position: absolute;
   inset: -20%;
   pointer-events: none;
   z-index: 30;
   opacity: 0;
-  transform: scale(0.85);
+  transform: scale(0.9);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .center-glow-img {
@@ -565,7 +403,7 @@ button {
   height: 100%;
   object-fit: cover;
   mix-blend-mode: screen;
-  filter: blur(16px);
+  filter: blur(15px);
 }
 
 .card-gold-dust {
@@ -574,6 +412,7 @@ button {
   pointer-events: none;
   z-index: 31;
   opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
 .gold-dust-img {
@@ -583,63 +422,95 @@ button {
   mix-blend-mode: screen;
 }
 
-.envelope-scene.state-unlocking .card-center-glow {
-  animation: unlockGlowPulse 1.1s ease-out forwards;
+/* 2A: Card Front Cover Artwork */
+.card-cover-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
 
-@keyframes unlockGlowPulse {
-  0% {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  40% {
-    opacity: 0.65;
-    transform: scale(1.08);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.25);
-  }
+.envelope-scene.state-code-entry .card-cover-face,
+.envelope-scene.state-unlocking .card-cover-face {
+  opacity: 0;
 }
 
-.envelope-scene.state-unlocking .card-gold-dust {
-  animation: dustParticlesPulse 1.3s ease-out 0.15s forwards;
+.card-art {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
-@keyframes dustParticlesPulse {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  50% {
-    opacity: 0.4;
-    transform: scale(1.05);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.15);
-  }
+/* 2B: Card Inner Panel (Stationery for Code Entry) */
+.card-inner-panel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  overflow: hidden;
+  transition: opacity 0.4s ease;
 }
 
-/* Phase A: Unlocking Form Content Fade Out (0.0s - 0.35s) */
-.envelope-scene.state-unlocking .card-form-content {
-  animation: formContentFadeOut 0.35s ease-out forwards;
+.envelope-scene.state-code-entry .card-inner-panel {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-@keyframes formContentFadeOut {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(8px);
-  }
+.envelope-scene.state-unlocking .card-inner-panel {
+  opacity: 0.9;
 }
 
-/* ========================================================
-   CODE FORM STYLING & STAGGERED ENTRANCE
-   ======================================================== */
+.card-inner-bg-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  pointer-events: none;
+}
+
+/* Card Back to Envelope Button */
+.card-back-btn {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  background: rgba(255, 253, 248, 0.92);
+  backdrop-filter: blur(6px);
+  color: var(--crimson);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(102, 2, 31, 0.1);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.card-back-btn:hover {
+  background: var(--crimson);
+  color: #ffffff;
+  transform: translateX(-2px);
+}
+
+/* Code Form Content */
 .card-invite-form {
   position: absolute;
   inset: 0;
@@ -680,7 +551,6 @@ button {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   margin: 0 0 4px;
-  opacity: 0;
 }
 
 .card-form-subtitle {
@@ -689,27 +559,26 @@ button {
   font-size: clamp(11.5px, 2.4vw, 14px);
   font-style: italic;
   margin: 0;
-  opacity: 0;
 }
 
-/* Staggered Form Entrance (Requirement 10) */
+/* Staggered form entrance */
 .envelope-scene.state-code-entry .card-form-title {
-  animation: formItemIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.0s both;
+  animation: fadeInStagger 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }
 
 .envelope-scene.state-code-entry .card-form-subtitle {
-  animation: formItemIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.10s both;
+  animation: fadeInStagger 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
 }
 
 .envelope-scene.state-code-entry .card-input-pill-group {
-  animation: formItemIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
+  animation: fadeInStagger 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
 }
 
 .envelope-scene.state-code-entry .card-invite-submit-btn {
-  animation: formItemIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.26s both;
+  animation: fadeInStagger 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
 }
 
-@keyframes formItemIn {
+@keyframes fadeInStagger {
   0% {
     opacity: 0;
     transform: translateY(12px);
@@ -717,22 +586,6 @@ button {
   100% {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-/* Unlocking Form Content Fade Out */
-.envelope-scene.state-unlocking .card-form-content {
-  animation: formContentFadeOut 0.38s ease-out forwards;
-}
-
-@keyframes formContentFadeOut {
-  0% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(10px);
   }
 }
 
@@ -744,7 +597,6 @@ button {
   margin-bottom: 3.5%;
   filter: drop-shadow(0 4px 12px rgba(74, 1, 22, 0.18));
   transition: transform 0.3s ease, filter 0.3s ease;
-  opacity: 0;
 }
 
 .card-input-pill-img {
@@ -796,17 +648,14 @@ button {
   margin-bottom: 2.5%;
 }
 
-/* Subtle Input Shake on Wrong Code (Requirement 11) */
 .card-input-pill-group.has-error {
-  animation: codeShake 0.3s ease-in-out;
+  animation: subtleShake 0.35s ease-in-out;
 }
 
-@keyframes codeShake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  50% { transform: translateX(4px); }
-  75% { transform: translateX(-2px); }
-  100% { transform: translateX(0); }
+@keyframes subtleShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
 
 /* Submit CTA Button */
@@ -820,7 +669,6 @@ button {
   cursor: pointer;
   filter: drop-shadow(0 6px 16px rgba(74, 1, 22, 0.35));
   transition: transform 0.2s ease, filter 0.2s ease;
-  opacity: 0;
 }
 
 .card-invite-submit-btn:hover,
@@ -839,6 +687,258 @@ button {
   object-fit: fill;
   display: block;
   pointer-events: none;
+}
+
+/* Layer 3: Envelope Pocket (Base layer covering lower half) */
+.envelope-pocket-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 35;
+  pointer-events: none;
+  transform: translateY(0);
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+}
+
+.envelope-scene.state-opening .envelope-pocket-layer,
+.envelope-scene.state-code-entry .envelope-pocket-layer {
+  transform: translateY(20px);
+  opacity: 0.85;
+}
+
+.envelope-scene.state-unlocking .envelope-pocket-layer {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* Layer 4: Left Flap (3D Hinge Left) */
+.envelope-flap-left {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 40;
+  pointer-events: none;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  backface-visibility: hidden;
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.9s ease;
+}
+
+.envelope-scene.state-opening .envelope-flap-left {
+  animation: openLeftFlap3D 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
+}
+
+.envelope-scene.state-code-entry .envelope-flap-left,
+.envelope-scene.state-unlocking .envelope-flap-left {
+  transform: rotateY(-110deg);
+  opacity: 0.15;
+}
+
+@keyframes openLeftFlap3D {
+  0% {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(-110deg);
+    opacity: 0.15;
+  }
+}
+
+/* Layer 5: Right Flap (3D Hinge Right) */
+.envelope-flap-right {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 41;
+  pointer-events: none;
+  transform-origin: right center;
+  transform: rotateY(0deg);
+  backface-visibility: hidden;
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s, opacity 0.9s ease;
+}
+
+.envelope-scene.state-opening .envelope-flap-right {
+  animation: openRightFlap3D 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards;
+}
+
+.envelope-scene.state-code-entry .envelope-flap-right,
+.envelope-scene.state-unlocking .envelope-flap-right {
+  transform: rotateY(110deg);
+  opacity: 0.15;
+}
+
+@keyframes openRightFlap3D {
+  0% {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotateY(110deg);
+    opacity: 0.15;
+  }
+}
+
+/* Layer 6: Top Flap (3D Hinge Top) */
+.envelope-flap-top {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 45;
+  pointer-events: none;
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  backface-visibility: hidden;
+  transition: transform 1.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease;
+}
+
+.envelope-scene.state-opening .envelope-flap-top {
+  animation: openTopFlap3D 1.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.envelope-scene.state-code-entry .envelope-flap-top,
+.envelope-scene.state-unlocking .envelope-flap-top {
+  transform: rotateX(-165deg);
+  opacity: 0;
+}
+
+@keyframes openTopFlap3D {
+  0% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+  60% {
+    transform: rotateX(-100deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: rotateX(-165deg);
+    opacity: 0;
+  }
+}
+
+/* Layer 7: Wax Seal & Sparkle/Glow FX */
+.wax-seal-wrapper {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  width: 110px;
+  height: 110px;
+  z-index: 60;
+  pointer-events: none;
+  transform-origin: center center;
+  transition: transform 0.5s ease, opacity 0.4s ease;
+}
+
+.wax-seal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 16px rgba(74, 1, 22, 0.4));
+}
+
+.seal-glow-layer {
+  position: absolute;
+  inset: -30%;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.seal-glow-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mix-blend-mode: screen;
+}
+
+.seal-flare-layer {
+  position: absolute;
+  inset: -40%;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.seal-flare-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Wax Seal Opening Sequence */
+.envelope-scene.state-opening .wax-seal-wrapper {
+  animation: sealReleaseAndFade 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.envelope-scene.state-opening .seal-glow-layer {
+  animation: sealGlowPulse 0.55s ease-out forwards;
+}
+
+.envelope-scene.state-opening .seal-flare-layer {
+  animation: sealFlarePulse 0.5s ease-out forwards;
+}
+
+.envelope-scene.state-code-entry .wax-seal-wrapper,
+.envelope-scene.state-unlocking .wax-seal-wrapper {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.85);
+  display: none;
+}
+
+@keyframes sealReleaseAndFade {
+  0% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  35% {
+    transform: translate(-50%, -50%) scale(1.07) rotate(1.5deg);
+    opacity: 1;
+  }
+  65% {
+    transform: translate(-50%, -50%) scale(0.96) rotate(1deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.85) rotate(0deg);
+    opacity: 0;
+  }
+}
+
+@keyframes sealGlowPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes sealFlarePulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(0deg);
+  }
+  40% {
+    opacity: 0.9;
+    transform: scale(1.2) rotate(15deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.6) rotate(30deg);
+  }
 }
 
 /* Subtle "Tap to open" prompt */
@@ -961,7 +1061,7 @@ button {
   color: var(--paper);
 }
 
-/* Background Layer with Deep Burgundy Artwork (Requirement 6 & 14) */
+/* Background Layer with Deep Burgundy Artwork */
 .hero-bg-layer {
   position: absolute;
   inset: 0;
@@ -978,18 +1078,8 @@ button {
   object-fit: cover;
   object-position: center;
   display: block;
-  transform: scale(1.035);
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-.hero.is-animating-entrance .hero-bg-img {
-  animation: heroBgEntrance 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
-}
-
-.hero.is-revealed .hero-bg-img {
-  opacity: 1;
   transform: scale(1);
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hero-bg-glow {
@@ -1022,28 +1112,9 @@ button {
   filter: blur(42px);
   pointer-events: none;
   z-index: 2;
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-.hero.is-animating-entrance .hero-ambient-glow {
-  animation: heroGlowFadeIn 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both;
-}
-
-.hero.is-revealed .hero-ambient-glow {
   opacity: 0.88;
-  animation: heroGlowBreathe 8s ease-in-out infinite alternate;
-}
-
-@keyframes heroGlowFadeIn {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -46%) scale(0.92);
-  }
-  100% {
-    opacity: 0.88;
-    transform: translate(-50%, -46%) scale(1);
-  }
+  will-change: transform, opacity;
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
 @keyframes heroGlowBreathe {
@@ -1057,87 +1128,12 @@ button {
   }
 }
 
-@keyframes heroBgEntrance {
-  0% {
-    opacity: 0;
-    transform: scale(1.035);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+.hero.is-revealed .hero-ambient-glow {
+  animation: heroGlowBreathe 7s ease-in-out infinite alternate;
 }
 
 /* ========================================================
-   SACRED GANESH JI WATERMARK LAYER (Layer z-index: 4)
-   Positioned behind flowers and couple names as an elegant,
-   clearly visible watermark embedded within the burgundy hero.
-   ======================================================== */
-.hero-ganesh-layer {
-  position: absolute;
-  left: 50%;
-  top: 48%;
-  transform: translate(-50%, -50%);
-  z-index: 4;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-.hero-ganesh-img {
-  display: block;
-  width: clamp(420px, 42vw, 620px);
-  max-width: none;
-  height: auto;
-  opacity: 1;
-  filter: brightness(0.88) saturate(0.75);
-  pointer-events: none;
-}
-
-@media (max-width: 768px) {
-  .hero-ganesh-layer {
-    top: 47%;
-  }
-
-  .hero-ganesh-img {
-    width: clamp(270px, 78vw, 390px);
-  }
-}
-
-/* Staged Entrance Animation (1.8s, 0.35s delay) */
-.hero.is-animating-entrance .hero-ganesh-layer {
-  animation: ganeshHeroReveal 1.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
-}
-
-/* Resting State */
-.hero.is-revealed .hero-ganesh-layer {
-  opacity: 0.22;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-@keyframes ganeshHeroReveal {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.94);
-  }
-  to {
-    opacity: 0.22;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-/* ========================================================
-   HERO FLORAL STAGE & PERFECT SYMMETRICAL PAIRS
-   Pair 1: Upper branches (Gold Left / Ivory Right)
-   Pair 2: Bottom Red Peonies (Left / Right)
-   Pair 3: Bottom Ivory Roses (Left / Right)
-   Pair 4: Side Peonies (Left / Right)
-   Pair 5: Rear Ivory Roses (Left / Right)
+   HERO FLORAL STAGE & INDEPENDENT FLOWER LAYERS
    ======================================================== */
 .hero-floral-stage {
   position: absolute;
@@ -1166,15 +1162,10 @@ button {
   -webkit-user-drag: none;
 }
 
-.flower-branch-gold-img {
-  filter: drop-shadow(0 4px 14px rgba(45, 0, 10, 0.6));
-  transform: scaleX(1);
-}
-
-.floral-branch-ivory .flower-asset,
+/* Shadows and Enhancements */
+.flower-branch-gold-img,
 .flower-branch-ivory-img {
   filter: drop-shadow(0 4px 14px rgba(45, 0, 10, 0.6));
-  transform: scaleX(-1);
 }
 
 .flower-peony-img {
@@ -1185,160 +1176,154 @@ button {
   filter: drop-shadow(0 6px 18px rgba(35, 0, 8, 0.6));
 }
 
-/* --- Mobile Floral Positioning (< 768px) --- */
-/* Pair 1: Upper Branches (Perfect Mirrored Geometry) */
-.floral-branch-gold,
-.floral-branch-ivory {
-  top: -15px;
-  width: var(--hero-branch-w-mobile, clamp(120px, 36vw, 185px));
+/* Layering Z-Indexes */
+.layer-rear-branch {
+  z-index: 3;
+}
+.layer-rear-flower {
   z-index: 4;
 }
+.layer-fg-flower {
+  z-index: 12;
+}
 
+/* ========================================================
+   RESPONSIVE FLORAL POSITIONS — MOBILE FIRST (< 768px)
+   ======================================================== */
 .floral-branch-gold {
+  top: -15px;
   left: -20px;
+  width: clamp(120px, 36vw, 185px);
   transform-origin: top left;
 }
 
 .floral-branch-ivory {
+  top: -15px;
   right: -20px;
+  width: clamp(115px, 34vw, 175px);
   transform-origin: top right;
 }
 
-/* Pair 2: Bottom Red Peonies */
+.floral-rose-rear-left {
+  top: clamp(110px, 20vh, 160px);
+  left: -12px;
+  width: clamp(65px, 18vw, 95px);
+  transform-origin: center left;
+  opacity: 0.85;
+}
+
+.floral-rose-rear-right {
+  top: clamp(110px, 20vh, 160px);
+  right: -12px;
+  width: clamp(65px, 18vw, 95px);
+  transform-origin: center right;
+  opacity: 0.85;
+}
+
+.floral-peony-side-left {
+  bottom: clamp(120px, 24vh, 185px);
+  left: -25px;
+  width: clamp(75px, 22vw, 115px);
+  transform-origin: center left;
+}
+
+.floral-peony-side-right {
+  bottom: clamp(120px, 24vh, 185px);
+  right: -25px;
+  width: clamp(75px, 22vw, 115px);
+  transform-origin: center right;
+}
+
 .floral-peony-bottom-left {
   bottom: -25px;
   left: -20px;
-  width: var(--hero-peony-bottom-w-mobile, clamp(130px, 39vw, 205px));
+  width: clamp(130px, 39vw, 205px);
   transform-origin: bottom left;
-  z-index: 12;
 }
 
 .floral-peony-bottom-right {
   bottom: -25px;
   right: -20px;
-  width: var(--hero-peony-bottom-w-mobile, clamp(130px, 39vw, 205px));
+  width: clamp(130px, 39vw, 205px);
   transform-origin: bottom right;
-  z-index: 12;
 }
 
-/* Pair 3: Bottom Ivory Roses */
-.floral-rose-bottom-left {
+.floral-rose-bottom-center-left {
   bottom: 8px;
   left: clamp(80px, 26vw, 140px);
-  width: var(--hero-rose-bottom-w-mobile, clamp(85px, 25vw, 130px));
+  width: clamp(85px, 25vw, 130px);
   transform-origin: bottom center;
-  z-index: 10;
 }
 
-.floral-rose-bottom-right {
+.floral-rose-bottom-center-right {
   bottom: 8px;
   right: clamp(80px, 26vw, 140px);
-  width: var(--hero-rose-bottom-w-mobile, clamp(85px, 25vw, 130px));
+  width: clamp(85px, 25vw, 130px);
   transform-origin: bottom center;
-  z-index: 10;
 }
 
-/* Pair 4: Side Peonies */
-.floral-peony-side-left {
-  top: 48%;
-  left: -25px;
-  transform: translateY(-50%);
-  width: var(--hero-peony-side-w-mobile, clamp(80px, 22vw, 120px));
-  transform-origin: center left;
-  z-index: 6;
-}
-
-.floral-peony-side-right {
-  top: 48%;
-  right: -25px;
-  transform: translateY(-50%);
-  width: var(--hero-peony-side-w-mobile, clamp(80px, 22vw, 120px));
-  transform-origin: center right;
-  z-index: 6;
-}
-
-/* Pair 5: Rear Ivory Roses */
-.floral-rose-rear-left {
-  bottom: 60px;
-  left: -10px;
-  width: var(--hero-rose-rear-w-mobile, clamp(75px, 20vw, 110px));
-  transform-origin: center left;
-  z-index: 2;
-}
-
-.floral-rose-rear-right {
-  bottom: 60px;
-  right: -10px;
-  width: var(--hero-rose-rear-w-mobile, clamp(75px, 20vw, 110px));
-  transform-origin: center right;
-  z-index: 2;
-}
-
-/* --- Desktop Floral Positioning (>= 769px) --- */
+/* ========================================================
+   RESPONSIVE FLORAL POSITIONS — DESKTOP (> 768px)
+   ======================================================== */
 @media (min-width: 769px) {
-  /* Pair 1: Upper Branches */
   .floral-branch-gold {
     top: -20px;
     left: -20px;
-    width: var(--hero-branch-w-desktop, clamp(210px, 24vw, 310px));
+    width: clamp(210px, 24vw, 310px);
   }
 
   .floral-branch-ivory {
     top: -20px;
     right: -20px;
-    width: var(--hero-branch-w-desktop, clamp(210px, 24vw, 310px));
+    width: clamp(200px, 22vw, 290px);
   }
 
-  /* Pair 2: Bottom Red Peonies */
+  .floral-rose-rear-left {
+    top: 22%;
+    left: 10px;
+    width: clamp(100px, 12vw, 150px);
+  }
+
+  .floral-rose-rear-right {
+    top: 22%;
+    right: 10px;
+    width: clamp(100px, 12vw, 150px);
+  }
+
+  .floral-peony-side-left {
+    bottom: 28%;
+    left: -10px;
+    width: clamp(130px, 15vw, 190px);
+  }
+
+  .floral-peony-side-right {
+    bottom: 28%;
+    right: -10px;
+    width: clamp(130px, 15vw, 190px);
+  }
+
   .floral-peony-bottom-left {
     bottom: -35px;
     left: -15px;
-    width: var(--hero-peony-bottom-w-desktop, clamp(220px, 26vw, 330px));
+    width: clamp(220px, 26vw, 330px);
   }
 
   .floral-peony-bottom-right {
     bottom: -35px;
     right: -15px;
-    width: var(--hero-peony-bottom-w-desktop, clamp(220px, 26vw, 330px));
+    width: clamp(220px, 26vw, 330px);
   }
 
-  /* Pair 3: Bottom Ivory Roses */
-  .floral-rose-bottom-left {
+  .floral-rose-bottom-center-left {
     bottom: 12px;
     left: clamp(160px, 19vw, 260px);
-    width: var(--hero-rose-bottom-w-desktop, clamp(140px, 15vw, 200px));
+    width: clamp(140px, 15vw, 200px);
   }
 
-  .floral-rose-bottom-right {
+  .floral-rose-bottom-center-right {
     bottom: 12px;
     right: clamp(160px, 19vw, 260px);
-    width: var(--hero-rose-bottom-w-desktop, clamp(140px, 15vw, 200px));
-  }
-
-  /* Pair 4: Side Peonies */
-  .floral-peony-side-left {
-    top: 48%;
-    left: -20px;
-    width: var(--hero-peony-side-w-desktop, clamp(130px, 14vw, 190px));
-  }
-
-  .floral-peony-side-right {
-    top: 48%;
-    right: -20px;
-    width: var(--hero-peony-side-w-desktop, clamp(130px, 14vw, 190px));
-  }
-
-  /* Pair 5: Rear Ivory Roses */
-  .floral-rose-rear-left {
-    bottom: 85px;
-    left: 10px;
-    width: var(--hero-rose-rear-w-desktop, clamp(110px, 12vw, 160px));
-  }
-
-  .floral-rose-rear-right {
-    bottom: 85px;
-    right: 10px;
-    width: var(--hero-rose-rear-w-desktop, clamp(110px, 12vw, 160px));
+    width: clamp(140px, 15vw, 200px);
   }
 }
 
@@ -1374,7 +1359,7 @@ button {
   font-size: clamp(11.5px, 2.8vw, 13.5px);
   letter-spacing: 0.34em;
   text-transform: uppercase;
-  color: #dfbe76;
+  color: #dfbe76; /* Warm muted gold */
   margin-bottom: 12px;
   font-weight: 500;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7), 0 0 16px rgba(223, 190, 118, 0.25);
@@ -1383,7 +1368,7 @@ button {
 .script-line {
   font-family: var(--font-script);
   font-size: clamp(40px, 8.8vw, 58px);
-  color: #fffaf0;
+  color: #fffaf0; /* Warm champagne / ivory */
   line-height: 1.1;
   margin-bottom: 8px;
   text-shadow: 
@@ -1413,7 +1398,7 @@ button {
   font-family: var(--font-display);
   font-size: clamp(14px, 3.6vw, 18px);
   letter-spacing: 0.34em;
-  color: #fff9f2;
+  color: #fff9f2; /* Warm ivory */
   text-transform: uppercase;
   border-top: 1px solid rgba(223, 190, 118, 0.55);
   border-bottom: 1px solid rgba(223, 190, 118, 0.55);
@@ -1431,7 +1416,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin: 4px 0 6px;
+  margin: 4px 0 12px;
 }
 
 .hero-flourish .flourish-bar {
@@ -1455,7 +1440,7 @@ button {
   font-family: var(--font-script);
   font-size: clamp(66px, 17vw, 102px);
   line-height: 0.88;
-  color: #fffdfa;
+  color: #fffdfa; /* Warm ivory / soft white — NOT grey! */
   text-shadow: 
     0 4px 22px rgba(0, 0, 0, 0.85),
     0 2px 8px rgba(0, 0, 0, 0.9),
@@ -1474,7 +1459,7 @@ button {
 .couple-names #connector {
   font-size: 0.55em;
   line-height: 0.72;
-  color: #f7e2b2;
+  color: #f7e2b2; /* Brighter champagne/gold */
   margin: 4px 0;
   font-family: var(--font-serif);
   font-style: italic;
@@ -1482,12 +1467,12 @@ button {
 }
 
 .hero-venue-tag {
-  margin-top: 0;
+  margin-top: 18px;
   font-family: var(--font-serif);
-  font-size: clamp(16px, 3.8vw, 20px);
+  font-size: clamp(17px, 4vw, 21px);
   font-style: italic;
   letter-spacing: 0.05em;
-  color: #f6edd9;
+  color: #f6edd9; /* Soft champagne/ivory */
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
 }
 
@@ -1527,165 +1512,147 @@ button {
 }
 
 /* ========================================================
-   SYNCHRONIZED HERO ENTRANCE TIMELINE (Requirements 9, 10, 11)
-   0.25s hero burgundy background starts
-   0.40s top branches enter together (Pair 1)
-   0.62s bottom red peonies enter together (Pair 2)
-   0.82s bottom ivory roses enter together (Pair 3)
-   0.98s side peonies enter together (Pair 4)
-   1.12s rear ivory flowers softly appear (Pair 5)
-   1.15s small top ornament
-   1.30s "Together with their families"
-   1.50s Isha
-   1.68s &
-   1.86s Sajan
-   2.12s "The Wedding Celebration"
-   2.34s NOVEMBER 2026
-   2.55s flourish
-   2.72s South Florida, Florida
+   CINEMATIC FLORAL & TYPOGRAPHY ENTRANCE ANIMATIONS
    ======================================================== */
-
-/* Pair 1: Upper Branches (Synchronized 0.40s delay, 1.3s duration) */
 .hero.is-animating-entrance .floral-branch-gold {
-  animation: entranceBranchLeft 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.40s both;
+  animation: entranceBranchGold 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
 }
 
 .hero.is-animating-entrance .floral-branch-ivory {
-  animation: entranceBranchRight 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.40s both;
+  animation: entranceBranchIvory 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both;
 }
 
-/* Pair 2: Bottom Red Peonies (0.62s delay, 1.35s duration) */
-.hero.is-animating-entrance .floral-peony-bottom-left,
+.hero.is-animating-entrance .floral-peony-bottom-left {
+  animation: entrancePeonyBloomLeft 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.0s both;
+}
+
 .hero.is-animating-entrance .floral-peony-bottom-right {
-  animation: entrancePeonyBloomBottom 1.35s cubic-bezier(0.22, 1, 0.36, 1) 0.62s both;
+  animation: entrancePeonyBloomRight 1.1s cubic-bezier(0.22, 1, 0.36, 1) 1.2s both;
 }
 
-/* Pair 3: Bottom Ivory Roses (0.82s delay, 1.2s duration) */
-.hero.is-animating-entrance .floral-rose-bottom-left,
-.hero.is-animating-entrance .floral-rose-bottom-right {
-  animation: entranceRoseBloomBottom 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.82s both;
+.hero.is-animating-entrance .floral-rose-bottom-center-left {
+  animation: entranceRoseIvory 1.0s cubic-bezier(0.22, 1, 0.36, 1) 1.4s both;
 }
 
-/* Pair 4: Side Peonies (0.98s delay, 1.1s duration) */
+.hero.is-animating-entrance .floral-rose-bottom-center-right {
+  animation: entranceRoseIvory 1.0s cubic-bezier(0.22, 1, 0.36, 1) 1.55s both;
+}
+
 .hero.is-animating-entrance .floral-peony-side-left {
-  animation: entrancePeonySideLeft 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.98s both;
+  animation: entrancePeonyBloomLeft 1.0s cubic-bezier(0.22, 1, 0.36, 1) 1.55s both;
 }
 
 .hero.is-animating-entrance .floral-peony-side-right {
-  animation: entrancePeonySideRight 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.98s both;
+  animation: entrancePeonyBloomRight 1.0s cubic-bezier(0.22, 1, 0.36, 1) 1.65s both;
 }
 
-/* Pair 5: Rear Ivory Flowers (1.12s delay, 1.0s duration) */
 .hero.is-animating-entrance .floral-rose-rear-left {
-  animation: entranceRoseRearLeft 1.0s cubic-bezier(0.22, 1, 0.36, 1) 1.12s both;
+  animation: entranceRoseIvory 1.0s cubic-bezier(0.22, 1, 0.36, 1) 1.75s both;
 }
 
 .hero.is-animating-entrance .floral-rose-rear-right {
-  animation: entranceRoseRearRight 1.0s cubic-bezier(0.22, 1, 0.36, 1) 1.12s both;
+  animation: entranceRoseIvory 1.0s cubic-bezier(0.22, 1, 0.36, 1) 1.85s both;
 }
 
-/* Typography Stagger Delays (1.15s -> 2.72s) */
+/* Sequential Typography Entrance */
 .hero.is-animating-entrance .hero-ornament {
-  animation: entranceHeroFade 0.75s cubic-bezier(0.22, 1, 0.36, 1) 1.15s both;
+  animation: entranceHeroFade 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1.8s both;
 }
 
 .hero.is-animating-entrance .hero-subgreeting {
-  animation: entranceHeroSub 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1.30s both;
+  animation: entranceHeroSub 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1.9s both;
 }
 
 .hero.is-animating-entrance .hero-name-isha {
-  animation: entranceHeroName 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1.50s both;
+  animation: entranceHeroName 0.95s cubic-bezier(0.22, 1, 0.36, 1) 2.2s both;
 }
 
 .hero.is-animating-entrance .hero-amp {
-  animation: entranceHeroName 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1.68s both;
+  animation: entranceHeroName 0.9s cubic-bezier(0.22, 1, 0.36, 1) 2.45s both;
 }
 
-.hero.is-animating-entrance .hero-name-sajan {
-  animation: entranceHeroName 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1.86s both;
+.hero.is-animating-entrance .hero-name-sagar {
+  animation: entranceHeroName 0.95s cubic-bezier(0.22, 1, 0.36, 1) 2.7s both;
 }
 
 .hero.is-animating-entrance .hero-wedding-day {
-  animation: entranceHeroDetails 0.8s cubic-bezier(0.22, 1, 0.36, 1) 2.12s both;
+  animation: entranceHeroDetails 0.85s cubic-bezier(0.22, 1, 0.36, 1) 3.1s both;
 }
 
 .hero.is-animating-entrance .hero-date-wrapper {
-  animation: entranceHeroDetails 0.8s cubic-bezier(0.22, 1, 0.36, 1) 2.34s both;
+  animation: entranceHeroDetails 0.85s cubic-bezier(0.22, 1, 0.36, 1) 3.3s both;
 }
 
 .hero.is-animating-entrance .hero-flourish-wrapper {
-  animation: entranceHeroDetails 0.75s cubic-bezier(0.22, 1, 0.36, 1) 2.55s both;
+  animation: entranceHeroDetails 0.8s cubic-bezier(0.22, 1, 0.36, 1) 3.5s both;
 }
 
 .hero.is-animating-entrance .hero-venue-tag {
-  animation: entranceHeroDetails 0.8s cubic-bezier(0.22, 1, 0.36, 1) 2.72s both;
+  animation: entranceHeroDetails 0.85s cubic-bezier(0.22, 1, 0.36, 1) 3.7s both;
 }
 
 /* ========================================================
-   RESTING AMBIENT LIVING MOVEMENT (7–11s, Requirements 4 & 5)
+   AMBIENT RESTING STATE ANIMATIONS
    ======================================================== */
 .hero.is-revealed .floral-branch-gold {
   opacity: 1;
-  animation: ambientBranchSwayLeft 8.0s ease-in-out infinite alternate;
+  animation: ambientBranchSwayLeft 7.2s ease-in-out infinite alternate;
 }
 
 .hero.is-revealed .floral-branch-ivory {
   opacity: 1;
-  animation: ambientBranchSwayRight 8.0s ease-in-out infinite alternate;
+  animation: ambientBranchSwayRight 8.5s ease-in-out infinite alternate;
 }
 
 .hero.is-revealed .floral-peony-bottom-left {
   opacity: 1;
-  animation: ambientPeonyBottomLeft 9.2s ease-in-out infinite alternate;
+  animation: ambientFlowerBreathe1 7.8s ease-in-out infinite alternate;
 }
 
 .hero.is-revealed .floral-peony-bottom-right {
   opacity: 1;
-  animation: ambientPeonyBottomRight 9.2s ease-in-out infinite alternate;
+  animation: ambientFlowerBreathe2 8.4s ease-in-out infinite alternate 0.8s;
 }
 
-.hero.is-revealed .floral-rose-bottom-left {
+.hero.is-revealed .floral-rose-bottom-center-left {
   opacity: 1;
-  animation: ambientRoseBottomLeft 8.0s ease-in-out infinite alternate 0.5s;
+  animation: ambientFlowerBreathe1 8.9s ease-in-out infinite alternate 1.4s;
 }
 
-.hero.is-revealed .floral-rose-bottom-right {
+.hero.is-revealed .floral-rose-bottom-center-right {
   opacity: 1;
-  animation: ambientRoseBottomRight 8.0s ease-in-out infinite alternate 0.5s;
+  animation: ambientFlowerBreathe2 7.6s ease-in-out infinite alternate 2.1s;
 }
 
 .hero.is-revealed .floral-peony-side-left {
   opacity: 1;
-  animation: ambientPeonySideLeft 10.0s ease-in-out infinite alternate 0.8s;
+  animation: ambientFlowerBreathe2 9.1s ease-in-out infinite alternate 0.5s;
 }
 
 .hero.is-revealed .floral-peony-side-right {
   opacity: 1;
-  animation: ambientPeonySideRight 10.0s ease-in-out infinite alternate 0.8s;
+  animation: ambientFlowerBreathe1 8.2s ease-in-out infinite alternate 1.2s;
 }
 
 .hero.is-revealed .floral-rose-rear-left {
-  opacity: 0.82;
-  animation: ambientRoseRearLeft 9.5s ease-in-out infinite alternate 1.0s;
+  opacity: 0.85;
+  animation: ambientFlowerBreathe1 9.5s ease-in-out infinite alternate 1.8s;
 }
 
 .hero.is-revealed .floral-rose-rear-right {
-  opacity: 0.82;
-  animation: ambientRoseRearRight 9.5s ease-in-out infinite alternate 1.0s;
+  opacity: 0.85;
+  animation: ambientFlowerBreathe2 8.7s ease-in-out infinite alternate 2.4s;
 }
 
 .hero.is-revealed .hero-stagger-item {
   opacity: 1;
 }
 
-/* ========================================================
-   ENTRANCE & AMBIENT KEYFRAMES (GPU-accelerated transforms)
-   ======================================================== */
-/* Pair 1: Upper Branches (Perfect Mirrored Movement) */
-@keyframes entranceBranchLeft {
+/* Keyframe Definitions */
+@keyframes entranceBranchGold {
   0% {
     opacity: 0;
-    transform: translate3d(-50px, -30px, 0) rotate(-6deg) scale(0.86);
+    transform: translate3d(-50px, -25px, 0) rotate(-6deg) scale(0.86);
   }
   100% {
     opacity: 1;
@@ -1693,10 +1660,10 @@ button {
   }
 }
 
-@keyframes entranceBranchRight {
+@keyframes entranceBranchIvory {
   0% {
     opacity: 0;
-    transform: translate3d(50px, -30px, 0) rotate(6deg) scale(0.86);
+    transform: translate3d(45px, -30px, 0) rotate(5deg) scale(0.88);
   }
   100% {
     opacity: 1;
@@ -1704,115 +1671,74 @@ button {
   }
 }
 
-/* Pair 2: Bottom Red Peonies */
-@keyframes entrancePeonyBloomBottom {
+@keyframes entrancePeonyBloomLeft {
   0% {
     opacity: 0;
-    transform: translate3d(0, 100px, 0) scale(0.45);
+    transform: scale(0.25) rotate(-5deg);
   }
-  70% {
+  72% {
     opacity: 1;
-    transform: translate3d(0, -5px, 0) scale(1.025);
+    transform: scale(1.06) rotate(1deg);
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: scale(1) rotate(0deg);
   }
 }
 
-/* Pair 3: Bottom Ivory Roses */
-@keyframes entranceRoseBloomBottom {
+@keyframes entrancePeonyBloomRight {
   0% {
     opacity: 0;
-    transform: translate3d(0, 70px, 0) scale(0.45);
+    transform: scale(0.25) rotate(5deg);
+  }
+  72% {
+    opacity: 1;
+    transform: scale(1.06) rotate(-1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes entranceRoseIvory {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 25px, 0) scale(0.45);
   }
   75% {
     opacity: 1;
-    transform: translate3d(0, -3px, 0) scale(1.03);
+    transform: translate3d(0, -3px, 0) scale(1.02);
   }
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
-/* Pair 4: Side Peonies */
-@keyframes entrancePeonySideLeft {
-  0% {
-    opacity: 0;
-    transform: translate3d(-70px, -50%, 0) scale(0.65);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, -50%, 0) scale(1);
-  }
-}
-
-@keyframes entrancePeonySideRight {
-  0% {
-    opacity: 0;
-    transform: translate3d(70px, -50%, 0) scale(0.65);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, -50%, 0) scale(1);
-  }
-}
-
-/* Pair 5: Rear Ivory Flowers */
-@keyframes entranceRoseRearLeft {
-  0% {
-    opacity: 0;
-    transform: translate3d(-40px, 20px, 0) scale(0.75);
-  }
-  100% {
-    opacity: 0.82;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
-@keyframes entranceRoseRearRight {
-  0% {
-    opacity: 0;
-    transform: translate3d(40px, 20px, 0) scale(0.75);
-  }
-  100% {
-    opacity: 0.82;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
-/* Typography Keyframes (18-20px translation, no dramatic scale) */
-@keyframes entranceHeroFade {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 15px, 0);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes entranceHeroSub {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 18px, 0);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
   }
 }
 
 @keyframes entranceHeroName {
   0% {
     opacity: 0;
-    transform: translate3d(0, 22px, 0);
+    transform: translate3d(0, 22px, 0) scale(0.96);
+    filter: blur(7px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes entranceHeroSub {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+    filter: blur(4px);
   }
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0);
+    filter: blur(0);
   }
 }
 
@@ -1827,100 +1753,62 @@ button {
   }
 }
 
-/* Subtle Paired Ambient Sway / Breathing (7–11s, max scale 1.015, rot +-0.8deg, trans 2-4px) */
+@keyframes entranceHeroFade {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @keyframes ambientBranchSwayLeft {
-  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  50% { transform: translate3d(2px, -2px, 0) rotate(-0.6deg) scale(1.012); }
-  100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(1px, -1px, 0) rotate(0.8deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
 }
 
 @keyframes ambientBranchSwayRight {
-  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  50% { transform: translate3d(-2px, -2px, 0) rotate(0.6deg) scale(1.012); }
-  100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-}
-
-@keyframes ambientPeonyBottomLeft {
-  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  50% { transform: translate3d(2px, -3px, 0) rotate(0.6deg) scale(1.015); }
-  100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-}
-
-@keyframes ambientPeonyBottomRight {
-  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-  50% { transform: translate3d(-2px, -3px, 0) rotate(-0.6deg) scale(1.015); }
-  100% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
-}
-
-@keyframes ambientRoseBottomLeft {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(1px, -2px, 0) scale(1.014); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
-@keyframes ambientRoseBottomRight {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(-1px, -2px, 0) scale(1.014); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
-@keyframes ambientPeonySideLeft {
-  0% { transform: translate3d(0, -50%, 0) scale(1); }
-  50% { transform: translate3d(3px, -50%, 0) scale(1.012); }
-  100% { transform: translate3d(0, -50%, 0) scale(1); }
-}
-
-@keyframes ambientPeonySideRight {
-  0% { transform: translate3d(0, -50%, 0) scale(1); }
-  50% { transform: translate3d(-3px, -50%, 0) scale(1.012); }
-  100% { transform: translate3d(0, -50%, 0) scale(1); }
-}
-
-@keyframes ambientRoseRearLeft {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(2px, -2px, 0) scale(1.01); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
-@keyframes ambientRoseRearRight {
-  0% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(-2px, -2px, 0) scale(1.01); }
-  100% { transform: translate3d(0, 0, 0) scale(1); }
-}
-
-/* Reduced Motion Accessibility (Requirement 12) */
-@media (prefers-reduced-motion: reduce) {
-  .hero-bg-img,
-  .hero-ambient-glow,
-  .hero-ganesh-layer,
-  .floral-item,
-  .hero-stagger-item {
-    animation: none !important;
-    transition: opacity 0.4s ease !important;
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
-
-  .hero.is-animating-entrance .hero-ganesh-layer,
-  .hero.is-revealed .hero-ganesh-layer {
-    opacity: 0.22 !important;
-    transform: translate(-50%, -50%) scale(1) !important;
+  50% {
+    transform: translate3d(-1px, -1px, 0) rotate(-0.7deg);
   }
-
-  .hero.is-animating-entrance .hero-bg-img,
-  .hero.is-revealed .hero-bg-img,
-  .hero.is-animating-entrance .floral-item,
-  .hero.is-revealed .floral-item,
-  .hero.is-animating-entrance .hero-stagger-item,
-  .hero.is-revealed .hero-stagger-item {
-    opacity: 1 !important;
-    transform: none !important;
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
+}
 
-  .hero.is-animating-entrance .floral-rose-rear-left,
-  .hero.is-animating-entrance .floral-rose-rear-right,
-  .hero.is-revealed .floral-rose-rear-left,
-  .hero.is-revealed .floral-rose-rear-right {
-    opacity: 0.82 !important;
-    transform: none !important;
+@keyframes ambientFlowerBreathe1 {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.018);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes ambientFlowerBreathe2 {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.014);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
@@ -1986,724 +1874,208 @@ button {
   transform: translateX(-50%) rotate(180deg);
 }
 
-/* Countdown Scratch-Card Experience */
+/* Countdown Timer */
 .countdown-section {
-  position: relative;
   min-height: 320px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 85px 20px 75px;
 }
 
-.scratch-instruction {
-  font-family: var(--font-serif);
-  font-size: clamp(13px, 3.2vw, 15px);
-  font-style: italic;
-  letter-spacing: 0.08em;
-  color: var(--crimson-deep);
-  opacity: 0.85;
-  margin: 8px 0 16px;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  user-select: none;
-}
-
-.scratch-instruction.is-hidden {
-  opacity: 0;
-  transform: translateY(-4px);
-  pointer-events: none;
-}
-
-.countdown.scratch-countdown {
+.countdown {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(8px, 2.5vw, 14px);
-  margin-top: 6px;
-  flex-wrap: nowrap;
+  gap: 12px;
+  margin-top: 15px;
+  flex-wrap: wrap;
 }
 
-.countdown-unit.scratch-unit {
-  position: relative;
-  min-width: clamp(68px, 18vw, 84px);
-  height: clamp(82px, 21vw, 96px);
-  padding: 0;
+.countdown-unit {
+  min-width: 65px;
+  padding: 14px 10px 10px;
   background: #ffffff;
-  border-radius: 10px;
-  border: 1px solid rgba(184, 134, 40, 0.35);
-  box-shadow: 0 8px 22px rgba(90, 10, 30, 0.08), inset 0 0 12px rgba(223, 190, 118, 0.06);
+  border-radius: 8px;
+  border: 1px solid rgba(184, 134, 40, 0.25);
+  box-shadow: 0 6px 18px rgba(90, 10, 30, 0.06);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: none;
-  cursor: grab;
-  outline: none;
-  transform-style: preserve-3d;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
-}
-
-.countdown-unit.scratch-unit:focus-visible {
-  box-shadow: 0 0 0 3px rgba(184, 134, 40, 0.45), 0 8px 22px rgba(90, 10, 30, 0.12);
-}
-
-.countdown-unit.scratch-unit:active {
-  cursor: grabbing;
-}
-
-.countdown-unit.scratch-unit.is-revealed {
-  cursor: default;
-  animation: scratchCardRevealPulse 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-@keyframes scratchCardRevealPulse {
-  0% {
-    transform: scale(0.97);
-    box-shadow: 0 8px 22px rgba(90, 10, 30, 0.08);
-  }
-  50% {
-    transform: scale(1.02);
-    box-shadow: 0 10px 28px rgba(184, 134, 40, 0.25), 0 0 20px rgba(223, 190, 118, 0.3);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 8px 22px rgba(90, 10, 30, 0.08);
-  }
-}
-
-.countdown-content {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 6px;
-  box-sizing: border-box;
-  opacity: 0.95;
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.countdown-unit.scratch-unit:not(.is-revealed) .countdown-content {
-  opacity: 0.4;
-  transform: scale(0.95);
-}
-
-.countdown-unit.scratch-unit.is-revealed .countdown-content {
-  opacity: 1;
-  transform: scale(1);
 }
 
 .countdown-value {
   font-family: var(--font-display);
-  font-size: clamp(26px, 6.2vw, 34px);
+  font-size: clamp(26px, 6vw, 34px);
   font-weight: 700;
   color: var(--crimson);
   line-height: 1;
-  letter-spacing: 0.02em;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .countdown-label {
   font-family: var(--font-sans);
-  font-size: clamp(9.5px, 2.4vw, 11px);
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.15em;
   color: var(--ink-muted);
-  margin-top: 5px;
-  font-weight: 600;
-}
-
-.scratch-overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 5;
-  display: block;
-  touch-action: none;
-  cursor: grab;
-  border-radius: 9px;
-  will-change: opacity;
-}
-
-.scratch-particle {
-  position: fixed;
-  pointer-events: none;
-  z-index: 1000;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #fff7d6 0%, #dfbe76 70%, #b88628 100%);
-  box-shadow: 0 0 6px rgba(223, 190, 118, 0.8);
-  animation: goldDustFly 0.42s ease-out forwards;
-}
-
-@keyframes goldDustFly {
-  0% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(var(--dx, 6px), var(--dy, -10px), 0) scale(0.2);
-  }
+  margin-top: 6px;
+  font-weight: 500;
 }
 
 .countdown-separator {
   font-family: var(--font-display);
-  font-size: clamp(20px, 5vw, 26px);
+  font-size: 26px;
   font-weight: 600;
   color: var(--gold-dark);
-  margin: 0 -2px;
-  user-select: none;
 }
 
-/* Mobile adjustments */
-@media (max-width: 480px) {
-  .countdown.scratch-countdown {
-    gap: 6px;
-  }
-  
-  .countdown-unit.scratch-unit {
-    min-width: 66px;
-    height: 80px;
-    border-radius: 8px;
-  }
-  
-  .countdown-separator {
-    font-size: 18px;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .scratch-instruction {
-    display: none;
-  }
-  .scratch-overlay {
-    display: none !important;
-  }
-  .countdown-unit.scratch-unit {
-    animation: none !important;
-  }
-  .countdown-content {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-/* ========================================================
-   SCHEDULE OF EVENTS / LUXURY BOTANICAL WEDDING TIMELINE
-   - Real floating flower.svg markers (no circular rings/medallions)
-   - Delicate 1px gold vine with subtle leaf accents
-   - Soft translucent ceremony cards
-   - Staggered botanical bloom entrance
-   - Corner decorative gold branches
-   ======================================================== */
+/* Schedule / Timeline */
 .schedule {
-  position: relative;
-  min-height: 480px;
-  padding: 85px 24px 75px;
+  min-height: 460px;
+  padding: 70px 28px 65px;
   text-align: center;
-  overflow: hidden;
-  background-color: #4a0116;
-  color: var(--paper);
 }
 
-/* Faint Decorative Edge Branches */
-.schedule-decor {
-  position: absolute;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.13;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.schedule-decor-left {
-  top: 15px;
-  left: -25px;
-  width: clamp(140px, 20vw, 220px);
-}
-
-.schedule-decor-right {
-  bottom: 15px;
-  right: -25px;
-  width: clamp(140px, 20vw, 220px);
-}
-
-.schedule-branch-img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.schedule-branch-img.mirror {
-  transform: scale(-1, -1);
-}
-
-/* Section Header & Flourish */
-.schedule-header {
-  position: relative;
-  z-index: 2;
-  margin-bottom: 40px;
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.schedule.is-visible .schedule-header {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.schedule .script-heading {
-  margin-bottom: 6px;
-}
-
-.schedule-flourish {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  margin-top: 4px;
-}
-
-.schedule-flourish-line {
-  width: clamp(24px, 6vw, 44px);
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(223, 190, 118, 0.75), transparent);
-}
-
-.schedule-flourish-motif {
-  font-size: 13px;
-  color: var(--gold);
-  letter-spacing: 0.12em;
-  text-shadow: 0 0 10px rgba(223, 190, 118, 0.5);
-}
-
-/* Timeline Layout */
 .timeline {
   position: relative;
-  width: min(100%, 640px);
-  margin: 0 auto;
+  width: min(100%, 480px);
+  margin: 35px auto 0;
   text-align: left;
-  z-index: 2;
 }
 
-/* Delicate Connecting Gold Vine */
 .timeline::before {
   content: "";
   position: absolute;
-  left: 175px;
-  top: 20px;
-  bottom: 20px;
-  width: 1px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(223, 190, 118, 0.55) 10%,
-    rgba(223, 190, 118, 0.25) 50%,
-    rgba(223, 190, 118, 0.55) 90%,
-    transparent
-  );
-  opacity: 0.45;
+  left: 110px;
+  top: 15px;
+  bottom: 25px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--gold), rgba(223, 190, 118, 0.2));
   transform-origin: top;
   transform: scaleY(0);
-  transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1);
-  z-index: 1;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .schedule.is-visible .timeline::before {
   transform: scaleY(1);
 }
 
-/* Timeline Item Container */
 .timeline-item {
   position: relative;
   display: flex;
   align-items: flex-start;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
   opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.timeline-item:last-child {
-  margin-bottom: 0;
-}
-
-/* Subtle botanical leaf accent between events */
-.timeline-item:not(:last-child)::after {
-  content: "❧";
-  position: absolute;
-  left: 175px;
-  bottom: -23px;
-  transform: translateX(-50%) rotate(45deg);
-  font-size: 13px;
-  color: rgba(223, 190, 118, 0.4);
-  pointer-events: none;
-  z-index: 1;
-  line-height: 1;
-  opacity: 0;
-  transition: opacity 0.8s ease 0.4s;
-}
-
-.schedule.is-visible .timeline-item:not(:last-child)::after {
-  opacity: 1;
-}
-
-/* Alternating subtle card entrance (odd right, even left) */
-.timeline-item:nth-child(odd) {
-  transform: translateX(28px);
-}
-
-.timeline-item:nth-child(even) {
-  transform: translateX(-28px);
+  transform: translateY(22px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .timeline-item.is-visible {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
 }
 
-.schedule.is-visible .timeline-item:nth-child(1),
-.timeline-item.is-visible:nth-child(1) {
-  transition-delay: 0.10s;
-}
+.schedule.is-visible .timeline-item:nth-child(1) { transition-delay: 0.15s; }
+.schedule.is-visible .timeline-item:nth-child(2) { transition-delay: 0.35s; }
+.schedule.is-visible .timeline-item:nth-child(3) { transition-delay: 0.55s; }
 
-.schedule.is-visible .timeline-item:nth-child(2),
-.timeline-item.is-visible:nth-child(2) {
-  transition-delay: 0.28s;
-}
-
-.schedule.is-visible .timeline-item:nth-child(3),
-.timeline-item.is-visible:nth-child(3) {
-  transition-delay: 0.46s;
-}
-
-.schedule.is-visible .timeline-item:nth-child(4),
-.timeline-item.is-visible:nth-child(4) {
-  transition-delay: 0.64s;
-}
-
-/* Time & Date Column */
 .timeline-time-col {
-  width: 150px;
-  padding-right: 18px;
-  padding-top: 10px;
+  width: 100px;
+  padding-right: 14px;
   text-align: right;
   flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-
-.timeline-time-box {
-  position: relative;
-  display: inline-block;
 }
 
 .timeline-time {
   font-family: var(--font-display);
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 600;
-  color: #f7e7c4;
-  letter-spacing: 0.04em;
-  line-height: 1.35;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  color: var(--gold);
+  line-height: 1.25;
 }
 
 .timeline-date-small {
-  font-family: var(--font-serif);
-  font-size: 12.5px;
-  font-style: italic;
-  color: rgba(247, 231, 196, 0.82);
-  margin-top: 3px;
-  letter-spacing: 0.03em;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: var(--font-sans);
+  margin-top: 2px;
 }
 
-/* Real Flower Marker Column */
-.timeline-flower-col {
-  width: 50px;
+.timeline-dot-col {
+  width: 20px;
+  position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
   flex-shrink: 0;
-  position: relative;
-  z-index: 2;
-  padding-top: 4px;
+  padding-top: 3px;
 }
 
-/* Pure Floating Flower (No circular outline/ring/medallion) */
-.timeline-flower-marker {
-  width: 48px;
-  height: 48px;
-  display: block;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.65));
-  opacity: 0;
-  transform: translateY(8px) scale(0.45) rotate(-8deg);
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-select: none;
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--crimson-deep);
+  transform: scale(0.6);
+  box-shadow: 0 0 0 rgba(223, 190, 118, 0);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.6s ease;
 }
 
-.timeline-item.is-visible .timeline-flower-marker {
-  animation: flowerMarkerBloom 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-             flowerMarkerResting 7s ease-in-out infinite alternate 0.8s;
+.timeline-item.is-visible .timeline-dot {
+  transform: scale(1);
+  box-shadow: 0 0 14px rgba(223, 190, 118, 0.9);
 }
 
-.schedule.is-visible .timeline-item:nth-child(1) .timeline-flower-marker { animation-delay: 0.12s, 0.92s; }
-.schedule.is-visible .timeline-item:nth-child(2) .timeline-flower-marker { animation-delay: 0.30s, 1.10s; }
-.schedule.is-visible .timeline-item:nth-child(3) .timeline-flower-marker { animation-delay: 0.48s, 1.28s; }
-
-@keyframes flowerMarkerBloom {
-  0% {
-    opacity: 0;
-    transform: translateY(8px) scale(0.45) rotate(-8deg);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(-2px) scale(1.05) rotate(1deg);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1) rotate(0deg);
-  }
-}
-
-@keyframes flowerMarkerResting {
-  0% {
-    transform: translateY(0) scale(1) rotate(-0.5deg);
-  }
-  100% {
-    transform: translateY(0) scale(1.02) rotate(0.5deg);
-  }
-}
-
-/* Event Content & Soft Translucent Card */
 .timeline-content {
   padding-left: 18px;
   flex: 1;
-  min-width: 0;
+  opacity: 0;
+  transform: translateX(12px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.timeline-card {
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(223, 190, 118, 0.20);
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(20, 0, 8, 0.18);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  padding: 16px 20px;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-              border-color 0.35s ease,
-              background 0.35s ease,
-              box-shadow 0.35s ease;
-  position: relative;
-  overflow: hidden;
+.timeline-item.is-visible .timeline-content {
+  opacity: 1;
+  transform: translateX(0);
+}
+  padding-left: 18px;
+  flex: 1;
 }
 
 .timeline-name {
   font-family: var(--font-serif);
-  font-size: clamp(20px, 3vw, 23px);
+  font-size: 20px;
   font-weight: 600;
-  color: #fff8ed;
-  letter-spacing: 0.03em;
-  line-height: 1.25;
-  margin-bottom: 5px;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  line-height: 1.2;
 }
 
 .timeline-venue {
-  font-family: var(--font-serif);
-  font-size: 14.5px;
+  font-size: 14px;
   font-style: italic;
   color: var(--gold-light);
-  display: flex;
-  align-items: center;
-  gap: 7px;
   margin-top: 4px;
-  line-height: 1.35;
-}
-
-.venue-mark,
-.attire-mark {
-  color: var(--gold);
-  font-size: 10px;
-  font-style: normal;
-  line-height: 1;
-  flex-shrink: 0;
 }
 
 .timeline-attire {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  display: inline-block;
   font-size: 11px;
   font-family: var(--font-sans);
-  background: rgba(223, 190, 118, 0.12);
-  color: var(--gold-light);
-  padding: 3px 12px;
+  background: rgba(223, 190, 118, 0.15);
+  color: var(--gold);
+  padding: 2px 10px;
   border-radius: 999px;
-  margin-top: 8px;
-  border: 1px solid rgba(223, 190, 118, 0.22);
+  margin-top: 5px;
+  border: 1px solid rgba(223, 190, 118, 0.3);
 }
 
-/* Desktop Hover */
-@media (hover: hover) and (min-width: 769px) {
-  .timeline-item:hover .timeline-card {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.055);
-    border-color: rgba(223, 190, 118, 0.38);
-    box-shadow: 0 12px 28px rgba(20, 0, 8, 0.25);
-  }
-
-  .timeline-item:hover .timeline-flower-marker {
-    transform: scale(1.04);
-  }
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  .schedule {
-    padding: 65px 16px 55px;
-  }
-
-  .timeline {
-    width: 100%;
-  }
-
-  .timeline::before {
-    left: 103px;
-    top: 15px;
-    bottom: 15px;
-  }
-
-  .timeline-item:not(:last-child)::after {
-    left: 103px;
-    bottom: -21px;
-    font-size: 11px;
-  }
-
-  .timeline-time-col {
-    width: 80px;
-    padding-right: 10px;
-    padding-top: 8px;
-  }
-
-  .timeline-time {
-    font-size: 12px;
-  }
-
-  .timeline-date-small {
-    font-size: 11px;
-  }
-
-  .timeline-flower-col {
-    width: 44px;
-    padding-top: 4px;
-  }
-
-  .timeline-flower-marker {
-    width: 38px;
-    height: 38px;
-  }
-
-  .timeline-content {
-    padding-left: 10px;
-  }
-
-  .timeline-card {
-    padding: 14px 16px;
-    border-radius: 12px;
-  }
-
-  .timeline-name {
-    font-size: 18px;
-  }
-
-  .timeline-venue {
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 400px) {
-  .timeline::before {
-    left: 95px;
-  }
-
-  .timeline-item:not(:last-child)::after {
-    left: 95px;
-  }
-
-  .timeline-time-col {
-    width: 75px;
-    padding-right: 8px;
-  }
-
-  .timeline-time {
-    font-size: 11px;
-  }
-
-  .timeline-date-small {
-    font-size: 10.5px;
-  }
-
-  .timeline-flower-col {
-    width: 40px;
-  }
-
-  .timeline-flower-marker {
-    width: 36px;
-    height: 36px;
-  }
-
-  .timeline-content {
-    padding-left: 8px;
-  }
-
-  .timeline-card {
-    padding: 12px 14px;
-  }
-}
-
-/* Reduced Motion Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .schedule-header,
-  .timeline::before,
-  .timeline-item,
-  .timeline-flower-marker,
-  .timeline-card {
-    animation: none !important;
-    transition: opacity 0.3s ease !important;
-    transform: none !important;
-    opacity: 1 !important;
-  }
-}
-
-/* ========================================================
-   DEDICATED CEREMONY SECTIONS (Mehendi, Wedding, Reception)
-   - Full viewport height (min-height: 100svh)
-   - Real uploaded artwork backgrounds (mehendi.png, marriage.png, reception.png)
-   - Direct section background-image with auto 100% on desktop & cover on mobile
-   - Translucent floating ivory card (background: rgba(255, 252, 246, 0.78))
-   - Cinematic reveal (section scale 1.035 -> 1, card translateY 25px -> 0)
-   ======================================================== */
+/* Dedicated Ceremony Sections */
 .ceremony-details-container {
   display: flex;
   flex-direction: column;
   position: relative;
-  background-color: #f8efe5;
 }
 
 /* Ceremony Decorative Transition Divider */
@@ -2718,8 +2090,6 @@ button {
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.8s ease, transform 0.8s ease;
-  position: relative;
-  z-index: 4;
 }
 
 .ceremony-transition-divider.is-visible {
@@ -2751,119 +2121,46 @@ button {
   font-size: 13px;
   color: var(--gold-dark);
   letter-spacing: 0.2em;
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
-/* Ceremony Section Container */
 .ceremony-detail-section {
+  padding: 85px 24px 80px;
   position: relative;
-  min-height: 100svh;
-  min-height: 100vh;
-  width: 100%;
-  padding: clamp(60px, 8vw, 100px) 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
-  box-sizing: border-box;
-  background-color: #f8efe5;
-  background-repeat: no-repeat;
-  background-position: center center;
-  opacity: 0;
-  transform: scale(1.035);
-  transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.ceremony-detail-section.is-visible {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Direct Background Artwork per Ceremony */
-.ceremony-mehendi {
-  background-image: url("assets/images/mehendi.png") !important;
-}
-
-.ceremony-wedding {
-  background-image: url("assets/images/marriage.png") !important;
-}
-
-.ceremony-reception {
-  background-image: url("assets/images/reception.png") !important;
-}
-
-/* Desktop Image Fit */
-@media (min-width: 769px) {
-  .ceremony-mehendi,
-  .ceremony-wedding,
-  .ceremony-reception {
-    background-size: auto 100% !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    background-color: #f8efe5;
-  }
-}
-
-/* Mobile Image Fit */
-@media (max-width: 768px) {
-  .ceremony-detail-section {
-    min-height: 100svh;
-    padding: 50px 14px 60px;
-  }
-
-  .ceremony-mehendi,
-  .ceremony-wedding,
-  .ceremony-reception {
-    background-size: cover !important;
-    background-position: center top !important;
-    background-repeat: no-repeat !important;
-  }
-}
-
-/* Floating Translucent Ceremony Card */
 .ceremony-card {
   position: relative;
-  z-index: 3;
-  width: min(92%, 560px);
+  max-width: 540px;
   margin: 0 auto;
-  padding: clamp(28px, 5vw, 40px) clamp(20px, 4vw, 32px);
-  background: rgba(255, 252, 246, 0.78);
-  border: 1px solid rgba(194, 142, 46, 0.38);
-  border-radius: 18px;
-  box-shadow: 0 18px 55px rgba(70, 35, 15, 0.16);
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(7px);
+  padding: 38px 28px 34px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(184, 134, 40, 0.4);
+  outline: 1px solid rgba(184, 134, 40, 0.2);
+  outline-offset: -7px;
+  border-radius: 8px;
+  box-shadow: 0 10px 32px rgba(92, 15, 36, 0.05);
   text-align: center;
-  opacity: 0;
-  transform: translateY(25px) scale(0.985);
-  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
-              transform 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
-}
-
-.ceremony-detail-section.is-visible .ceremony-card {
-  opacity: 1;
-  transform: translateY(0) scale(1);
+  z-index: 2;
 }
 
 .ceremony-card-ornament {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .ceremony-flower-icon {
-  width: 28px;
-  height: 28px;
-  opacity: 0.9;
-  filter: drop-shadow(0 1px 3px rgba(184, 134, 40, 0.3));
+  width: 26px;
+  height: 26px;
+  opacity: 0.85;
 }
 
 .ceremony-title {
   font-family: var(--font-script);
-  font-size: clamp(38px, 8vw, 54px);
+  font-size: clamp(34px, 7vw, 48px);
   color: var(--crimson);
-  margin: 4px 0 6px;
-  line-height: 1.1;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  margin: 6px 0 8px;
+  line-height: 1.15;
 }
 
 .ceremony-meta-badge {
@@ -2877,10 +2174,10 @@ button {
   letter-spacing: 0.12em;
   color: var(--gold-dark);
   text-transform: uppercase;
-  margin: 8px auto 18px;
+  margin: 6px auto 20px;
   padding: 6px 16px;
-  border-top: 1px solid rgba(184, 134, 40, 0.30);
-  border-bottom: 1px solid rgba(184, 134, 40, 0.30);
+  border-top: 1px solid rgba(184, 134, 40, 0.25);
+  border-bottom: 1px solid rgba(184, 134, 40, 0.25);
 }
 
 .ceremony-divider {
@@ -2888,13 +2185,29 @@ button {
   opacity: 0.6;
 }
 
+.ceremony-artwork-wrap {
+  max-width: 320px;
+  margin: 0 auto 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(92, 15, 36, 0.12);
+  border: 1px solid rgba(184, 134, 40, 0.3);
+}
+
+.ceremony-artwork {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 .ceremony-venue-box {
   margin: 18px auto 0;
-  padding: 18px 20px 20px;
-  background: rgba(255, 255, 255, 0.65);
-  border-radius: 12px;
-  border: 1px solid rgba(184, 134, 40, 0.24);
-  box-shadow: 0 4px 16px rgba(102, 2, 31, 0.04);
+  padding: 20px 22px 22px;
+  background: rgba(255, 253, 249, 0.95);
+  border-radius: 8px;
+  border: 1px solid rgba(184, 134, 40, 0.22);
+  box-shadow: inset 0 0 20px rgba(184, 134, 40, 0.04);
 }
 
 .ceremony-venue-label {
@@ -2904,24 +2217,24 @@ button {
   letter-spacing: 0.2em;
   color: var(--gold-dark);
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .ceremony-venue-name {
   font-family: var(--font-display);
-  font-size: clamp(18px, 3.8vw, 22px);
+  font-size: clamp(19px, 4vw, 24px);
   color: var(--crimson);
-  margin: 2px 0 6px;
+  margin: 4px 0 8px;
   font-weight: 700;
   line-height: 1.25;
 }
 
 .ceremony-venue-address {
   font-family: var(--font-serif);
-  font-size: 14.5px;
+  font-size: 15px;
   color: var(--ink-muted);
-  line-height: 1.45;
-  margin: 0 auto 16px;
+  line-height: 1.5;
+  margin: 0 auto 18px;
   max-width: 420px;
 }
 
@@ -2933,10 +2246,10 @@ button {
   background: var(--crimson);
   color: #ffffff;
   text-decoration: none;
-  padding: 11px 26px;
+  padding: 12px 28px;
   border-radius: 999px;
   font-family: var(--font-display);
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -2950,6 +2263,11 @@ button {
   overflow: hidden;
 }
 
+.ceremony-map-button .button-pin {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+
 .ceremony-map-button:hover,
 .ceremony-map-button:focus-visible {
   background: var(--crimson-deep);
@@ -2958,9 +2276,14 @@ button {
   border-color: rgba(223, 190, 118, 0.75);
 }
 
+.ceremony-map-button:hover .button-pin,
+.ceremony-map-button:focus-visible .button-pin {
+  transform: translateY(-3px);
+}
+
 .ceremony-program-box {
-  margin-top: 22px;
-  padding-top: 18px;
+  margin-top: 26px;
+  padding-top: 20px;
   border-top: 1px dashed rgba(184, 134, 40, 0.35);
   text-align: center;
 }
@@ -2970,7 +2293,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .program-flourish {
@@ -2980,7 +2303,7 @@ button {
 
 .ceremony-program-heading {
   font-family: var(--font-display);
-  font-size: 13.5px;
+  font-size: 14px;
   letter-spacing: 0.12em;
   color: var(--crimson);
   text-transform: uppercase;
@@ -2994,8 +2317,8 @@ button {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-width: 380px;
+  gap: 10px;
+  max-width: 360px;
   text-align: left;
 }
 
@@ -3007,24 +2330,7 @@ button {
   font-size: 15px;
   color: var(--ink);
   line-height: 1.45;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-.ceremony-detail-section.is-visible .ceremony-program-item {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.ceremony-detail-section.is-visible .ceremony-program-item:nth-child(1) { transition-delay: 0.35s; }
-.ceremony-detail-section.is-visible .ceremony-program-item:nth-child(2) { transition-delay: 0.42s; }
-.ceremony-detail-section.is-visible .ceremony-program-item:nth-child(3) { transition-delay: 0.49s; }
-.ceremony-detail-section.is-visible .ceremony-program-item:nth-child(4) { transition-delay: 0.56s; }
-.ceremony-detail-section.is-visible .ceremony-program-item:nth-child(5) { transition-delay: 0.63s; }
-.ceremony-detail-section.is-visible .ceremony-program-item:nth-child(6) { transition-delay: 0.70s; }
-.ceremony-detail-section.is-visible .ceremony-program-item:nth-child(7) { transition-delay: 0.77s; }
-.ceremony-detail-section.is-visible .ceremony-program-item:nth-child(8) { transition-delay: 0.84s; }
 
 .program-bullet {
   color: var(--gold-dark);
@@ -3037,17 +2343,273 @@ button {
   flex: 1;
 }
 
-/* Reduced Motion Accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .ceremony-detail-section,
-  .ceremony-card,
-  .ceremony-program-item {
-    animation: none !important;
-    transition: opacity 0.3s ease !important;
-    transform: none !important;
-    opacity: 1 !important;
-  }
+/* ============================================================
+   MEHENDI — "Floral Garden Awakening" Animation
+   ============================================================ */
+.ceremony-mehendi .mehendi-botanical-accents {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
 }
+
+.ceremony-mehendi .mehendi-vine {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  opacity: 0;
+  transition: opacity 1.1s ease 0.2s, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+}
+
+.ceremony-mehendi .mehendi-vine-left {
+  top: 40px;
+  left: 20px;
+  transform: translate(-18px, -18px) scale(0.85);
+}
+
+.ceremony-mehendi .mehendi-vine-right {
+  bottom: 40px;
+  right: 20px;
+  transform: translate(18px, 18px) scale(0.85) rotate(180deg);
+}
+
+.ceremony-mehendi.is-visible .mehendi-vine {
+  opacity: 0.8;
+  transform: translate(0, 0) scale(1);
+}
+
+.ceremony-mehendi .ceremony-card {
+  transform: translateY(32px) scale(1.04);
+  filter: blur(1.5px);
+  opacity: 0;
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ceremony-mehendi.is-visible .ceremony-card {
+  transform: translateY(var(--mehendi-depth-y, 0px)) scale(1);
+  filter: blur(0);
+  opacity: 1;
+}
+
+.ceremony-mehendi .floral-divider {
+  width: 140px;
+  height: 2px;
+  margin: 10px auto 14px;
+  background: linear-gradient(90deg, transparent, rgba(58, 92, 48, 0.45), var(--gold), rgba(58, 92, 48, 0.45), transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+}
+
+.ceremony-mehendi.is-visible .floral-divider {
+  transform: scaleX(1);
+}
+
+.ceremony-mehendi .ceremony-program-item {
+  opacity: 0;
+  transform: translateX(-14px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ceremony-mehendi.is-visible .ceremony-program-item:nth-child(1) { transition-delay: 0.35s; opacity: 1; transform: translateX(0); }
+.ceremony-mehendi.is-visible .ceremony-program-item:nth-child(2) { transition-delay: 0.45s; opacity: 1; transform: translateX(0); }
+.ceremony-mehendi.is-visible .ceremony-program-item:nth-child(3) { transition-delay: 0.55s; opacity: 1; transform: translateX(0); }
+.ceremony-mehendi.is-visible .ceremony-program-item:nth-child(4) { transition-delay: 0.65s; opacity: 1; transform: translateX(0); }
+
+/* ============================================================
+   WEDDING — "Mandap Reveal" Signature Animation
+   ============================================================ */
+.ceremony-wedding {
+  background: radial-gradient(ellipse at 50% 40%, rgba(255, 248, 235, 0.98), var(--paper) 70%);
+}
+
+.wedding-glow-layer {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(650px, 95vw);
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(223, 190, 118, 0.35) 0%, rgba(184, 134, 40, 0.12) 48%, transparent 72%);
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--wedding-glow-intensity, 0.15);
+  transition: opacity 0.8s ease;
+  filter: blur(28px);
+}
+
+.mandap-arch-frame {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(560px, 90vw);
+  height: 48px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 1s ease 0.15s, transform 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+
+.mandap-arch-curve {
+  width: 100%;
+  height: 42px;
+  border-top: 2px solid rgba(184, 134, 40, 0.5);
+  border-left: 2px solid transparent;
+  border-right: 2px solid transparent;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  transform: scaleY(0.4);
+  transform-origin: top;
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+}
+
+.ceremony-wedding.is-visible .mandap-arch-frame {
+  opacity: 1;
+  transform: translateX(-50%);
+}
+
+.ceremony-wedding.is-visible .mandap-arch-curve {
+  transform: scaleY(1);
+}
+
+.ceremony-wedding .ceremony-card {
+  clip-path: inset(8% 0 8% 0 round 8px);
+  transform: translateY(32px) scale(1.035);
+  opacity: 0;
+  transition: clip-path 1.15s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.15s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 16px 42px rgba(92, 15, 36, 0.08);
+}
+
+.ceremony-wedding.is-visible .ceremony-card {
+  clip-path: inset(0 0 0 0 round 8px);
+  transform: translateY(var(--wedding-depth-y, 0px)) scale(1);
+  opacity: 1;
+}
+
+.ceremony-wedding .ceremony-title {
+  transform: translateY(18px);
+  opacity: 0;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s,
+              opacity 0.8s ease 0.2s;
+}
+
+.ceremony-wedding.is-visible .ceremony-title {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.wedding-ceremony-line {
+  width: 160px;
+  height: 2px;
+  margin: 10px auto 16px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-dark), var(--gold), transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.35s;
+}
+
+.ceremony-wedding.is-visible .wedding-ceremony-line {
+  transform: scaleX(1);
+}
+
+.ceremony-wedding .ceremony-venue-box {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.8s ease 0.45s,
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s;
+}
+
+.ceremony-wedding.is-visible .ceremony-venue-box {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ceremony-wedding .ceremony-program-item {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ceremony-wedding.is-visible .ceremony-program-item:nth-child(1) { transition-delay: 0.50s; opacity: 1; transform: translateY(0); }
+.ceremony-wedding.is-visible .ceremony-program-item:nth-child(2) { transition-delay: 0.58s; opacity: 1; transform: translateY(0); }
+.ceremony-wedding.is-visible .ceremony-program-item:nth-child(3) { transition-delay: 0.66s; opacity: 1; transform: translateY(0); }
+.ceremony-wedding.is-visible .ceremony-program-item:nth-child(4) { transition-delay: 0.74s; opacity: 1; transform: translateY(0); }
+.ceremony-wedding.is-visible .ceremony-program-item:nth-child(5) { transition-delay: 0.82s; opacity: 1; transform: translateY(0); }
+.ceremony-wedding.is-visible .ceremony-program-item:nth-child(6) { transition-delay: 0.90s; opacity: 1; transform: translateY(0); }
+.ceremony-wedding.is-visible .ceremony-program-item:nth-child(7) { transition-delay: 0.98s; opacity: 1; transform: translateY(0); }
+.ceremony-wedding.is-visible .ceremony-program-item:nth-child(8) { transition-delay: 1.06s; opacity: 1; transform: translateY(0); }
+
+/* ============================================================
+   RECEPTION — "Evening Lights" Animation
+   ============================================================ */
+.ceremony-reception {
+  filter: brightness(0.85);
+  transition: filter 1s ease;
+}
+
+.ceremony-reception.is-visible {
+  filter: brightness(1);
+}
+
+.reception-light-canopy {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6px;
+  opacity: 0;
+  transition: opacity 0.8s ease 0.25s;
+}
+
+.ceremony-reception.is-visible .reception-light-canopy {
+  opacity: 1;
+}
+
+.light-dot {
+  font-size: 11px;
+  color: var(--gold);
+  animation: lightShimmer 3s ease-in-out infinite alternate;
+}
+
+.light-dot.d1 { animation-delay: 0s; }
+.light-dot.d2 { animation-delay: 0.5s; }
+.light-dot.d3 { animation-delay: 1.1s; }
+.light-dot.d4 { animation-delay: 0.7s; }
+.light-dot.d5 { animation-delay: 1.4s; }
+
+@keyframes lightShimmer {
+  0% { opacity: 0.35; transform: scale(0.85); text-shadow: 0 0 2px rgba(223, 190, 118, 0.3); }
+  100% { opacity: 1; transform: scale(1.15); text-shadow: 0 0 10px rgba(223, 190, 118, 0.9); }
+}
+
+.ceremony-reception .ceremony-card {
+  transform: translateY(28px) scale(0.99);
+  opacity: 0;
+  transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.85s ease;
+}
+
+.ceremony-reception.is-visible .ceremony-card {
+  transform: translateY(var(--reception-depth-y, 0px)) scale(1);
+  opacity: 1;
+}
+
+.ceremony-reception .ceremony-program-item {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ceremony-reception.is-visible .ceremony-program-item:nth-child(1) { transition-delay: 0.32s; opacity: 1; transform: translateY(0); }
+.ceremony-reception.is-visible .ceremony-program-item:nth-child(2) { transition-delay: 0.42s; opacity: 1; transform: translateY(0); }
+.ceremony-reception.is-visible .ceremony-program-item:nth-child(3) { transition-delay: 0.52s; opacity: 1; transform: translateY(0); }
+.ceremony-reception.is-visible .ceremony-program-item:nth-child(4) { transition-delay: 0.62s; opacity: 1; transform: translateY(0); }
+.ceremony-reception.is-visible .ceremony-program-item:nth-child(5) { transition-delay: 0.72s; opacity: 1; transform: translateY(0); }
 
 /* Location & Venue */
 .location {
