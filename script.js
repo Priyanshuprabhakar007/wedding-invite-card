@@ -507,6 +507,14 @@
         var parent = canvas.parentElement;
         if (!parent) return;
         var rect = parent.getBoundingClientRect();
+
+        if (!rect.width || !rect.height) {
+          requestAnimationFrame(function () {
+            drawFoilCover(canvas, unitLabel);
+          });
+          return;
+        }
+
         var width = Math.round(rect.width) || 82;
         var height = Math.round(rect.height) || 80;
         var dpr = window.devicePixelRatio || 1;
