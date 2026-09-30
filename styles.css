@@ -100,8 +100,9 @@ button {
 .petal-shower {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
   pointer-events: none !important;
   overflow: hidden;
   z-index: 100;
@@ -924,12 +925,14 @@ button {
 
 @media (max-width: 768px) {
   .site-shell {
-    width: calc(100vw - 16px);
-    max-width: calc(100vw - 16px);
-    margin: 8px auto;
+    width: calc(100% - 12px);
+    max-width: calc(100% - 12px);
+    margin: 6px auto;
     border-radius: 10px;
     border: 1.5px solid rgba(223, 190, 118, 0.55);
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65), 0 0 25px rgba(102, 2, 31, 0.35);
+    box-sizing: border-box;
+    overflow: hidden;
   }
 }
 
@@ -2694,16 +2697,23 @@ button {
 /* ========================================================
    DEDICATED CEREMONY SECTIONS (Mehendi, Wedding, Reception)
    - Full viewport height (min-height: 100svh)
+/* ========================================================
+   DEDICATED CEREMONY SECTIONS (Mehendi, Wedding, Reception)
    - Real uploaded artwork backgrounds (mehendi.png, marriage.png, reception.png)
-   - Direct section background-image with auto 100% on desktop & cover on mobile
+   - ::before background layer with var(--ceremony-bg) for seamless full-height coverage
    - Translucent floating ivory card (background: rgba(255, 252, 246, 0.78))
-   - Cinematic reveal (section scale 1.035 -> 1, card translateY 25px -> 0)
+   - Cinematic background reveal (scale 1.025 -> 1) within overflow-clipped container
    ======================================================== */
 .ceremony-details-container {
   display: flex;
   flex-direction: column;
   position: relative;
   background-color: #f8efe5;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Ceremony Decorative Transition Divider */
@@ -2754,70 +2764,178 @@ button {
   opacity: 0.85;
 }
 
+/* Direct Background Artwork Variables per Ceremony */
+.ceremony-mehendi {
+  --ceremony-bg: url("assets/images/mehendi.png");
+}
+
+.ceremony-wedding {
+  --ceremony-bg: url("assets/images/marriage.png");
+}
+
+.ceremony-reception {
+  --ceremony-bg: url("assets/images/reception.png");
+}
+
 /* Ceremony Section Container */
 .ceremony-detail-section {
   position: relative;
-  min-height: 100svh;
-  min-height: 100vh;
+  isolation: isolate;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 100svh;
+  margin: 0;
   padding: clamp(60px, 8vw, 100px) 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  overflow-x: hidden;
   box-sizing: border-box;
-  background-color: #f8efe5;
-  background-repeat: no-repeat;
-  background-position: center center;
+  background: #f8efe5;
   opacity: 0;
-  transform: scale(1.035);
-  transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: none;
+  transition: opacity 1.2s ease;
 }
 
 .ceremony-detail-section.is-visible {
   opacity: 1;
+  transform: none;
+}
+
+.ceremony-detail-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--ceremony-bg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  pointer-events: none;
+  transform: scale(1.025);
+  opacity: 0;
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 1.2s ease;
+}
+
+.ceremony-detail-section.is-visible::before {
   transform: scale(1);
+  opacity: 1;
 }
 
-/* Direct Background Artwork per Ceremony */
-.ceremony-mehendi {
-  background-image: url("assets/images/mehendi.png") !important;
-}
-
-.ceremony-wedding {
-  background-image: url("assets/images/marriage.png") !important;
-}
-
-.ceremony-reception {
-  background-image: url("assets/images/reception.png") !important;
-}
-
-/* Desktop Image Fit */
+/* Desktop Sizing and Containment */
 @media (min-width: 769px) {
-  .ceremony-mehendi,
-  .ceremony-wedding,
-  .ceremony-reception {
-    background-size: auto 100% !important;
-    background-position: center center !important;
-    background-repeat: no-repeat !important;
-    background-color: #f8efe5;
+  .ceremony-detail-section {
+    min-height: clamp(850px, 105vh, 1150px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(60px, 8vw, 100px) 20px;
+  }
+
+  .ceremony-detail-section::before {
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .ceremony-card {
+    width: min(78%, 560px);
+    max-width: calc(100% - 40px);
   }
 }
 
-/* Mobile Image Fit */
+/* Mobile Sizing and Layout */
 @media (max-width: 768px) {
   .ceremony-detail-section {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 36px 12px 44px;
     min-height: 100svh;
-    padding: 50px 14px 60px;
+    height: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
-  .ceremony-mehendi,
-  .ceremony-wedding,
-  .ceremony-reception {
-    background-size: cover !important;
-    background-position: center top !important;
-    background-repeat: no-repeat !important;
+  .ceremony-detail-section::before {
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .ceremony-card {
+    width: min(100%, 370px);
+    max-width: 100%;
+    min-width: 0;
+    margin: clamp(70px, 14vh, 115px) auto 0;
+    padding: 24px 16px 26px;
+    box-sizing: border-box;
+    border-radius: 16px;
+  }
+
+  .ceremony-venue-box {
+    width: 100%;
+    margin-top: 18px;
+    padding: 16px 12px 18px;
+  }
+
+  .ceremony-venue-address {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  .ceremony-map-button {
+    width: min(100%, 230px);
+    max-width: 100%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    box-sizing: border-box;
+  }
+
+  .ceremony-program-box {
+    margin-top: 20px;
+    padding-top: 16px;
+  }
+
+  .ceremony-program-header {
+    gap: 7px;
+  }
+
+  .ceremony-program-heading {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  .ceremony-program-list {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .ceremony-program-item {
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 430px) {
+  .ceremony-title {
+    font-size: clamp(34px, 11vw, 44px);
+  }
+}
+
+@media (max-width: 390px) {
+  .ceremony-card {
+    width: 100%;
+    padding: 22px 14px 24px;
   }
 }
 
@@ -2825,7 +2943,10 @@ button {
 .ceremony-card {
   position: relative;
   z-index: 3;
-  width: min(92%, 560px);
+  width: min(78%, 560px);
+  max-width: calc(100% - 40px);
+  min-width: 0;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: clamp(28px, 5vw, 40px) clamp(20px, 4vw, 32px);
   background: rgba(255, 252, 246, 0.78);
@@ -2839,6 +2960,30 @@ button {
   transform: translateY(25px) scale(0.985);
   transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
               transform 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+}
+
+.ceremony-card *,
+.ceremony-card *::before,
+.ceremony-card *::after {
+  box-sizing: border-box;
+}
+
+.ceremony-venue-box,
+.ceremony-program-box,
+.ceremony-program-list,
+.ceremony-meta-badge {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.ceremony-venue-name,
+.ceremony-venue-address,
+.ceremony-title,
+.program-text {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .ceremony-detail-section.is-visible .ceremony-card {
@@ -2867,18 +3012,19 @@ button {
 }
 
 .ceremony-meta-badge {
-  display: inline-flex;
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 5px 7px;
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 10px;
+  line-height: 1.5;
   letter-spacing: 0.12em;
   color: var(--gold-dark);
   text-transform: uppercase;
   margin: 8px auto 18px;
-  padding: 6px 16px;
+  padding: 7px 4px;
   border-top: 1px solid rgba(184, 134, 40, 0.30);
   border-bottom: 1px solid rgba(184, 134, 40, 0.30);
 }
