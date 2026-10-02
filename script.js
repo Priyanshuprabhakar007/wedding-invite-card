@@ -225,9 +225,16 @@
     if (!cfg) return;
 
     // Couple & Date
-    if (byId("partnerOne")) byId("partnerOne").textContent = cfg.couple.partnerOne || "Isha";
+    if (byId("partnerOne")) byId("partnerOne").textContent = cfg.couple.partnerOne || "Sajan";
     if (byId("connector")) byId("connector").textContent = cfg.couple.connector || "&";
-    if (byId("partnerTwo")) byId("partnerTwo").textContent = cfg.couple.partnerTwo || "Sajan";
+    if (byId("partnerTwo")) {
+      var p2 = cfg.couple.partnerTwo || "Isha";
+      if (p2.startsWith("I")) {
+        byId("partnerTwo").innerHTML = '<span class="name-initial-i">I</span><span class="name-rest">' + p2.slice(1) + '</span>';
+      } else {
+        byId("partnerTwo").textContent = p2;
+      }
+    }
     if (byId("heroDate")) byId("heroDate").textContent = cfg.event.dateDisplay || "NOVEMBER 2026";
     if (byId("weddingDay")) byId("weddingDay").textContent = cfg.copy.weddingDay || "The Wedding Celebration";
     if (byId("subGreeting")) byId("subGreeting").textContent = cfg.couple.subGreeting || "Together with their families";
@@ -237,6 +244,7 @@
     if (byId("letterTitle")) byId("letterTitle").textContent = cfg.copy.dearFriends;
     if (byId("letterOne")) byId("letterOne").textContent = cfg.copy.letterOne;
     if (byId("letterTwo")) byId("letterTwo").textContent = cfg.copy.letterTwo;
+    if (byId("letterSignature")) byId("letterSignature").textContent = cfg.copy.letterSignature || "Sajan & Isha";
 
     // Countdown & Schedule
     if (byId("countdownTitle")) byId("countdownTitle").textContent = cfg.copy.countdownTitle;
@@ -249,14 +257,6 @@
     if (byId("mapButton") && cfg.event.googleMapsUrl) {
       byId("mapButton").href = cfg.event.googleMapsUrl;
     }
-
-    // Dress code
-    if (byId("dressTitle")) byId("dressTitle").textContent = cfg.copy.dressCodeTitle;
-    if (byId("dressIntro")) byId("dressIntro").textContent = cfg.copy.dressIntro;
-    if (byId("gentlemenLabel")) byId("gentlemenLabel").textContent = cfg.copy.gentlemen;
-    if (byId("gentlemenText")) byId("gentlemenText").textContent = cfg.copy.gentlemenText;
-    if (byId("ladiesLabel")) byId("ladiesLabel").textContent = cfg.copy.ladies;
-    if (byId("ladiesText")) byId("ladiesText").textContent = cfg.copy.ladiesText;
 
     // Details & Contact
     if (byId("detailsTitle")) byId("detailsTitle").textContent = cfg.copy.detailsTitle;
@@ -310,11 +310,16 @@
       item.className = "timeline-item motion-reveal";
       item.style.setProperty("--item-index", idx);
 
+      var timelineDisplayTime =
+        ev.id === "wedding"
+          ? "3:00 PM – 8:00 PM"
+          : (ev.time || "");
+
       item.innerHTML =
         '<div class="timeline-time-col">' +
           '<div class="timeline-time-box">' +
             (ev.date ? '<div class="timeline-date-highlight">' + ev.date + '</div>' : '') +
-            '<div class="timeline-time-secondary">' + (ev.time || "") + '</div>' +
+            '<div class="timeline-time-secondary">' + timelineDisplayTime + '</div>' +
           '</div>' +
         '</div>' +
         '<div class="timeline-flower-col" aria-hidden="true">' +
@@ -385,6 +390,31 @@
           '</div>';
       }
 
+      var timingHtml = "";
+      if (ev.timings && ev.timings.length > 0) {
+        var timingRows = ev.timings.map(function(t) {
+          return '<div class="wedding-timing-row">' +
+            '<span class="wedding-time">' + t.time + '</span>' +
+            '<span class="wedding-timing-label">' + t.label + '</span>' +
+          '</div>';
+        }).join("");
+
+        timingHtml =
+          '<div class="ceremony-meta-badge ceremony-meta-stacked">' +
+            '<span class="ceremony-date-long">' + (ev.dateLong || ev.date || "") + '</span>' +
+          '</div>' +
+          '<div class="wedding-timing-list">' +
+            timingRows +
+          '</div>';
+      } else {
+        timingHtml =
+          '<div class="ceremony-meta-badge">' +
+            '<span class="ceremony-date-long">' + (ev.dateLong || ev.date || "") + '</span>' +
+            '<span class="ceremony-divider">•</span>' +
+            '<span class="ceremony-time-range">' + (ev.time || "") + '</span>' +
+          '</div>';
+      }
+
       section.innerHTML =
         '<div class="ceremony-bg-layer" aria-hidden="true"></div>' +
         '<div class="ceremony-card">' +
@@ -392,11 +422,7 @@
             '<img src="assets/images/flower.svg" alt="" class="ceremony-flower-icon" aria-hidden="true">' +
           '</div>' +
           '<h2 id="heading-' + ev.id + '" class="script-heading dark ceremony-title">' + (ev.name || "") + '</h2>' +
-          '<div class="ceremony-meta-badge">' +
-            '<span class="ceremony-date-long">' + (ev.dateLong || ev.date || "") + '</span>' +
-            '<span class="ceremony-divider">•</span>' +
-            '<span class="ceremony-time-range">' + (ev.time || "") + '</span>' +
-          '</div>' +
+          timingHtml +
           '<div class="ceremony-venue-box">' +
             '<div class="ceremony-venue-label">Venue &amp; Location</div>' +
             '<h3 class="ceremony-venue-name">' + (ev.venue || "") + '</h3>' +
@@ -453,8 +479,6 @@
       var units = document.querySelectorAll(".scratch-unit");
       if (!units || units.length === 0) return;
 
-      var isRevealed = false;
-      var isRevealingSequence = false;
       var hasReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       // Single shared touch glow indicator following the pointer
@@ -593,67 +617,64 @@
         ctx.restore(); // restore scale
       }
 
-      // Master synchronized luxury wave reveal function
-      function startRevealSequence(triggerUnit) {
-        if (isRevealed || isRevealingSequence) return;
-        isRevealingSequence = true;
-        hideTouchGlow();
+      // Check if all cards have been revealed
+      function checkAllCardsRevealed() {
+        var allRevealed = true;
+        units.forEach(function (u) {
+          if (u.dataset.revealed !== "true") {
+            allRevealed = false;
+          }
+        });
 
-        // 1. Soft glow pulse on active heart (0-220ms)
-        if (triggerUnit) {
-          triggerUnit.classList.add("is-activating");
-        }
-
-        // 2. Wave and foil dissolve (180ms)
-        setTimeout(function () {
+        if (allRevealed) {
+          if (container) {
+            container.classList.add("all-revealed");
+            container.classList.add("is-revealed");
+          }
           if (instruction) {
             instruction.classList.add("is-hidden");
           }
+        }
+      }
 
-          if (container) {
-            container.classList.add("is-revealing");
+      // Reveal ONLY the single targeted card
+      function revealSingleUnit(unit) {
+        if (!unit) return;
+        if (unit.dataset.revealed === "true" || unit.dataset.revealing === "true") return;
+
+        unit.dataset.revealing = "true";
+        hideTouchGlow();
+
+        unit.classList.add("is-activating");
+
+        setTimeout(function () {
+          unit.classList.add("is-revealed");
+          unit.classList.remove("is-activating");
+          unit.classList.remove("is-touching");
+
+          var canvas = unit.querySelector(".scratch-overlay");
+          if (canvas) {
+            canvas.classList.add("is-dissolving");
+            var rect = unit.getBoundingClientRect();
+            spawnShimmer(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+            setTimeout(function () {
+              if (canvas) canvas.style.display = "none";
+            }, 650);
           }
 
-          // Staggered reveal across all 4 hearts
-          var staggerDelays = [0, 70, 140, 210];
-          units.forEach(function (unit, index) {
-            var delay = staggerDelays[index] || (index * 70);
-            setTimeout(function () {
-              unit.classList.add("is-revealed");
-              unit.classList.remove("is-activating");
-              unit.classList.remove("is-touching");
+          unit.dataset.revealed = "true";
+          unit.dataset.revealing = "false";
 
-              var canvas = unit.querySelector(".scratch-overlay");
-              if (canvas) {
-                canvas.classList.add("is-dissolving");
-                if (hasReducedMotion) {
-                  canvas.style.display = "none";
-                } else {
-                  // Sparkle burst around revealed heart
-                  var uRect = unit.getBoundingClientRect();
-                  spawnShimmer(uRect.left + uRect.width / 2, uRect.top + uRect.height / 2);
-                  setTimeout(function () {
-                    if (canvas) canvas.style.display = "none";
-                  }, 650);
-                }
-              }
-            }, delay);
-          });
-
-          // Conclude sequence and mark permanently revealed
-          setTimeout(function () {
-            isRevealed = true;
-            isRevealingSequence = false;
-            if (container) {
-              container.classList.add("is-revealed");
-              container.classList.remove("is-revealing");
-            }
-          }, 800);
+          checkAllCardsRevealed();
         }, hasReducedMotion ? 0 : 180);
       }
 
-      // Configure each scratch unit
+      // Configure each scratch unit with its own independent state & events
       units.forEach(function (unit) {
+        unit.dataset.revealed = "false";
+        unit.dataset.revealing = "false";
+
         var canvas = unit.querySelector(".scratch-overlay");
         if (!canvas) return;
         var unitName = unit.getAttribute("data-unit") || "days";
@@ -693,7 +714,7 @@
         }
 
         canvas.addEventListener("pointerdown", function (e) {
-          if (isRevealed || isRevealingSequence) return;
+          if (unit.dataset.revealed === "true" || unit.dataset.revealing === "true") return;
           isScratching = true;
           unit.classList.add("is-touching");
           try {
@@ -709,7 +730,7 @@
         });
 
         canvas.addEventListener("pointermove", function (e) {
-          if (!isScratching || isRevealed || isRevealingSequence) return;
+          if (!isScratching || unit.dataset.revealed === "true" || unit.dataset.revealing === "true") return;
           e.preventDefault();
 
           var pos = getCanvasPos(e);
@@ -733,7 +754,7 @@
             try {
               canvas.releasePointerCapture(e.pointerId);
             } catch (err) {}
-            startRevealSequence(unit);
+            revealSingleUnit(unit);
           }
         });
 
@@ -750,37 +771,35 @@
         canvas.addEventListener("pointerup", endScratch);
         canvas.addEventListener("pointercancel", endScratch);
 
-        // Accessibility: Keyboard trigger on focusable card
+        // Accessibility: Keyboard trigger on focused card
         unit.addEventListener("keydown", function (e) {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            startRevealSequence(unit);
+            revealSingleUnit(unit);
           }
         });
       });
 
-      // Redraw on window resize if not yet revealed
+      // Redraw on window resize ONLY for non-revealed cards
       var resizeTimeout = null;
       window.addEventListener("resize", function () {
-        if (isRevealed || isRevealingSequence) return;
         if (resizeTimeout) clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(function () {
-          if (!isRevealed && !isRevealingSequence) {
-            units.forEach(function (unit) {
-              var canvas = unit.querySelector(".scratch-overlay");
-              var unitName = unit.getAttribute("data-unit") || "days";
-              if (canvas && canvas.style.display !== "none" && !canvas.classList.contains("is-dissolving")) {
-                drawFoilCover(canvas, unitName);
-              }
-            });
-          }
+          units.forEach(function (unit) {
+            if (unit.dataset.revealed === "true" || unit.dataset.revealing === "true") {
+              return;
+            }
+            var canvas = unit.querySelector(".scratch-overlay");
+            var unitName = unit.getAttribute("data-unit") || "days";
+            if (canvas && canvas.style.display !== "none" && !canvas.classList.contains("is-dissolving")) {
+              drawFoilCover(canvas, unitName);
+            }
+          });
         }, 150);
       });
     }
   }
 
-  // -------------------------------------------------------------
-  // 4. MUSIC & SOUND SYNTHESIZER
   // -------------------------------------------------------------
   function initAudio() {
     try {
@@ -1000,14 +1019,12 @@
 
   function preloadCriticalAssets() {
     var criticalUrls = [
-      "assets/images/ChatGPT Image Sep 26, 2026, 01_25_51 PM-1.png",
+      "assets/images/envelope-flap-ornate.png",
+      "assets/images/corner-ornament.png",
       "assets/images/envelope-seal.png",
-      "assets/images/wedding-card.png",
       "assets/images/invite-card-bg.png",
       "assets/images/invite-input-pill.png",
       "assets/images/invite-btn-pill.png",
-      "assets/images/08_center_glow.png",
-      "assets/images/07_floating_dust_particles.png",
       "assets/images/hero-burgundy-bg.png",
       "assets/images/branch-gold.png",
       "assets/images/branch-ivory.png",
@@ -1029,9 +1046,11 @@
   }
 
   function setupUnifiedInvitationExperience() {
+    console.log("[Envelope] setupUnifiedInvitationExperience started");
     var scene = byId("envelopeScene");
     var wrapper = byId("envelopeWrapper");
     var unsealBtn = byId("unsealHitBtn");
+    var sealWrapper = byId("waxSealWrapper");
     var form = byId("cardInviteForm");
     var input = byId("cardInviteCodeInput");
     var errorMsg = byId("cardInviteErrorMsg");
@@ -1040,6 +1059,11 @@
     var mainSite = byId("mainSite");
     var hero = byId("celebrationHero");
 
+    console.log("[Envelope elements]", {
+      scene: !!scene,
+      wrapper: !!wrapper,
+      unsealBtn: !!unsealBtn
+    });
     if (!scene || !wrapper) return;
 
     preloadCriticalAssets();
@@ -1047,23 +1071,51 @@
     // Set Initial State
     currentState = ANIM_STATES.CLOSED;
     scene.className = "envelope-scene state-closed";
-    wrapper.setAttribute("aria-expanded", "false");
 
     // ========================================================
     // TAP TO OPEN (CLOSED -> OPENING -> CODE_ENTRY)
+    // ONLY TRIGGERED BY CLICKING/TAPPING THE CENTER SEAL
     // ========================================================
+    function createSealSparkles(x, y) {
+      var count = 6;
+      for (var i = 0; i < count; i++) {
+        var sp = document.createElement("div");
+        sp.className = "seal-sparkle";
+        sp.style.left = x + "px";
+        sp.style.top = y + "px";
+        var angle = (Math.PI * 2 * i) / count + (Math.random() * 0.4 - 0.2);
+        var dist = 20 + Math.random() * 25;
+        var tx = Math.cos(angle) * dist;
+        var ty = Math.sin(angle) * dist;
+        var size = 3 + Math.random() * 3;
+        sp.style.setProperty("--sp-tx", tx.toFixed(1) + "px");
+        sp.style.setProperty("--sp-ty", ty.toFixed(1) + "px");
+        sp.style.setProperty("--sp-size", size.toFixed(1) + "px");
+        document.body.appendChild(sp);
+        (function (elem) {
+          setTimeout(function () {
+            if (elem && elem.parentNode) elem.parentNode.removeChild(elem);
+          }, 650);
+        })(sp);
+      }
+    }
+
     function handleTapToOpen() {
+      console.log("[Envelope] opening", currentState);
       if (currentState !== ANIM_STATES.CLOSED) return;
       currentState = ANIM_STATES.OPENING;
       clearStateTimers();
 
       scene.className = "envelope-scene state-opening";
-      wrapper.setAttribute("aria-expanded", "true");
+
+      // Trigger soft sparkles at seal position
+      var sealRect = (sealWrapper || unsealBtn).getBoundingClientRect();
+      createSealSparkles(sealRect.left + sealRect.width / 2, sealRect.top + sealRect.height / 2);
 
       // Play soft unseal wax sound
       playUnsealSound();
 
-      // At 1.85s: Open card settled -> Morph seamlessly to CODE_ENTRY
+      // At 1.25s: sequenced flaps slid away and code card is fully revealed -> Code entry interactive
       stateTimers.push(setTimeout(function () {
         if (currentState === ANIM_STATES.OPENING) {
           currentState = ANIM_STATES.CODE_ENTRY;
@@ -1081,35 +1133,44 @@
             submitBtn.disabled = false;
           }
 
-          // Auto-focus input after form elements arrive (~600ms)
+          // Auto-focus input when card is in place
           stateTimers.push(setTimeout(function () {
             if (currentState === ANIM_STATES.CODE_ENTRY && input) {
               input.focus();
             }
-          }, 600));
+          }, 80));
         }
-      }, 1850));
+      }, 1250));
     }
 
+    // Bind interaction ONLY to central seal hit button and seal wrapper
     if (unsealBtn) {
       unsealBtn.addEventListener("click", function (e) {
         e.stopPropagation();
         handleTapToOpen();
       });
+      unsealBtn.addEventListener("keydown", function (e) {
+        if ((e.key === "Enter" || e.key === " ") && currentState === ANIM_STATES.CLOSED) {
+          e.preventDefault();
+          e.stopPropagation();
+          handleTapToOpen();
+        }
+      });
     }
 
-    wrapper.addEventListener("click", function (e) {
-      if (currentState === ANIM_STATES.CLOSED) {
+    if (sealWrapper) {
+      sealWrapper.addEventListener("click", function (e) {
+        e.stopPropagation();
         handleTapToOpen();
-      }
-    });
-
-    wrapper.addEventListener("keydown", function (e) {
-      if ((e.key === "Enter" || e.key === " ") && currentState === ANIM_STATES.CLOSED) {
-        e.preventDefault();
-        handleTapToOpen();
-      }
-    });
+      });
+      sealWrapper.addEventListener("keydown", function (e) {
+        if ((e.key === "Enter" || e.key === " ") && currentState === ANIM_STATES.CLOSED) {
+          e.preventDefault();
+          e.stopPropagation();
+          handleTapToOpen();
+        }
+      });
+    }
 
     // ========================================================
     // CODE SUBMISSION (CODE_ENTRY -> UNLOCKING -> HERO_REVEAL -> COMPLETE)
@@ -1450,8 +1511,8 @@
     container.innerHTML = "";
 
     var isMobile = window.innerWidth <= 768;
-    // Requirement 20: 4-6 petals moving slowly during initial state
-    var count = isMobile ? 5 : 6;
+    // Minimal 2-3 subtle slow floating petals in closed state
+    var count = isMobile ? 2 : 3;
 
     function rand(min, max) {
       return Math.random() * (max - min) + min;
@@ -1495,7 +1556,9 @@
       }
 
       item.className = "petal-item " + layerClass;
-      item.style.left = rand(0, 96).toFixed(1) + "vw";
+      // Spawn petals on outer left/right to keep central ornate artwork and seal clear
+      var spawnLeft = Math.random() < 0.5 ? rand(2, 22) : rand(78, 96);
+      item.style.left = spawnLeft.toFixed(1) + "vw";
 
       // Set dimensions on inner element
       inner.style.width = size.toFixed(0) + "px";
@@ -1546,6 +1609,7 @@
         var newIsMobile = window.innerWidth <= 768;
         if (newIsMobile !== isMobile) {
           setupPetals();
+    initCoupleGallery();
         }
       }, 300);
     });
@@ -1634,43 +1698,10 @@
       successView.hidden = false;
     });
 
-    var whatsappBtn = byId("rsvpWhatsappBtn");
-    if (whatsappBtn) {
-      whatsappBtn.addEventListener("click", function () {
-        var formData = new FormData(form);
-        var name = formData.get("guestName") || "";
-        var count = formData.get("familyGuestCount") || "1";
-        var attendance = formData.get("attendance") || "Joyfully Accept";
-        var msg = formData.get("message") || "";
 
-        var checkedEvents = [];
-        form.querySelectorAll('input[name="attendingEvent"]:checked').forEach(function (cb) {
-          checkedEvents.push(cb.value);
-        });
-        var eventsText = checkedEvents.length > 0 ? checkedEvents.join(", ") : "None";
-
-        var invitedList = (activeInvitation && activeInvitation.allowedEvents) ?
-          activeInvitation.allowedEvents.map(function (e) { return e.name; }).join(", ") :
-          "All Functions";
-
-        var text = "✨ *Wedding RSVP for Isha & Sajan's Wedding* ✨\n\n" +
-          "👤 *Name:* " + (name || "Family & Friends") + "\n" +
-          (activeInvitation ? ("🏷️ *Invite Code:* " + activeInvitation.code + "\n") : "") +
-          (activeInvitation ? ("📜 *Invitation:* " + activeInvitation.label + "\n") : "") +
-          "🎊 *Invited Functions:* " + invitedList + "\n" +
-          "✅ *Attendance:* " + attendance + "\n" +
-          "👥 *Number of Guests:* " + count + "\n" +
-          "💌 *Functions Attending:* " + eventsText + "\n" +
-          (msg ? ("✍️ *Message:* " + msg + "\n") : "") +
-          "\nLooking forward to celebrating with you!";
-
-        var phone = cfg.copy.organizerWhatsapp || "919876543210";
-        var url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
-        window.open(url, "_blank");
-      });
-    }
   }
 
+  // -------------------------------------------------------------
   // -------------------------------------------------------------
   // 8b. HASH, SCROLL RESTORATION & NAVIGATION GUARD
   // -------------------------------------------------------------
@@ -1698,18 +1729,480 @@
   window.addEventListener("load", enforceLockedScroll);
 
   // -------------------------------------------------------------
+  // 8c. COUPLE PHOTO CAROUSEL — OUR JOURNEY TOGETHER (ISHA & SAJAN)
+  // -------------------------------------------------------------
+  var coupleGalleryImages = [
+    "./assets/images/gallery/01.jpeg",
+    "./assets/images/gallery/02.jpeg",
+    "./assets/images/gallery/03.jpeg",
+    "./assets/images/gallery/04.jpeg",
+    "./assets/images/gallery/05.jpeg",
+    "./assets/images/gallery/06.jpeg",
+    "./assets/images/gallery/07.jpeg",
+    "./assets/images/gallery/08.jpeg",
+    "./assets/images/gallery/09.jpeg",
+    "./assets/images/gallery/10.jpeg",
+    "./assets/images/gallery/11.jpeg",
+    "./assets/images/gallery/12.jpeg",
+    "./assets/images/gallery/14.jpeg",
+    "./assets/images/gallery/15.jpeg",
+    "./assets/images/gallery/16.jpeg",
+    "./assets/images/gallery/17.jpeg",
+    "./assets/images/gallery/18.jpeg",
+    "./assets/images/gallery/19.jpeg",
+    "./assets/images/gallery/20.jpeg",
+    "./assets/images/gallery/21.jpeg",
+    "./assets/images/gallery/22.jpeg",
+    "./assets/images/gallery/23.jpeg",
+    "./assets/images/gallery/24.jpeg",
+    "./assets/images/gallery/25.jpeg",
+    "./assets/images/gallery/26.jpeg",
+    "./assets/images/gallery/27.jpeg",
+    "./assets/images/gallery/28.jpeg",
+    "./assets/images/gallery/29.jpeg",
+    "./assets/images/gallery/30.jpeg",
+    "./assets/images/gallery/31.jpeg",
+    "./assets/images/gallery/32.jpeg",
+    "./assets/images/gallery/33.jpeg",
+    "./assets/images/gallery/34.jpeg",
+    "./assets/images/gallery/35.jpeg",
+    "./assets/images/gallery/36.jpeg",
+    "./assets/images/gallery/37.jpeg",
+    "./assets/images/gallery/38.jpeg",
+    "./assets/images/gallery/39.jpeg"
+  ];
+
+  function initCoupleGallery() {
+    var mainImage = document.getElementById("galleryMainImage");
+    var carousel = document.getElementById("coupleGalleryCarousel");
+
+    if (!mainImage || !carousel) {
+      console.warn("Gallery elements not found; gallery initialization skipped.");
+      return;
+    }
+
+    if (!coupleGalleryImages || !coupleGalleryImages.length) {
+      return;
+    }
+
+    var stage = document.getElementById("galleryStage");
+    var prevBtn = document.getElementById("galleryPrevBtn");
+    var nextBtn = document.getElementById("galleryNextBtn");
+    var counterEl = document.getElementById("galleryCounter");
+    var progressBar = document.getElementById("galleryProgressBar");
+    var blurBg = document.getElementById("galleryBlurBg") || document.querySelector(".gallery-blur-bg");
+
+    var lightbox = document.getElementById("galleryLightbox");
+    var lightboxImg = document.getElementById("lightboxImage");
+    var lightboxOverlay = document.getElementById("lightboxOverlay");
+    var lightboxClose = document.getElementById("lightboxClose");
+    var lightboxPrev = document.getElementById("lightboxPrev");
+    var lightboxNext = document.getElementById("lightboxNext");
+    var lightboxCounter = document.getElementById("lightboxCounter");
+
+    var currentGalleryIndex = 0;
+    var isGalleryTransitioning = false;
+    var galleryAutoplayTimer = null;
+    var galleryAutoplayInterval = 4500;
+    var isGalleryHoveredOrInteracting = false;
+    var isGalleryLightboxOpen = false;
+
+    function formatGalleryNumber(n) {
+      return n < 10 ? "0" + n : "" + n;
+    }
+
+    function updateGalleryCounter() {
+      if (counterEl && coupleGalleryImages.length > 0) {
+        counterEl.textContent = formatGalleryNumber(currentGalleryIndex + 1) + " / " + formatGalleryNumber(coupleGalleryImages.length);
+      }
+      if (lightboxCounter && coupleGalleryImages.length > 0) {
+        lightboxCounter.textContent = formatGalleryNumber(currentGalleryIndex + 1) + " / " + formatGalleryNumber(coupleGalleryImages.length);
+      }
+    }
+
+    function updateGalleryProgress() {
+      if (progressBar && coupleGalleryImages.length > 0) {
+        var pct = ((currentGalleryIndex + 1) / coupleGalleryImages.length) * 100;
+        progressBar.style.width = pct + "%";
+      }
+    }
+
+    function updateGalleryBackground(src) {
+      if (blurBg) {
+        blurBg.style.setProperty("--gallery-current-image", 'url("' + src + '")');
+        blurBg.style.backgroundImage = 'url("' + src + '")';
+      }
+    }
+
+    function preloadGalleryNeighbors(index) {
+      if (!coupleGalleryImages.length) return;
+      var total = coupleGalleryImages.length;
+      var nextIdx = (index + 1) % total;
+      var prevIdx = (index - 1 + total) % total;
+      var nextImg = new Image();
+      nextImg.src = coupleGalleryImages[nextIdx];
+      var prevImg = new Image();
+      prevImg.src = coupleGalleryImages[prevIdx];
+    }
+
+    function applyGalleryImage(index, direction) {
+      if (!coupleGalleryImages.length) return;
+
+      if (index < 0) {
+        index = coupleGalleryImages.length - 1;
+      }
+      if (index >= coupleGalleryImages.length) {
+        index = 0;
+      }
+      if (isGalleryTransitioning) return;
+
+      var src = coupleGalleryImages[index];
+      var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (!mainImage) return;
+
+      if (!direction || prefersReduced) {
+        currentGalleryIndex = index;
+        mainImage.src = src;
+        mainImage.alt = "Isha and Sajan – memory " + (currentGalleryIndex + 1);
+        updateGalleryBackground(src);
+        updateGalleryCounter();
+        updateGalleryProgress();
+        if (isGalleryLightboxOpen && lightboxImg) {
+          lightboxImg.src = src;
+        }
+        preloadGalleryNeighbors(currentGalleryIndex);
+        return;
+      }
+
+      isGalleryTransitioning = true;
+      var preload = new Image();
+
+      preload.onload = function () {
+        var exitClass = direction === "next" ? "anim-exit-left" : "anim-exit-right";
+        var enterPrepClass = direction === "next" ? "anim-enter-right-prep" : "anim-enter-left-prep";
+
+        mainImage.className = "gallery-main-image " + exitClass;
+
+        setTimeout(function () {
+          currentGalleryIndex = index;
+          mainImage.src = src;
+          mainImage.alt = "Isha and Sajan – memory " + (currentGalleryIndex + 1);
+          updateGalleryBackground(src);
+          updateGalleryCounter();
+          updateGalleryProgress();
+
+          if (isGalleryLightboxOpen && lightboxImg) {
+            lightboxImg.src = src;
+          }
+
+          mainImage.className = "gallery-main-image " + enterPrepClass;
+          void mainImage.offsetWidth;
+          mainImage.className = "gallery-main-image anim-active";
+
+          setTimeout(function () {
+            mainImage.className = "gallery-main-image";
+            isGalleryTransitioning = false;
+            preloadGalleryNeighbors(currentGalleryIndex);
+          }, 700);
+        }, 220);
+      };
+
+      preload.onerror = function () {
+        console.error("Gallery image failed:", src);
+        isGalleryTransitioning = false;
+      };
+
+      preload.src = src;
+    }
+
+    function nextGallerySlide() {
+      applyGalleryImage(currentGalleryIndex + 1, "next");
+    }
+
+    function prevGallerySlide() {
+      applyGalleryImage(currentGalleryIndex - 1, "prev");
+    }
+
+    function startGalleryAutoplay() {
+      stopGalleryAutoplay();
+      var prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReduced || isGalleryHoveredOrInteracting || isGalleryLightboxOpen) return;
+
+      galleryAutoplayTimer = setInterval(function () {
+        if (!isGalleryHoveredOrInteracting && !isGalleryLightboxOpen) {
+          nextGallerySlide();
+        }
+      }, galleryAutoplayInterval);
+    }
+
+    function stopGalleryAutoplay() {
+      if (galleryAutoplayTimer) {
+        clearInterval(galleryAutoplayTimer);
+        galleryAutoplayTimer = null;
+      }
+    }
+
+    function pauseAndResumeGalleryAutoplay() {
+      stopGalleryAutoplay();
+      setTimeout(function () {
+        startGalleryAutoplay();
+      }, 3000);
+    }
+
+    // Diagnostic logging
+    mainImage.addEventListener("load", function () {
+      console.log("GALLERY IMAGE LOADED:", this.currentSrc || this.src);
+    });
+
+    mainImage.addEventListener("error", function () {
+      console.error("GALLERY IMAGE FAILED:", this.getAttribute("src"), this.src);
+    });
+
+    // Step 7: Apply the first image immediately
+    applyGalleryImage(0, null);
+
+    // Prev / Next button clicks
+    if (nextBtn) {
+      nextBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        nextGallerySlide();
+        pauseAndResumeGalleryAutoplay();
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        prevGallerySlide();
+        pauseAndResumeAutoplay();
+      });
+    }
+
+    // Hover pauses autoplay
+    carousel.addEventListener("mouseenter", function () {
+      isGalleryHoveredOrInteracting = true;
+      stopGalleryAutoplay();
+    });
+
+    carousel.addEventListener("mouseleave", function () {
+      isGalleryHoveredOrInteracting = false;
+      startGalleryAutoplay();
+    });
+
+    // Touch & Swipe gestures
+    var touchStartX = 0;
+    var touchStartY = 0;
+    var touchEndX = 0;
+    var touchEndY = 0;
+    var isSwiping = false;
+
+    carousel.addEventListener("touchstart", function (e) {
+      if (e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchEndX = touchStartX;
+        touchEndY = touchStartY;
+        isSwiping = true;
+        isGalleryHoveredOrInteracting = true;
+        stopGalleryAutoplay();
+      }
+    }, { passive: true });
+
+    carousel.addEventListener("touchmove", function (e) {
+      if (isSwiping && e.touches.length === 1) {
+        touchEndX = e.touches[0].clientX;
+        touchEndY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    carousel.addEventListener("touchend", function () {
+      if (!isSwiping) return;
+      isSwiping = false;
+      var diffX = touchEndX - touchStartX;
+      var diffY = touchEndY - touchStartY;
+
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 45) {
+        if (diffX < 0) {
+          nextGallerySlide();
+        } else {
+          prevGallerySlide();
+        }
+      }
+
+      isGalleryHoveredOrInteracting = false;
+      pauseAndResumeGalleryAutoplay();
+    });
+
+    // Keyboard navigation
+    carousel.setAttribute("tabindex", "0");
+    carousel.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        nextGallerySlide();
+        pauseAndResumeGalleryAutoplay();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        prevGallerySlide();
+        pauseAndResumeAutoplay();
+      }
+    });
+
+    // Lightbox modal functions
+    function openLightbox() {
+      if (!lightbox || !lightboxImg) return;
+      isGalleryLightboxOpen = true;
+      stopGalleryAutoplay();
+      lightbox.hidden = false;
+      lightbox.removeAttribute("inert");
+      lightbox.setAttribute("aria-hidden", "false");
+      lightboxImg.src = coupleGalleryImages[currentGalleryIndex];
+      updateGalleryCounter();
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      if (!lightbox) return;
+      isGalleryLightboxOpen = false;
+      lightbox.hidden = true;
+      lightbox.setAttribute("inert", "");
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      startGalleryAutoplay();
+    }
+
+    if (stage) {
+      stage.addEventListener("click", function (e) {
+        if (!e.target.closest(".gallery-nav")) {
+          openLightbox();
+        }
+      });
+    }
+
+    if (lightboxClose) lightboxClose.addEventListener("click", closeLightbox);
+    if (lightboxOverlay) lightboxOverlay.addEventListener("click", closeLightbox);
+
+    if (lightboxNext) {
+      lightboxNext.addEventListener("click", function (e) {
+        e.stopPropagation();
+        nextGallerySlide();
+      });
+    }
+
+    if (lightboxPrev) {
+      lightboxPrev.addEventListener("click", function (e) {
+        e.stopPropagation();
+        prevGallerySlide();
+      });
+    }
+
+    if (lightbox) {
+      var lbTouchStartX = 0;
+      var lbTouchStartY = 0;
+      var lbTouchEndX = 0;
+      var lbTouchEndY = 0;
+
+      lightbox.addEventListener("touchstart", function (e) {
+        if (e.touches.length === 1) {
+          lbTouchStartX = e.touches[0].clientX;
+          lbTouchStartY = e.touches[0].clientY;
+          lbTouchEndX = lbTouchStartX;
+          lbTouchEndY = lbTouchStartY;
+        }
+      }, { passive: true });
+
+      lightbox.addEventListener("touchmove", function (e) {
+        if (e.touches.length === 1) {
+          lbTouchEndX = e.touches[0].clientX;
+          lbTouchEndY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      lightbox.addEventListener("touchend", function () {
+        var diffX = lbTouchEndX - lbTouchStartX;
+        var diffY = lbTouchEndY - lbTouchStartY;
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 45) {
+          if (diffX < 0) {
+            nextGallerySlide();
+          } else {
+            prevGallerySlide();
+          }
+        }
+      });
+    }
+
+    document.addEventListener("keydown", function (e) {
+      if (isGalleryLightboxOpen) {
+        if (e.key === "Escape") {
+          closeLightbox();
+        } else if (e.key === "ArrowRight") {
+          nextGallerySlide();
+        } else if (e.key === "ArrowLeft") {
+          prevGallerySlide();
+        }
+      }
+    });
+
+    startGalleryAutoplay();
+  }
+
+  // -------------------------------------------------------------
   // 9. INITIALIZE ON DOM READY
   // -------------------------------------------------------------
   document.addEventListener("DOMContentLoaded", function () {
     enforceLockedScroll();
-    bindData(data);
-    prepareFloralAssets();
-    startCountdown(data.event.countdownDate || "2026-11-20T15:30:00-05:00");
-    setupUnifiedInvitationExperience();
-    setupScrollAnimations();
-    setupPetals();
 
-    var musicBtn = byId("musicToggle");
+    // CRITICAL — invitation opening must initialize first
+    try {
+      setupUnifiedInvitationExperience();
+    } catch (err) {
+      console.error("[CRITICAL] Envelope initialization failed:", err);
+    }
+
+    // Remaining features must not be allowed to break the envelope
+    try {
+      bindData(data);
+    } catch (err) {
+      console.error("[bindData]", err);
+    }
+
+    try {
+      prepareFloralAssets();
+    } catch (err) {
+      console.error("[prepareFloralAssets]", err);
+    }
+
+    try {
+      startCountdown(
+        data.event && data.event.countdownDate
+          ? data.event.countdownDate
+          : "2026-11-20T15:30:00-05:00"
+      );
+    } catch (err) {
+      console.error("[countdown]", err);
+    }
+
+    try {
+      if (typeof initCoupleGallery === "function") {
+        initCoupleGallery();
+      }
+    } catch (err) {
+      console.error("[gallery]", err);
+    }
+
+    try {
+      setupScrollAnimations();
+    } catch (err) {
+      console.error("[scroll animations]", err);
+    }
+
+    try {
+      setupPetals();
+    } catch (err) {
+      console.error("[petals]", err);
+    }
+
+    var musicBtn = document.getElementById("musicToggle");
     if (musicBtn) {
       musicBtn.addEventListener("click", toggleMusic);
     }
