@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Isha & Sajan — RSVP Administration Dashboard</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <!-- Background Ambience -->
+  <div class="admin-bg" aria-hidden="true"></div>
+
+  <!-- Loading Screen (Initial verification) -->
+  <div id="initLoader" class="init-loader">
+    <div class="loader-spinner"></div>
+    <p class="loader-text">Securing wedding registry...</p>
+  </div>
+
+  <!-- 1. LOGIN SECTION -->
+  <main id="loginView" class="login-view" style="display: none;">
+    <div class="login-card">
+      <div class="login-ornament" aria-hidden="true">❦</div>
+      <h1 class="login-couple">Isha & Sajan</h1>
+      <h2 class="login-subtitle">RSVP Administration</h2>
+      <p class="login-note">Enter master passcode to access wedding guest entries.</p>
+
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label for="adminPassword">Master Password</label>
+          <div class="password-wrap">
+            <input 
+              type="password" 
+              id="adminPassword" 
+              name="password" 
+              placeholder="••••••••••••" 
+              autocomplete="current-password" 
+              required 
+              autofocus
+            >
+            <button type="button" id="togglePasswordBtn" class="toggle-pwd-btn" aria-label="Toggle password visibility">
+              <span id="pwdEyeIcon">👁</span>
+            </button>
+          </div>
+        </div>
+
+        <div id="loginError" class="login-error" hidden></div>
+
+        <button type="submit" id="loginSubmitBtn" class="btn-primary login-btn">
+          <span class="btn-text">OPEN DASHBOARD</span>
+          <span class="btn-loader" hidden>Verifying...</span>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- 2. DASHBOARD SECTION -->
+  <div id="dashboardView" class="dashboard-view" style="display: none;">
+    
+    <!-- Top Header -->
+    <header class="admin-header">
+      <div class="header-container">
+        <div class="header-brand">
+          <span class="brand-monogram">I & S</span>
+          <div class="brand-text">
+            <h1 class="brand-title">Isha & Sajan</h1>
+            <span class="brand-subtitle">Wedding RSVP Dashboard</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="refreshBtn" class="btn-header" title="Refresh live RSVPs">
+            <span class="btn-icon">↻</span>
+            <span class="btn-label">Refresh</span>
+          </button>
+          <button id="exportCsvBtn" class="btn-header btn-gold" title="Export currently filtered RSVPs as CSV">
+            <span class="btn-icon">📥</span>
+            <span class="btn-label">Export CSV</span>
+          </button>
+          <button id="logoutBtn" class="btn-header btn-outline" title="Sign out of administration">
+            <span class="btn-icon">🚪</span>
+            <span class="btn-label">Logout</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+
+      <!-- Summary Statistics Grid -->
+      <section class="stats-section" aria-label="Key RSVP Metrics">
+        <div class="stats-grid">
+          
+          <div class="stat-card stat-total">
+            <div class="stat-icon">💌</div>
+            <div class="stat-info">
+              <span class="stat-label">RSVP Responses</span>
+              <span class="stat-value" id="statResponses">0</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-guests">
+            <div class="stat-icon">👥</div>
+            <div class="stat-info">
+              <span class="stat-label">Total Guests Attending</span>
+              <span class="stat-value" id="statTotalGuests">0</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-accepted">
+            <div class="stat-icon">✨</div>
+            <div class="stat-info">
+              <span class="stat-label">Accepted Invitations</span>
+              <span class="stat-value" id="statAccepted">0</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-declined">
+            <div class="stat-icon">🥀</div>
+            <div class="stat-info">
+              <span class="stat-label">Declined Invitations</span>
+              <span class="stat-value" id="statDeclined">0</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-mehendi">
+            <div class="stat-icon">🌿</div>
+            <div class="stat-info">
+              <span class="stat-label">Mehendi Guests</span>
+              <span class="stat-value" id="statMehendiGuests">0</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-wedding">
+            <div class="stat-icon">🪔</div>
+            <div class="stat-info">
+              <span class="stat-label">Wedding Ceremony Guests</span>
+              <span class="stat-value" id="statWeddingGuests">0</span>
+            </div>
+          </div>
+
+          <div class="stat-card stat-reception">
+            <div class="stat-icon">🥂</div>
+            <div class="stat-info">
+              <span class="stat-label">Reception Guests</span>
+              <span class="stat-value" id="statReceptionGuests">0</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Event Headcount Breakdown -->
+      <section class="headcount-section">
+        <div class="headcount-card">
+          <div class="section-title-wrap">
+            <h2 class="section-heading">Event Headcount</h2>
+            <span class="section-caption">Cumulative headcounts based on party guest numbers</span>
+          </div>
+
+          <div class="headcount-cards-row">
+            
+            <div class="event-card">
+              <div class="event-card-header">
+                <span class="event-badge badge-mehendi">🌿 Mehendi</span>
+                <span class="event-date">Thu, Nov 19</span>
+              </div>
+              <div class="event-count-wrap">
+                <span class="event-count" id="headcountMehendi">0</span>
+                <span class="event-unit">guests attending</span>
+              </div>
+              <div class="event-venue">Deccan Spice, Pompano Beach</div>
+            </div>
+
+            <div class="event-card event-card-featured">
+              <div class="event-card-header">
+                <span class="event-badge badge-wedding">🪔 Wedding Ceremony</span>
+                <span class="event-date">Fri, Nov 20</span>
+              </div>
+              <div class="event-count-wrap">
+                <span class="event-count" id="headcountWedding">0</span>
+                <span class="event-unit">guests attending</span>
+              </div>
+              <div class="event-venue">South Florida Hindu Temple</div>
+            </div>
+
+            <div class="event-card">
+              <div class="event-card-header">
+                <span class="event-badge badge-reception">🥂 Reception</span>
+                <span class="event-date">Sat, Nov 21</span>
+              </div>
+              <div class="event-count-wrap">
+                <span class="event-count" id="headcountReception">0</span>
+                <span class="event-unit">guests attending</span>
+              </div>
+              <div class="event-venue">The White Barn at Cielo Farms</div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Filter and Table Section -->
+      <section class="data-section">
+        <div class="data-card">
+          
+          <!-- Controls Bar -->
+          <div class="controls-bar">
+            
+            <!-- Search Input -->
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Search guest name, phone, or invite code..." 
+                aria-label="Search RSVPs"
+              >
+              <button id="clearSearchBtn" class="clear-search-btn" hidden aria-label="Clear search">✕</button>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="filters-wrap">
+              
+              <!-- Status Filter -->
+              <div class="filter-group">
+                <span class="filter-label">Status:</span>
+                <div class="segmented-control" id="statusFilterControl">
+                  <button class="filter-btn active" data-status="all">All</button>
+                  <button class="filter-btn" data-status="yes">Attending</button>
+                  <button class="filter-btn" data-status="no">Declined</button>
+                </div>
+              </div>
+
+              <!-- Event Filter -->
+              <div class="filter-group">
+                <span class="filter-label">Event:</span>
+                <select id="eventFilterSelect" class="filter-select">
+                  <option value="all">All Events</option>
+                  <option value="mehendi">Mehendi</option>
+                  <option value="wedding">Wedding Ceremony</option>
+                  <option value="reception">Reception</option>
+                </select>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Active Filter Information -->
+          <div class="table-meta-bar">
+            <div class="meta-count">
+              Showing <strong id="visibleCount">0</strong> of <strong id="totalCount">0</strong> RSVPs
+            </div>
+            <div id="activeFilterBadge" class="active-filter-badge" hidden></div>
+          </div>
+
+          <!-- Loading & Error Overlays -->
+          <div id="tableLoading" class="table-loading" hidden>
+            <div class="loader-spinner"></div>
+            <span>Fetching latest responses...</span>
+          </div>
+
+          <div id="tableError" class="table-error" hidden>
+            <span class="error-icon">⚠️</span>
+            <p id="tableErrorMsg">Unable to load RSVP responses. Please try again.</p>
+            <button id="retryFetchBtn" class="btn-primary btn-sm">Retry</button>
+          </div>
+
+          <!-- RSVPs Table Container -->
+          <div class="table-container" id="tableContainer">
+            <table class="rsvp-table" id="rsvpTable">
+              <thead>
+                <tr>
+                  <th>Guest Name</th>
+                  <th>Phone / WhatsApp</th>
+                  <th>Status</th>
+                  <th class="text-center">Guests</th>
+                  <th>Functions</th>
+                  <th>Invite Code</th>
+                  <th>Invitation Type</th>
+                  <th>Message</th>
+                  <th>Submitted At</th>
+                </tr>
+              </thead>
+              <tbody id="rsvpTableBody">
+                <!-- Rows injected dynamically -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Empty State -->
+          <div id="tableEmpty" class="table-empty" hidden>
+            <div class="empty-icon">📭</div>
+            <h3 class="empty-title">No RSVP entries match your filters</h3>
+            <p class="empty-desc">Try modifying your search keywords or switching filters back to "All".</p>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="admin-footer">
+      <p>Isha & Sajan Wedding Administration • Confidential Database Access</p>
+    </footer>
+
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
