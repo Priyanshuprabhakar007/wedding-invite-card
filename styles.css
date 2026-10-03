@@ -1209,14 +1209,20 @@ button {
   width: clamp(88px, 6vw, 110px);
   height: clamp(88px, 6vw, 110px);
   border-radius: 50%;
-  z-index: 55;
+  z-index: 70;
   background: transparent;
   border: none;
   cursor: pointer;
   outline: none;
   padding: 0;
   margin: 0;
+  pointer-events: auto;
   -webkit-tap-highlight-color: transparent;
+}
+
+.envelope-scene.state-closed .unseal-hit-btn {
+  display: block !important;
+  pointer-events: auto !important;
 }
 
 @media (max-width: 600px) {

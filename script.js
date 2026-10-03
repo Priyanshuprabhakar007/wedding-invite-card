@@ -1666,37 +1666,222 @@
       });
     }
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var formData = new FormData(form);
-      var name = formData.get("guestName") || "Guest";
-      var mobile = formData.get("mobileNumber") || "";
-      var count = formData.get("familyGuestCount") || "1";
-      var attendance = formData.get("attendance") || "Yes";
-      var msg = formData.get("message") || "";
+    form.addEventListener(
+      "submit",
+      async function (e) {
 
-      var checkedEvents = [];
-      form.querySelectorAll('input[name="attendingEvent"]:checked').forEach(function (cb) {
-        checkedEvents.push(cb.value);
-      });
+        e.preventDefault();
 
-      var responses = JSON.parse(localStorage.getItem("wedding_rsvps") || "[]");
-      responses.push({
-        name: name,
-        mobile: mobile,
-        guests: count,
-        attendance: attendance,
-        events: checkedEvents,
-        inviteCode: activeInvitation ? activeInvitation.code : null,
-        invitationLabel: activeInvitation ? activeInvitation.label : null,
-        message: msg,
-        timestamp: new Date().toISOString()
-      });
-      localStorage.setItem("wedding_rsvps", JSON.stringify(responses));
+        var submitButton =
+          form.querySelector(
+            'button[type="submit"]'
+          );
 
-      formContainer.hidden = true;
-      successView.hidden = false;
-    });
+        var originalText =
+          submitButton
+            ? submitButton.textContent
+            : "Submit RSVP";
+
+        try {
+
+          var formData =
+            new FormData(form);
+
+          var name =
+            String(
+              formData.get(
+                "guestName"
+              ) || ""
+            ).trim();
+
+          var mobile =
+            String(
+              formData.get(
+                "mobileNumber"
+              ) || ""
+            ).trim();
+
+          var guestCount =
+            Number(
+              formData.get(
+                "familyGuestCount"
+              ) || 1
+            );
+
+          var attendance =
+            String(
+              formData.get(
+                "attendance"
+              ) || ""
+            );
+
+          var message =
+            String(
+              formData.get(
+                "message"
+              ) || ""
+            ).trim();
+
+          var checkedEvents = [];
+
+          form
+            .querySelectorAll(
+              'input[name="attendingEvent"]:checked'
+            )
+            .forEach(function (checkbox) {
+              checkedEvents.push(
+                checkbox.value
+              );
+            });
+
+          if (!name) {
+            throw new Error(
+              "Please enter your full name."
+            );
+          }
+
+          if (!mobile) {
+            throw new Error(
+              "Please enter your phone number."
+            );
+          }
+
+          if (
+            !Number.isInteger(guestCount) ||
+            guestCount < 1 ||
+            guestCount > 10
+          ) {
+            throw new Error(
+              "Please enter a valid number of guests."
+            );
+          }
+
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent =
+              "Submitting...";
+          }
+
+          var payload = {
+
+            guestName:
+              name,
+
+            mobileNumber:
+              mobile,
+
+            attendance:
+              attendance,
+
+            guestCount:
+              guestCount,
+
+            attendingEvents:
+              checkedEvents,
+
+            inviteCode:
+              activeInvitation &&
+              activeInvitation.code
+                ? activeInvitation.code
+                : null,
+
+            invitationLabel:
+              activeInvitation &&
+              activeInvitation.label
+                ? activeInvitation.label
+                : null,
+
+            message:
+              message
+          };
+
+          console.log(
+            "[RSVP] Sending submission",
+            {
+              guestName:
+                payload.guestName,
+
+              guestCount:
+                payload.guestCount,
+
+              attendance:
+                payload.attendance,
+
+              attendingEvents:
+                payload.attendingEvents,
+
+              inviteCode:
+                payload.inviteCode
+            }
+          );
+
+          var response =
+            await fetch(
+              "/api/rsvp",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                  JSON.stringify(
+                    payload
+                  )
+              }
+            );
+
+          var result = {};
+
+          try {
+            result =
+              await response.json();
+          } catch (error) {
+            result = {};
+          }
+
+          if (
+            !response.ok ||
+            !result.success
+          ) {
+
+            throw new Error(
+              result.error ||
+              "Unable to submit RSVP."
+            );
+          }
+
+          console.log(
+            "[RSVP] Successfully saved."
+          );
+
+          formContainer.hidden = true;
+          successView.hidden = false;
+
+        } catch (error) {
+
+          console.error(
+            "[RSVP] Submission failed:",
+            error
+          );
+
+          alert(
+            error.message ||
+            "We could not submit your RSVP. Please try again."
+          );
+
+        } finally {
+
+          if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent =
+              originalText;
+          }
+        }
+      }
+    );
 
 
   }
