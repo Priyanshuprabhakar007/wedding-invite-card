@@ -1919,7 +1919,6 @@
   var coupleGalleryImages = [
     "./assets/images/gallery/1.jpeg",
     "./assets/images/gallery/2.jpeg",
-    "./assets/images/gallery/3.jpeg",
     "./assets/images/gallery/4.jpeg",
     "./assets/images/gallery/5.jpeg",
     "./assets/images/gallery/6.jpeg",
@@ -1927,7 +1926,6 @@
     "./assets/images/gallery/9.jpeg",
     "./assets/images/gallery/10.jpeg",
     "./assets/images/gallery/11.jpeg",
-    "./assets/images/gallery/12.jpeg",
     "./assets/images/gallery/14.jpeg",
     "./assets/images/gallery/15.jpeg",
     "./assets/images/gallery/16.jpeg",
@@ -1936,14 +1934,12 @@
     "./assets/images/gallery/19.jpeg",
     "./assets/images/gallery/20.jpeg",
     "./assets/images/gallery/21.jpeg",
-    "./assets/images/gallery/23.jpeg",
     "./assets/images/gallery/25.jpeg",
     "./assets/images/gallery/27.jpeg",
     "./assets/images/gallery/28.jpeg",
     "./assets/images/gallery/30.jpeg",
     "./assets/images/gallery/31.jpeg",
     "./assets/images/gallery/32.jpeg",
-    "./assets/images/gallery/35.jpeg",
     "./assets/images/gallery/36.jpeg",
     "./assets/images/gallery/37.jpeg",
     "./assets/images/gallery/38.jpeg",
@@ -1954,8 +1950,7 @@
     "./assets/images/gallery/43.jpeg",
     "./assets/images/gallery/44.jpeg",
     "./assets/images/gallery/45.jpeg",
-    "./assets/images/gallery/46.jpeg",
-    "./assets/images/gallery/WhatsApp Image 2026-10-02 at 16.45.20.jpeg"
+    "./assets/images/gallery/46.jpeg"
   ];
 
   function initCoupleGallery() {
@@ -2097,6 +2092,25 @@
       preload.onerror = function () {
         console.error("Gallery image failed:", src);
         isGalleryTransitioning = false;
+        var failedIndex = index;
+
+        if (direction === "next") {
+          var nextIndex = failedIndex + 1;
+          if (nextIndex >= coupleGalleryImages.length) {
+            nextIndex = 0;
+          }
+          if (nextIndex !== currentGalleryIndex) {
+            applyGalleryImage(nextIndex, "next");
+          }
+        } else if (direction === "prev") {
+          var prevIndex = failedIndex - 1;
+          if (prevIndex < 0) {
+            prevIndex = coupleGalleryImages.length - 1;
+          }
+          if (prevIndex !== currentGalleryIndex) {
+            applyGalleryImage(prevIndex, "prev");
+          }
+        }
       };
 
       preload.src = src;
@@ -2161,7 +2175,7 @@
       prevBtn.addEventListener("click", function (e) {
         e.stopPropagation();
         prevGallerySlide();
-        pauseAndResumeAutoplay();
+        pauseAndResumeGalleryAutoplay();
       });
     }
 
@@ -2230,7 +2244,7 @@
       } else if (e.key === "ArrowLeft") {
         e.preventDefault();
         prevGallerySlide();
-        pauseAndResumeAutoplay();
+        pauseAndResumeGalleryAutoplay();
       }
     });
 
