@@ -8,14 +8,19 @@
   <meta name="description" content="You are cordially invited to celebrate the royal wedding of Sajan &amp; Isha.">
   <meta name="theme-color" content="#66021f">
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts Optimized -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Beau+Rivage&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Pinyon+Script&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css?v=2.4">
+  <!-- Critical Above-The-Fold Image Preloads -->
+  <link rel="preload" as="image" href="assets/images/envelope-seal.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/envelope-flap-ornate.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/corner-ornament.webp" fetchpriority="high">
+
+  <link rel="stylesheet" href="styles.css?v=3.0">
 </head>
 
 <body class="envelope-closed-state invitation-locked">
@@ -46,16 +51,16 @@
 
       <!-- Ornamental Corners on Closed Front Envelope -->
       <div class="front-corner front-corner-left" aria-hidden="true">
-        <img src="assets/images/corner-ornament.png" alt="" aria-hidden="true">
+        <img src="assets/images/corner-ornament.webp" alt="" aria-hidden="true" decoding="async">
       </div>
       <div class="front-corner front-corner-right" aria-hidden="true">
-        <img src="assets/images/corner-ornament.png" alt="" aria-hidden="true">
+        <img src="assets/images/corner-ornament.webp" alt="" aria-hidden="true" decoding="async">
       </div>
 
       <!-- 4. Top Flap (Virtual Oversized Triangle Flap) -->
       <div class="top-flap-viewport">
         <div class="top-flap-plane">
-          <img class="top-flap-art" src="assets/images/envelope-flap-ornate.png" alt="">
+          <img class="top-flap-art" src="assets/images/envelope-flap-ornate.webp" alt="" decoding="async">
         </div>
       </div>
     </div>
@@ -65,7 +70,7 @@
 
       <!-- CANONICAL CODE ENTRY CARD (Stationery with code form) -->
       <div id="codeCard" class="card-canonical code-card-layer" aria-hidden="true">
-        <img class="card-bg-img" src="assets/images/invite-card-bg.png" alt="" aria-hidden="true">
+        <img class="card-bg-img" src="assets/images/invite-card-bg.webp" alt="" aria-hidden="true" decoding="async">
 
         <!-- Interactive Code Form Inside Card -->
         <form id="cardInviteForm" class="card-invite-form" autocomplete="off" aria-label="Private celebration invite code entry">
@@ -76,7 +81,7 @@
 
             <!-- Input Pill -->
             <div id="cardInputPillGroup" class="card-input-pill-group">
-              <img class="card-input-pill-img" src="assets/images/invite-input-pill.png" alt="" aria-hidden="true">
+              <img class="card-input-pill-img" src="assets/images/invite-input-pill.webp" alt="" aria-hidden="true" decoding="async">
               <input type="text" id="cardInviteCodeInput" class="card-invite-code-input"
                 placeholder="Enter your invite code" autocomplete="off" autocorrect="off" autocapitalize="characters"
                 spellcheck="false" enterkeyhint="done" aria-label="Enter your invite code">
@@ -88,7 +93,7 @@
             <!-- Submit CTA Button Pill -->
             <button type="submit" id="cardInviteSubmitBtn" class="card-invite-submit-btn"
               aria-label="Enter the Celebration">
-              <img class="card-btn-pill-img" src="assets/images/invite-btn-pill.png" alt="Enter the Celebration">
+              <img class="card-btn-pill-img" src="assets/images/invite-btn-pill.webp" alt="Enter the Celebration" decoding="async">
             </button>
 
           </div>
@@ -100,7 +105,7 @@
     <!-- WAX SEAL & PULSE GLOW (Center of Screen) -->
     <div id="waxSealWrapper" class="wax-seal-wrapper" aria-hidden="true">
       <div class="seal-glow-layer"></div>
-      <img id="waxSealImg" class="wax-seal-img" src="assets/images/envelope-seal.png" alt="S&amp;I Royal Wax Seal">
+      <img id="waxSealImg" class="wax-seal-img" src="assets/images/envelope-seal.webp" alt="S&amp;I Royal Wax Seal" decoding="async">
     </div>
 
     <!-- Subtle instruction below the central seal -->
@@ -124,7 +129,7 @@
     <section id="celebrationHero" class="hero section-burgundy" aria-labelledby="coupleNames">
       <!-- Background Canvas / Artwork Layer -->
       <div class="hero-bg-layer" aria-hidden="true">
-        <img class="hero-bg-img" src="assets/images/hero-burgundy-bg.png" alt="" id="heroBgImg">
+        <img class="hero-bg-img" src="assets/images/hero-burgundy-bg.webp" alt="" id="heroBgImg" loading="lazy" decoding="async">
         <div class="hero-bg-glow"></div>
         <div class="hero-bg-vignette"></div>
       </div>
@@ -133,42 +138,42 @@
       <div id="heroFloralStage" class="hero-floral-stage" aria-hidden="true">
         <!-- PAIR 1: Upper Branches -->
         <div class="floral-item floral-branch-gold" id="flowerGoldBranch">
-          <img class="flower-asset flower-branch-gold-img" src="assets/images/branch-gold.png" alt="" data-type="white">
+          <img class="flower-asset flower-branch-gold-img" src="assets/images/branch-gold.webp" alt="" loading="lazy" decoding="async">
         </div>
         <div class="floral-item floral-branch-ivory" id="flowerIvoryBranch">
-          <img class="flower-asset flower-branch-ivory-img" src="assets/images/branch-gold.png" alt="" data-type="white">
+          <img class="flower-asset flower-branch-ivory-img" src="assets/images/branch-gold.webp" alt="" loading="lazy" decoding="async">
         </div>
 
         <!-- PAIR 5: Rear Ivory Flowers (Behind mid/fg layers) -->
         <div class="floral-item floral-rose-rear-left" id="flowerRoseRearLeft">
-          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
+          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.webp" alt="" loading="lazy" decoding="async">
         </div>
         <div class="floral-item floral-rose-rear-right" id="flowerRoseRearRight">
-          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
+          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.webp" alt="" loading="lazy" decoding="async">
         </div>
 
         <!-- PAIR 4: Side Peonies -->
         <div class="floral-item floral-peony-side-left" id="flowerPeonySideLeft">
-          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
+          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.webp" alt="" loading="lazy" decoding="async">
         </div>
         <div class="floral-item floral-peony-side-right" id="flowerPeonySideRight">
-          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
+          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.webp" alt="" loading="lazy" decoding="async">
         </div>
 
         <!-- PAIR 3: Bottom Ivory Roses -->
         <div class="floral-item floral-rose-bottom-left" id="flowerRoseBottomLeft">
-          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
+          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.webp" alt="" loading="lazy" decoding="async">
         </div>
         <div class="floral-item floral-rose-bottom-right" id="flowerRoseBottomRight">
-          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.jpg" alt="" data-type="black">
+          <img class="flower-asset flower-rose-img" src="assets/images/rose-ivory.webp" alt="" loading="lazy" decoding="async">
         </div>
 
         <!-- PAIR 2: Bottom Red Peonies -->
         <div class="floral-item floral-peony-bottom-left" id="flowerPeonyBottomLeft">
-          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
+          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.webp" alt="" loading="lazy" decoding="async">
         </div>
         <div class="floral-item floral-peony-bottom-right" id="flowerPeonyBottomRight">
-          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.jpg" alt="" data-type="black">
+          <img class="flower-asset flower-peony-img" src="assets/images/peony-red.webp" alt="" loading="lazy" decoding="async">
         </div>
       </div>
 
@@ -177,8 +182,8 @@
 
       <!-- Hero Typography & Celebration Content -->
       <div class="hero-content">
-        <img src="assets/images/ganesh-hero.png" class="hero-ganesh-top-icon hero-stagger-item hero-ornament" alt="Shree Ganesh"
-          aria-hidden="true">
+        <img src="assets/images/ganesh-hero.webp" class="hero-ganesh-top-icon hero-stagger-item hero-ornament" alt="Shree Ganesh"
+          aria-hidden="true" loading="lazy" decoding="async">
         <p id="subGreeting" class="sub-greeting hero-stagger-item hero-subgreeting">Together with their families</p>
 
         <h1 id="coupleNames" class="couple-names">
@@ -224,7 +229,7 @@
 
     <!-- COUNTDOWN TIMER SECTION -->
     <section class="paper-section countdown-section motion-reveal" aria-labelledby="countdownTitle">
-      <img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
+      <img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="" loading="lazy" decoding="async">
       <h2 id="countdownTitle" class="script-heading dark">The Grand Celebration Begins In</h2>
       <p id="scratchInstruction" class="scratch-instruction">✦ Scratch to reveal the countdown ✦</p>
 
@@ -293,16 +298,16 @@
         </div>
       </div>
 
-      <img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
+      <img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="" loading="lazy" decoding="async">
     </section>
 
     <!-- SCHEDULE OF EVENTS / TIMELINE -->
     <section class="schedule section-burgundy motion-reveal" aria-labelledby="scheduleTitle">
       <div class="schedule-decor schedule-decor-left" aria-hidden="true">
-        <img src="assets/images/branch-gold.png" class="schedule-branch-img" alt="">
+        <img src="assets/images/branch-gold.webp" class="schedule-branch-img" alt="" loading="lazy" decoding="async">
       </div>
       <div class="schedule-decor schedule-decor-right" aria-hidden="true">
-        <img src="assets/images/branch-gold.png" class="schedule-branch-img mirror" alt="">
+        <img src="assets/images/branch-gold.webp" class="schedule-branch-img mirror" alt="" loading="lazy" decoding="async">
       </div>
 
       <div class="schedule-header">
@@ -356,6 +361,7 @@
             class="gallery-main-image"
             src=""
             alt="Isha and Sajan"
+            decoding="async"
           >
 
         </div>
@@ -373,7 +379,7 @@
 
       <div class="gallery-controls">
         <span id="galleryCounter" class="gallery-counter">
-          01 / 38
+          01 / 34
         </span>
 
         <div class="gallery-progress">
@@ -387,7 +393,7 @@
 
     <!-- IMPORTANT DETAILS & CONTACTS -->
     <section class="paper-section details motion-reveal" aria-labelledby="detailsTitle">
-      <img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
+      <img class="torn torn-top" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="" loading="lazy" decoding="async">
       <div class="details-content">
         <h2 id="detailsTitle" class="script-heading dark">Important Details</h2>
         <p id="contactCopy">For any assistance regarding travel, accommodation, or queries, please feel free to reach
@@ -402,7 +408,7 @@
         <p id="giftCopy" class="gift-note">No boxed gifts please. Your warm presence, smiles, and heartfelt blessings
           are the greatest gifts to Isha &amp; Sajan.</p>
       </div>
-      <img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="">
+      <img class="torn torn-bottom" data-asset="tornEdge" src="assets/images/torn-edge.svg" alt="" loading="lazy" decoding="async">
     </section>
 
     <!-- RSVP & CELEBRATION SIGNOFF -->
@@ -418,7 +424,7 @@
       <p id="signoff" class="script-heading signoff">Looking forward to celebrating with you!</p>
       <p id="closingNames" class="closing-names">With Best Compliments from Family</p>
 
-      <img id="footerPhoto" class="footer-photo" src="assets/images/footer-photo.svg" alt="Together Forever">
+      <img id="footerPhoto" class="footer-photo" src="assets/images/footer-photo.svg" alt="Together Forever" loading="lazy" decoding="async">
     </section>
 
     <!-- FOOTER -->
@@ -491,15 +497,15 @@
       <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close photo preview">✕</button>
       <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="Previous photo">‹</button>
       <div class="lightbox-image-wrap" id="lightboxImageWrap">
-        <img id="lightboxImage" class="lightbox-img" src="" alt="Isha and Sajan fullscreen">
+        <img id="lightboxImage" class="lightbox-img" src="" alt="Isha and Sajan fullscreen" decoding="async">
       </div>
       <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="Next photo">›</button>
-      <div class="lightbox-counter" id="lightboxCounter">01 / 38</div>
+      <div class="lightbox-counter" id="lightboxCounter">01 / 34</div>
     </div>
   </div>
 
-  <script src="wedding-data.js?v=2.4"></script>
-  <script src="script.js?v=2.4"></script>
+  <script src="wedding-data.js?v=3.0" defer></script>
+  <script src="script.js?v=3.0" defer></script>
 </body>
 
 </html>

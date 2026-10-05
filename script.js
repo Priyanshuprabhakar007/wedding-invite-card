@@ -1017,23 +1017,11 @@
     stateTimers = [];
   }
 
-  function preloadCriticalAssets() {
+      function preloadCriticalAssets() {
     var criticalUrls = [
-      "assets/images/envelope-flap-ornate.png",
-      "assets/images/corner-ornament.png",
-      "assets/images/envelope-seal.png",
-      "assets/images/invite-card-bg.png",
-      "assets/images/invite-input-pill.png",
-      "assets/images/invite-btn-pill.png",
-      "assets/images/hero-burgundy-bg.png",
-      "assets/images/branch-gold.png",
-      "assets/images/branch-ivory.png",
-      "assets/images/peony-red.jpg",
-      "assets/images/rose-ivory.jpg",
-      "assets/images/ganesh-hero.png",
-      "assets/images/mehendi.png",
-      "assets/images/marriage.png",
-      "assets/images/reception.png"
+      "assets/images/envelope-seal.webp",
+      "assets/images/envelope-flap-ornate.webp",
+      "assets/images/corner-ornament.webp"
     ];
 
     criticalUrls.forEach(function (url) {
@@ -1100,7 +1088,22 @@
       }
     }
 
+  function preloadHeroAssets() {
+    var heroAssets = [
+      "assets/images/hero-burgundy-bg.webp",
+      "assets/images/branch-gold.webp",
+      "assets/images/rose-ivory.webp",
+      "assets/images/peony-red.webp",
+      "assets/images/ganesh-hero.webp"
+    ];
+    heroAssets.forEach(function (src) {
+      var img = new Image();
+      img.src = src;
+    });
+  }
+
     function handleTapToOpen() {
+      preloadHeroAssets();
       console.log("[Envelope] opening", currentState);
       if (currentState !== ANIM_STATES.CLOSED) return;
       currentState = ANIM_STATES.OPENING;
@@ -1498,14 +1501,14 @@
 
     // Direct web-safe paths to prepared transparent PNG petal assets
     var PETAL_ASSETS = [
-      "assets/images/Petal Shower/petal-1.png",
-      "assets/images/Petal Shower/petal-2.png",
-      "assets/images/Petal Shower/petal-3.png",
-      "assets/images/Petal Shower/petal-4.png",
-      "assets/images/Petal Shower/petal-5.png",
-      "assets/images/Petal Shower/petal-6.png",
-      "assets/images/Petal Shower/petal-7.png",
-      "assets/images/Petal Shower/petal-8.png"
+      "assets/images/Petal Shower/petal-1.webp",
+      "assets/images/Petal Shower/petal-2.webp",
+      "assets/images/Petal Shower/petal-3.webp",
+      "assets/images/Petal Shower/petal-4.webp",
+      "assets/images/Petal Shower/petal-5.webp",
+      "assets/images/Petal Shower/petal-6.webp",
+      "assets/images/Petal Shower/petal-7.webp",
+      "assets/images/Petal Shower/petal-8.webp"
     ];
 
     container.innerHTML = "";
@@ -1917,43 +1920,45 @@
   // 8c. COUPLE PHOTO CAROUSEL — OUR JOURNEY TOGETHER (ISHA & SAJAN)
   // -------------------------------------------------------------
   var coupleGalleryImages = [
-    "./assets/images/gallery/1.jpeg",
-    "./assets/images/gallery/2.jpeg",
-    "./assets/images/gallery/4.jpeg",
-    "./assets/images/gallery/5.jpeg",
-    "./assets/images/gallery/6.jpeg",
-    "./assets/images/gallery/7.jpeg",
-    "./assets/images/gallery/9.jpeg",
-    "./assets/images/gallery/10.jpeg",
-    "./assets/images/gallery/11.jpeg",
-    "./assets/images/gallery/14.jpeg",
-    "./assets/images/gallery/15.jpeg",
-    "./assets/images/gallery/16.jpeg",
-    "./assets/images/gallery/17.jpeg",
-    "./assets/images/gallery/18.jpeg",
-    "./assets/images/gallery/19.jpeg",
-    "./assets/images/gallery/20.jpeg",
-    "./assets/images/gallery/21.jpeg",
-    "./assets/images/gallery/25.jpeg",
-    "./assets/images/gallery/27.jpeg",
-    "./assets/images/gallery/28.jpeg",
-    "./assets/images/gallery/30.jpeg",
-    "./assets/images/gallery/31.jpeg",
-    "./assets/images/gallery/32.jpeg",
-    "./assets/images/gallery/36.jpeg",
-    "./assets/images/gallery/37.jpeg",
-    "./assets/images/gallery/38.jpeg",
-    "./assets/images/gallery/39.jpeg",
-    "./assets/images/gallery/40.jpeg",
-    "./assets/images/gallery/41.jpeg",
-    "./assets/images/gallery/42.jpeg",
-    "./assets/images/gallery/43.jpeg",
-    "./assets/images/gallery/44.jpeg",
-    "./assets/images/gallery/45.jpeg",
-    "./assets/images/gallery/46.jpeg"
+    "./assets/images/gallery/1.webp",
+    "./assets/images/gallery/2.webp",
+    "./assets/images/gallery/4.webp",
+    "./assets/images/gallery/5.webp",
+    "./assets/images/gallery/6.webp",
+    "./assets/images/gallery/7.webp",
+    "./assets/images/gallery/9.webp",
+    "./assets/images/gallery/10.webp",
+    "./assets/images/gallery/11.webp",
+    "./assets/images/gallery/14.webp",
+    "./assets/images/gallery/15.webp",
+    "./assets/images/gallery/16.webp",
+    "./assets/images/gallery/17.webp",
+    "./assets/images/gallery/18.webp",
+    "./assets/images/gallery/19.webp",
+    "./assets/images/gallery/20.webp",
+    "./assets/images/gallery/21.webp",
+    "./assets/images/gallery/25.webp",
+    "./assets/images/gallery/27.webp",
+    "./assets/images/gallery/28.webp",
+    "./assets/images/gallery/30.webp",
+    "./assets/images/gallery/31.webp",
+    "./assets/images/gallery/32.webp",
+    "./assets/images/gallery/36.webp",
+    "./assets/images/gallery/37.webp",
+    "./assets/images/gallery/38.webp",
+    "./assets/images/gallery/39.webp",
+    "./assets/images/gallery/40.webp",
+    "./assets/images/gallery/41.webp",
+    "./assets/images/gallery/42.webp",
+    "./assets/images/gallery/43.webp",
+    "./assets/images/gallery/44.webp",
+    "./assets/images/gallery/45.webp",
+    "./assets/images/gallery/46.webp"
   ];
 
+  var isGalleryInitialized = false;
   function initCoupleGallery() {
+    if (isGalleryInitialized) return;
     var mainImage = document.getElementById("galleryMainImage");
     var carousel = document.getElementById("coupleGalleryCarousel");
 
@@ -2160,6 +2165,7 @@
     });
 
     // Step 7: Apply the first image immediately
+    isGalleryInitialized = true;
     applyGalleryImage(0, null);
 
     // Prev / Next button clicks

@@ -187,12 +187,8 @@ window.WEDDING_CONFIG = {
     done: "Close"
   },
   assets: {
-    introVideo: "assets/1.mp4",
-    waxSeal: "assets/images/wax-seal.webp",
-    envelopeTop: "assets/images/envelope-top.webp",
-    envelopeLeft: "assets/images/envelope-left.webp",
-    envelopeRight: "assets/images/envelope-right.webp",
-    envelopeBottom: "assets/images/envelope-bottom.webp",
+    waxSeal: "assets/images/envelope-seal.webp",
+    envelopeTop: "assets/images/envelope-flap-ornate.webp",
     tornEdge: "assets/images/torn-edge.svg",
     venueImage: "assets/images/venue-sketch.svg",
     dressPhotoOne: "assets/images/dress-photo-one.svg",
