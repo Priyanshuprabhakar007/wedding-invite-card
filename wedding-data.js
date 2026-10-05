@@ -130,7 +130,7 @@ window.WEDDING_CONFIG = {
       time: "3:00 PM – 8:00 PM",
       timelineTime: "3:00 PM – 8:00 PM",
       timings: [
-        { time: "3:30 PM", label: "Arrival of Baraat" },
+        { time: "3:30 PM", label: "Baraat and Snacks" },
         { time: "5:00 PM", label: "Wedding Ceremony" },
         { time: "6:30 PM", label: "Dinner" }
       ],
