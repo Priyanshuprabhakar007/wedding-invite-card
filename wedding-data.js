@@ -131,7 +131,7 @@ window.WEDDING_CONFIG = {
       timelineTime: "3:00 PM – 8:00 PM",
       timings: [
         { time: "3:30 PM", label: "Arrival of Baraat" },
-        { time: "5:00 PM", label: "Muhurat" },
+        { time: "5:00 PM", label: "Wedding Ceremony" },
         { time: "6:30 PM", label: "Dinner" }
       ],
       venue: "South Florida Hindu Temple",
