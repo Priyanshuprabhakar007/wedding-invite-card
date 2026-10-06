@@ -142,7 +142,6 @@ window.WEDDING_CONFIG = {
         "Prayer to Lord Ganesha",
         "Welcome of the Couple & Families",
         "Exchange of Garlands",
-        "Giving Away of the Bride",
         "Sacred Wedding Rounds",
         "Seven Sacred Steps",
         "Sindoor & Sacred Necklace Ceremony",
