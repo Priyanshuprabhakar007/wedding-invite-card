@@ -49,7 +49,7 @@ window.WEDDING_CONFIG = {
     organizerPhone: "+1 (469) 347-4780",
     organizerWhatsapp: "14693474780",
     giftCopy: "No boxed gifts please. Your warm presence, smiles, and heartfelt blessings are the greatest gifts to Isha & Sajan.",
-    rsvpIntro: "Kindly confirm your presence by submitting the RSVP below or directly on WhatsApp to help us welcome you with warmth.",
+    rsvpIntro: "Kindly confirm your presence by submitting the RSVP below to help us welcome you with warmth.",
     rsvpTitle: "Confirm Your Attendance",
     rsvpButton: "RSVP Now",
     signoff: "Looking forward to celebrating with you!",
