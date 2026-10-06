@@ -5015,3 +5015,357 @@ button {
     font-size: 14px;
   }
 }
+
+
+/* ========================================================
+   DRESS CODE & ATTIRE SECTION
+   ======================================================== */
+.dress-code-section {
+  position: relative;
+  background: var(--crimson);
+  padding: clamp(65px, 8vw, 100px) clamp(16px, 4vw, 32px);
+  text-align: center;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.dress-code-decor {
+  position: absolute;
+  top: 25px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.32;
+}
+
+.dress-code-decor-left {
+  left: -20px;
+}
+
+.dress-code-decor-right {
+  right: -20px;
+}
+
+.dress-code-branch-img {
+  width: clamp(130px, 18vw, 220px);
+  height: auto;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+.dress-code-branch-img.mirror {
+  transform: scaleX(-1);
+}
+
+.dress-code-header {
+  position: relative;
+  z-index: 3;
+  max-width: 780px;
+  margin: 0 auto clamp(36px, 5vw, 52px);
+}
+
+.dress-code-kicker {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0.95;
+}
+
+.dress-code-header .script-heading {
+  font-family: var(--font-script);
+  font-size: clamp(40px, 6.5vw, 64px);
+  color: var(--gold-light);
+  line-height: 1.15;
+  margin: 0 0 10px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+.dress-code-flourish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 10px auto 14px;
+  max-width: 280px;
+  color: var(--gold);
+}
+
+.dress-flourish-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(223, 190, 118, 0.7), transparent);
+}
+
+.dress-flourish-motif {
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  color: var(--gold-light);
+  opacity: 0.9;
+}
+
+.dress-code-subtitle {
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 2.2vw, 18.5px);
+  font-style: italic;
+  color: rgba(251, 247, 240, 0.92);
+  line-height: 1.5;
+  margin: 0 auto;
+  max-width: 620px;
+  font-weight: 400;
+}
+
+/* Three-Card Responsive Grid */
+.dress-code-grid {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 2.5vw, 32px);
+  max-width: 1180px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+/* Individual Attire Card */
+.dress-card {
+  position: relative;
+  background: #FFFDF9;
+  border: 1px solid rgba(194, 142, 46, 0.38);
+  border-radius: 16px;
+  box-shadow: 0 14px 42px rgba(43, 0, 14, 0.2), 0 2px 8px rgba(184, 134, 40, 0.12);
+  padding: 32px 24px 28px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.4s ease;
+}
+
+.dress-card::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(194, 142, 46, 0.18);
+  border-radius: 11px;
+  pointer-events: none;
+}
+
+.dress-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 50px rgba(43, 0, 14, 0.26), 0 4px 12px rgba(184, 134, 40, 0.2);
+  border-color: rgba(194, 142, 46, 0.55);
+}
+
+.dress-card-ornament {
+  margin: 0 auto 10px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-dark);
+}
+
+.dress-card-icon {
+  width: 26px;
+  height: 26px;
+  stroke: var(--gold-dark);
+  filter: drop-shadow(0 1px 2px rgba(184, 134, 40, 0.25));
+}
+
+.dress-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 24px);
+  font-weight: 700;
+  color: #580316;
+  letter-spacing: 0.04em;
+  margin: 0 0 6px;
+  line-height: 1.25;
+}
+
+.dress-card-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 6px auto 10px;
+  width: 60%;
+  color: var(--gold-dark);
+}
+
+.dress-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(184, 134, 40, 0.35);
+}
+
+.dress-divider-diamond {
+  font-size: 10px;
+  color: var(--gold-dark);
+  opacity: 0.85;
+}
+
+.dress-card-meta {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #8A5D19;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(184, 134, 40, 0.22);
+}
+
+.dress-card-body {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.75;
+  color: #382A2C;
+  text-align: center;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.dress-card-body p {
+  margin: 0;
+}
+
+/* Reception Swatches */
+.dress-swatches-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin: 8px 0 6px;
+  padding: 10px 12px;
+  background: rgba(245, 239, 227, 0.65);
+  border-radius: 10px;
+  border: 1px solid rgba(184, 134, 40, 0.2);
+}
+
+.dress-swatch-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.dress-swatch-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(184, 134, 40, 0.4);
+  transition: transform 0.25s ease;
+}
+
+.dress-swatch-item:hover .dress-swatch-circle {
+  transform: scale(1.15);
+}
+
+.dress-swatch-label {
+  font-family: var(--font-sans);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #554448;
+  text-transform: uppercase;
+}
+
+.dress-card-closing {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: #66021f;
+  line-height: 1.45;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(184, 134, 40, 0.35);
+}
+
+/* Card Subtle Flavor Accents */
+.dress-card-mehendi {
+  background: linear-gradient(180deg, #FFFCF7 0%, #FFF9F0 100%);
+}
+
+.dress-card-wedding {
+  background: linear-gradient(180deg, #FFFCF7 0%, #FFFDF9 100%);
+}
+
+.dress-card-reception {
+  background: linear-gradient(180deg, #FFFCF7 0%, #FAF4F5 100%);
+}
+
+/* Tablet & Mobile Responsiveness */
+@media (max-width: 992px) {
+  .dress-code-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 760px;
+  }
+  .dress-card-reception {
+    grid-column: span 2;
+    max-width: 480px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 680px) {
+  .dress-code-section {
+    padding: 50px 16px;
+  }
+  .dress-code-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    gap: 22px;
+  }
+  .dress-card-reception {
+    grid-column: auto;
+    max-width: 100%;
+  }
+  .dress-card {
+    padding: 26px 18px 22px;
+  }
+  .dress-card-body {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .dress-card-closing {
+    font-size: 14.5px;
+  }
+}
+
+/* Staggered entrance animation when section is in viewport */
+.dress-code-section.motion-reveal.has-entered .dress-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dress-code-section .dress-card {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dress-code-section .dress-card:nth-child(1) { transition-delay: 0.08s; }
+.dress-code-section .dress-card:nth-child(2) { transition-delay: 0.18s; }
+.dress-code-section .dress-card:nth-child(3) { transition-delay: 0.28s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dress-code-section .dress-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
