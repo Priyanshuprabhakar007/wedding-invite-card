@@ -399,13 +399,24 @@
           '</div>';
         }).join("");
 
-        timingHtml =
-          '<div class="ceremony-meta-badge ceremony-meta-stacked">' +
-            '<span class="ceremony-date-long">' + (ev.dateLong || ev.date || "") + '</span>' +
-          '</div>' +
-          '<div class="wedding-timing-list">' +
-            timingRows +
-          '</div>';
+        if (ev.id === "wedding") {
+          timingHtml =
+            '<div class="ceremony-meta-badge ceremony-meta-stacked">' +
+              '<span class="ceremony-date-long">' + (ev.dateLong || ev.date || "") + '</span>' +
+            '</div>' +
+            '<div class="wedding-timing-list">' +
+              timingRows +
+            '</div>';
+        } else {
+          timingHtml =
+            '<div class="ceremony-meta-badge ceremony-meta-stacked">' +
+              '<span class="ceremony-date-long">' + (ev.dateLong || ev.date || "") + '</span>' +
+              (ev.time ? '<span class="ceremony-divider">•</span><span class="ceremony-time-range">' + ev.time + '</span>' : '') +
+            '</div>' +
+            '<div class="wedding-timing-list">' +
+              timingRows +
+            '</div>';
+        }
       } else {
         timingHtml =
           '<div class="ceremony-meta-badge">' +
