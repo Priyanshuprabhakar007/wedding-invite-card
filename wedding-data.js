@@ -154,6 +154,10 @@ window.WEDDING_CONFIG = {
       date: "21 November 2026",
       dateLong: "Saturday, November 21, 2026",
       time: "5:00 PM – 11:00 PM",
+      timelineTime: "5:00 PM – 11:00 PM",
+      timings: [
+        { time: "5:00 PM – 6:00 PM", label: "Cocktail Hour" }
+      ],
       venue: "The White Barn at Cielo Farms Nursery",
       address: "4680 Volunteer Rd, Southwest Ranches, FL 33330",
       googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=The+White+Barn+at+Cielo+Farms+Nursery+4680+Volunteer+Rd+Southwest+Ranches+FL+33330",
