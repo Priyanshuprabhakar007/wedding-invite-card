@@ -9,6 +9,8 @@
   var byId = function (id) { return document.getElementById(id); };
   var audioCtx = null;
   var isMusicPlaying = false;
+  var bgAudio = null;
+  var bgAudioChecked = false;
   var isEnvelopeOpened = false;
   var accessGranted = false;
   var activeInvitation = null;
@@ -35,6 +37,7 @@
   window.addEventListener("orientationchange", function () {
     setTimeout(updateAppViewportHeight, 100);
     setTimeout(updateAppViewportHeight, 400);
+    setTimeout(updateAppViewportHeight, 600);
   });
 
   if (window.visualViewport) {
@@ -983,41 +986,174 @@
     }
   }
 
+  // ── INDIAN WEDDING MUSIC ENGINE ──────────────────────────────
+  // Primary: HTML5 audio from assets/audio/background.mp3 (drop any MP3 there)
+  // Fallback: synthesized bansuri + tanpura (Raga Yaman, soft & meditative)
+
+  var musicNodes = [];
+
+  function stopAllMusicNodes() {
+    musicNodes.forEach(function (n) { try { n.stop(0); } catch (e) {} });
+    musicNodes = [];
+  }
+
+  function createReverb(ctx) {
+    try {
+      var len = Math.floor(ctx.sampleRate * 2.8); // longer, warmer tail
+      var buf = ctx.createBuffer(2, len, ctx.sampleRate);
+      for (var c = 0; c < 2; c++) {
+        var ch = buf.getChannelData(c);
+        for (var i = 0; i < len; i++) {
+          ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.2);
+        }
+      }
+      var conv = ctx.createConvolver();
+      conv.buffer = buf;
+      return conv;
+    } catch (e) { return null; }
+  }
+
   function playWeddingMelody() {
-    if (!audioCtx) initAudio();
-    if (!audioCtx) return;
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (!audioCtx || !isMusicPlaying) return;
+    stopAllMusicNodes();
 
-    var notes = [
-      523.25, 587.33, 659.25, 783.99, 880.00, 1046.50,
-      659.25, 783.99, 880.00, 1046.50, 1174.66, 1318.51
+    var ctx = audioCtx;
+    var now = ctx.currentTime;
+
+    // Master — gentle fade-in over 5 seconds
+    var master = ctx.createGain();
+    master.gain.setValueAtTime(0, now);
+    master.gain.linearRampToValueAtTime(0.60, now + 5.0);
+    master.connect(ctx.destination);
+    musicNodes.push(master);
+
+    // Generous reverb — the single biggest improvement for synthesis quality
+    var rev = createReverb(ctx);
+    var revGain = ctx.createGain();
+    revGain.gain.value = 0.42;
+    if (rev) { rev.connect(revGain); revGain.connect(ctx.destination); }
+
+    // ── 1. TANPURA DRONE ─────────────────────────────────────────
+    // Pure sine — Sa (C3) Pa (G3) Sa' (C4), detuned in cents for shimmer
+    var tanpuraNotes = [
+      [130.81, 0], [130.81, 4], [196.00, 0], [261.63, -3]
     ];
-    var noteIndex = 0;
+    tanpuraNotes.forEach(function (fd) {
+      var osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = fd[0] * Math.pow(2, fd[1] / 1200);
+      g.gain.setValueAtTime(0, now);
+      g.gain.linearRampToValueAtTime(0.044, now + 4.5);
+      osc.connect(g); g.connect(master);
+      if (rev) g.connect(rev);
+      osc.start(now);
+      musicNodes.push(osc, g);
+    });
 
-    function playPluck() {
-      if (!isMusicPlaying) return;
-      var osc = audioCtx.createOscillator();
-      var gain = audioCtx.createGain();
+    // ── 2. BANSURI MELODY — RAGA YAMAN ───────────────────────────
+    // Yaman: C D E F# G A B — the F# (tivra Ma) is the Indian signature
+    var Nl = 246.94;                                          // lower Ni (B3)
+    var S  = 261.63, R = 293.66, G = 329.63, M = 369.99;    // C D E F#
+    var P  = 392.00, D = 440.00, N = 493.88;                 // G A B
+    var S2 = 523.25, R2 = 587.33;                            // upper octave
 
-      osc.type = "sine";
-      var freq = notes[noteIndex % notes.length];
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    // Very slow, meditative phrases — each note held 2–5 seconds
+    // [freq, duration_s, gap_after_s]
+    var phrases = [
+      // Opening — Ni Sa Re Ga Ma (ascending through the F# — classic Yaman)
+      [[Nl,2.6,0.4],[S,3.2,0.6],[R,2.3,0.3],[G,2.8,0.5],[M,4.0,0.9]],
+      // Middle — Ga Ma Pa Dha Pa
+      [[G,2.2,0.3],[M,2.8,0.4],[P,3.2,0.6],[D,3.8,0.7],[P,2.6,0.5]],
+      // Upper — Pa Dha Ni Sa' (reaching the summit)
+      [[P,2.2,0.3],[D,2.6,0.4],[N,2.3,0.3],[S2,4.8,1.0],[N,2.8,0.5]],
+      // Descent — Sa' Ni Dha Pa Ma Ga (Ma landing is the Yaman moment)
+      [[S2,2.2,0.3],[N,2.2,0.3],[D,2.6,0.4],[P,2.8,0.5],[M,3.4,0.6],[G,3.8,0.8]],
+      // Resolution — Ma Ga Re Sa (long final Sa)
+      [[M,2.6,0.4],[G,2.3,0.3],[R,2.8,0.4],[S,5.5,1.5]]
+    ];
 
-      gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.1, audioCtx.currentTime + 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 2.2);
+    function playBansuriNote(freq, t, dur, prevFreq) {
+      try {
+        // FM synthesis: carrier at note freq, modulator at same freq (1:1 ratio)
+        // Produces the gentle, breathy sine-like tone of a bamboo flute.
+        var carrier = ctx.createOscillator();
+        var mod     = ctx.createOscillator();
+        var modG    = ctx.createGain();
+        carrier.type = 'sine'; mod.type = 'sine';
+        carrier.frequency.value = freq;
+        mod.frequency.value     = freq;
+        modG.gain.value         = freq * 0.20; // low index = soft flute color
 
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
+        // Meend (portamento) — glide from previous note
+        if (prevFreq && prevFreq !== freq) {
+          var glide = Math.min(0.22, dur * 0.20);
+          carrier.frequency.setValueAtTime(prevFreq, t);
+          carrier.frequency.linearRampToValueAtTime(freq, t + glide);
+          mod.frequency.setValueAtTime(prevFreq, t);
+          mod.frequency.linearRampToValueAtTime(freq, t + glide);
+        }
 
-      osc.start();
-      osc.stop(audioCtx.currentTime + 2.3);
+        // Vibrato — enters after the attack (flute-style)
+        var vib = ctx.createOscillator(), vibG = ctx.createGain();
+        vib.type = 'sine'; vib.frequency.value = 4.8;
+        vibG.gain.setValueAtTime(0, t);
+        vibG.gain.linearRampToValueAtTime(0, t + 0.45);
+        vibG.gain.linearRampToValueAtTime(freq * 0.009, t + 0.9);
+        vib.connect(vibG); vibG.connect(carrier.frequency);
 
-      noteIndex = (noteIndex + 1);
-      setTimeout(playPluck, 650 + (noteIndex % 3 === 0 ? 800 : 250));
+        // Andolan — slow swaying pitch on long held notes (very Indian)
+        if (dur > 3.0) {
+          var ando = ctx.createOscillator(), andoG = ctx.createGain();
+          ando.type = 'sine'; ando.frequency.value = 1.7;
+          andoG.gain.value = freq * 0.004;
+          ando.connect(andoG); andoG.connect(carrier.frequency);
+          ando.start(t + 0.6); ando.stop(t + dur + 0.1);
+          musicNodes.push(ando, andoG);
+        }
+
+        mod.connect(modG); modG.connect(carrier.frequency);
+
+        // Soft lowpass — flute has no harsh harmonics
+        var lp = ctx.createBiquadFilter();
+        lp.type = 'lowpass'; lp.frequency.value = 1500; lp.Q.value = 0.4;
+
+        // Breath-like envelope: slow attack, long sustain, gentle release
+        var env = ctx.createGain();
+        var atk = Math.min(0.30, dur * 0.12);
+        env.gain.setValueAtTime(0, t);
+        env.gain.linearRampToValueAtTime(0.055, t + atk);
+        env.gain.setValueAtTime(0.055, t + dur - 0.4);
+        env.gain.linearRampToValueAtTime(0, t + dur);
+
+        carrier.connect(lp); lp.connect(env);
+        env.connect(master);
+        if (rev) env.connect(rev);
+
+        carrier.start(t); mod.start(t); vib.start(t);
+        carrier.stop(t + dur + 0.12); mod.stop(t + dur + 0.12); vib.stop(t + dur + 0.12);
+        musicNodes.push(carrier, mod, modG, vib, vibG, lp, env);
+      } catch (e) {}
     }
 
-    playPluck();
+    function schedulePhrase(idx, startT) {
+      if (!isMusicPlaying) return;
+      var phrase = phrases[idx % phrases.length];
+      var t = startT;
+      var prevFreq = null;
+      phrase.forEach(function (n) {
+        playBansuriNote(n[0], t, n[1], prevFreq);
+        prevFreq = n[0];
+        t += n[1] + n[2];
+      });
+      var nextGap = 2.0 + (idx % 2 === 0 ? 1.0 : 0.5);
+      var delay = Math.max(0, (t + nextGap - ctx.currentTime) * 1000 - 100);
+      setTimeout(function () {
+        if (isMusicPlaying) schedulePhrase(idx + 1, ctx.currentTime + 0.15);
+      }, delay);
+    }
+
+    // Melody enters after drone settles
+    setTimeout(function () { if (isMusicPlaying) schedulePhrase(0, ctx.currentTime + 0.2); }, 3800);
   }
 
   function toggleMusic() {
@@ -1026,19 +1162,39 @@
 
     if (isMusicPlaying) {
       isMusicPlaying = false;
-      if (btn) {
-        btn.classList.remove("is-playing");
-        btn.innerHTML = "▶";
-      }
+      if (bgAudio) { try { bgAudio.pause(); } catch (e) {} }
+      stopAllMusicNodes();
+      if (btn) { btn.classList.remove("is-playing"); btn.setAttribute("aria-label", "Play music"); }
       if (audioCtx && audioCtx.state === 'running') audioCtx.suspend();
     } else {
       isMusicPlaying = true;
-      if (btn) {
-        btn.classList.add("is-playing");
-        btn.innerHTML = "⏸";
+      if (btn) { btn.classList.add("is-playing"); btn.setAttribute("aria-label", "Pause music"); }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(function () {});
+
+      // First try playing a real audio file — sounds infinitely better than synthesis.
+      // Drop any MP3/OGG into assets/audio/background.mp3 and it will be used automatically.
+      if (!bgAudioChecked) {
+        bgAudioChecked = true;
+        try {
+          var a = new Audio('assets/audio/background.mp3');
+          a.loop   = true;
+          a.volume = 0.30;
+          a.onerror = function () { bgAudio = null; if (isMusicPlaying) playWeddingMelody(); };
+          bgAudio = a;
+        } catch (e) { bgAudio = null; }
       }
-      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-      playWeddingMelody();
+
+      if (bgAudio) {
+        var playPromise = bgAudio.play();
+        if (playPromise && playPromise.catch) {
+          playPromise.catch(function () {
+            bgAudio = null;
+            if (isMusicPlaying) playWeddingMelody();
+          });
+        }
+      } else {
+        playWeddingMelody();
+      }
     }
   }
 
@@ -1383,6 +1539,10 @@
 
         // 1. Authoritative memory-only unlock
         unlockInvitation(invitation);
+
+        // Unlock AudioContext now while still inside user gesture (iOS requirement)
+        if (!audioCtx) initAudio();
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(function () {});
 
         // 2. Immediately prepare mainSite directly underneath the fixed envelope overlay
         if (mainSite) {
@@ -1801,30 +1961,10 @@
       }
     }
 
-    // iOS Safari responsive touch & click handlers
+    // touch-action: manipulation is set in CSS so click fires promptly — no touchend needed
     openBtn.addEventListener("click", openModal);
-    openBtn.addEventListener("touchend", function (e) {
-      if (e.cancelable) {
-        e.preventDefault();
-      }
-      openModal(e);
-    }, { passive: false });
-
-    if (closeBtn) {
-      closeBtn.addEventListener("click", closeModal);
-      closeBtn.addEventListener("touchend", function (e) {
-        if (e.cancelable) e.preventDefault();
-        closeModal(e);
-      }, { passive: false });
-    }
-
-    if (doneBtn) {
-      doneBtn.addEventListener("click", closeModal);
-      doneBtn.addEventListener("touchend", function (e) {
-        if (e.cancelable) e.preventDefault();
-        closeModal(e);
-      }, { passive: false });
-    }
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (doneBtn) doneBtn.addEventListener("click", closeModal);
 
     modal.addEventListener("click", function (e) {
       var card = modal.querySelector(".modal-card");

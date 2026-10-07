@@ -131,11 +131,11 @@ window.WEDDING_CONFIG = {
         "Dinner with family & friends"
       ],
       dressCode: {
-        eyebrow: "STYLE GUIDE",
+        eyebrow: "FREE SPIRIT STYLE",
         title: "DRESS CODE",
-        subtitle: "Colorful • Joyful • Comfortable",
-        text: "Wear whatever you prefer.",
-        tagline: "Come comfortable, come colorful, come as you are."
+        subtitle: "Colorful • Comfortable • Joyfully You",
+        text: "Come exactly as you are — vibrant, easy, and full of joy. There is no dress code today except to wear whatever makes you feel wonderful. A flowy salwar, a bright kurta, your favorite casual look — all are welcome. The only requirement is your biggest smile.",
+        tagline: "Come colorful, come comfortable, come as you are."
       }
     },
     {
@@ -166,9 +166,9 @@ window.WEDDING_CONFIG = {
       dressCode: {
         eyebrow: "TRADITIONAL ATTIRE",
         title: "DRESS CODE",
-        subtitle: "Regal • Traditional • Elegant",
-        text: "We would love to see you in your favorite <strong class=\"dc-highlight\">Indian ethnic wear</strong> (Sarees, Kurtas, Lehengas, Indian suits)! If you prefer Western formalwear, please opt for a modest style that covers the shoulders and knees.",
-        tagline: "Pick the color of your choice.",
+        subtitle: "Regal • Traditional • Timeless",
+        text: "We would love to see you dressed in your most beautiful <strong class=\"dc-highlight\">Indian ethnic wear</strong> — think Sarees, Lehengas, Sherwanis, Kurtas, or Indian suits in any color that makes your heart sing. If you prefer Western formalwear, please choose a modest, elegant style that covers the shoulders and knees. Every shade and hue is welcome — come dressed to celebrate!",
+        tagline: "Every color of the rainbow is welcome.",
         templeNote: "Shoes are not permitted inside the temple. Please plan your footwear accordingly."
       }
     },
@@ -194,15 +194,22 @@ window.WEDDING_CONFIG = {
         "Celebration with family & friends"
       ],
       dressCode: {
-        eyebrow: "EVENING SOIRÉE",
+        eyebrow: "AN EVENING TO REMEMBER",
         title: "DRESS CODE",
-        subtitle: "Elegant • Jewel Tones • A Touch of Sparkle",
-        text: "We want our reception to feel cozy, elegant, and full of celebration! We ask that our guests wear dark, rich jewel tones such as deep reds, maroons, emerald greens, navy, or black. Whether you prefer Western formalwear or Indian traditional attire, we love a bit of sparkle.",
+        subtitle: "Jewel Tones • Glamour • A Touch of Sparkle",
+        text: "Our reception is an evening of love, laughter, and a little bit of luxury — and we want you to dress the part! We invite our guests to wear deep, rich <strong class=\"dc-highlight\">jewel tones</strong> that glow in the candlelight: deep reds, burgundy, wine, maroon, emerald, forest green, sapphire, midnight blue, navy, royal purple, deep plum, or timeless black. Whether you glide in wearing a stunning Indian ensemble or turn heads in elegant Western formalwear — we welcome it all. Just don't forget a touch of sparkle. <em>This is your night to shine.</em>",
+        tagline: "Dress like you're the celebration.",
         swatches: [
           { name: "Deep Red", color: "#78061F" },
+          { name: "Burgundy", color: "#5C1A2A" },
+          { name: "Wine", color: "#6B1E30" },
           { name: "Maroon", color: "#4A0E17" },
           { name: "Emerald", color: "#14452F" },
+          { name: "Forest", color: "#1D4A32" },
+          { name: "Sapphire", color: "#0F2A4A" },
           { name: "Navy", color: "#152238" },
+          { name: "Royal Purple", color: "#2D1A4A" },
+          { name: "Deep Plum", color: "#3A1042" },
           { name: "Black", color: "#1E1E22" }
         ]
       }

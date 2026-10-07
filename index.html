@@ -125,6 +125,21 @@
        ======================================================== -->
   <main id="mainSite" class="site-shell" hidden inert aria-hidden="true">
 
+    <!-- FLOATING MUSIC TOGGLE -->
+    <button id="musicToggle" class="music-toggle-btn" type="button" aria-label="Pause music">
+      <span class="music-btn-icon" aria-hidden="true">
+        <svg class="music-icon-playing" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>
+        </svg>
+        <svg class="music-icon-paused" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </span>
+      <span class="music-btn-waves" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </span>
+    </button>
+
     <!-- HERO SECTION -->
     <section id="celebrationHero" class="hero section-burgundy" aria-labelledby="coupleNames">
       <!-- Background Canvas / Artwork Layer -->
@@ -509,6 +524,242 @@
       </div>
     </section>
 
+    <!-- OUR FAVORITE SPOTS IN SOUTH FLORIDA -->
+    <section class="spots-section section-burgundy motion-reveal" id="south-florida-spots" aria-labelledby="spotsTitle">
+
+      <div class="spots-decor spots-decor-left" aria-hidden="true">
+        <img src="assets/images/branch-gold.webp" class="spots-branch-img" alt="" loading="lazy" decoding="async">
+      </div>
+      <div class="spots-decor spots-decor-right" aria-hidden="true">
+        <img src="assets/images/branch-gold.webp" class="spots-branch-img mirror" alt="" loading="lazy" decoding="async">
+      </div>
+
+      <div class="spots-header">
+        <span class="spots-kicker">EXPLORE WITH US</span>
+        <h2 id="spotsTitle" class="script-heading">Our Favorite Spots in South Florida</h2>
+        <div class="spots-flourish" aria-hidden="true">
+          <span class="spots-flourish-line left"></span>
+          <span class="spots-flourish-motif">❦ &nbsp;✦ &nbsp;❦</span>
+          <span class="spots-flourish-line right"></span>
+        </div>
+        <p class="spots-intro">Here are some of our favorite places to eat, explore, grab coffee, and enjoy while you're here for our wedding!</p>
+      </div>
+
+      <div class="spots-grid">
+
+        <!-- PLACES TO EXPLORE -->
+        <div class="spots-category">
+          <div class="spots-cat-header">
+            <span class="spots-cat-icon">🌊</span>
+            <h3 class="spots-cat-title">Places to Explore</h3>
+          </div>
+          <ul class="spots-list">
+            <li class="spot-item">
+              <span class="spot-name">Pompano Beach Pier</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Pompano+Beach+Pier%2C+Pompano+Beach%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Pompano Beach Pier in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Hollywood Beach Broadwalk</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Hollywood+Beach+Broadwalk%2C+Hollywood%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Hollywood Beach Broadwalk in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Rooftop @1WLO</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Rooftop+%401WLO%2C+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Rooftop @1WLO in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">The Wharf Fort Lauderdale</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=The+Wharf+Fort+Lauderdale%2C+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open The Wharf Fort Lauderdale in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Las Olas Riverwalk</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Las+Olas+Riverwalk%2C+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Las Olas Riverwalk in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Pier Top</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Pier+Top%2C+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Pier Top in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Swizzle</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Swizzle+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Swizzle in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Hyatt Centric Las Olas</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Hyatt+Centric+Las+Olas+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Hyatt Centric Las Olas in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">The Wilder</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=The+Wilder+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open The Wilder in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- FAVORITE RESTAURANTS -->
+        <div class="spots-category">
+          <div class="spots-cat-header">
+            <span class="spots-cat-icon">🍽️</span>
+            <h3 class="spots-cat-title">Favorite Restaurants</h3>
+          </div>
+          <ul class="spots-list">
+            <li class="spot-item">
+              <span class="spot-name">El Camino</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=El+Camino+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open El Camino in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Moxies</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Moxies+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Moxies in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Nour Thai Kitchen</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Nour+Thai+Kitchen%2C+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Nour Thai Kitchen in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Café Bastille</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Cafe+Bastille+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Café Bastille in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Mister O1 Pizza</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Mister+O1+Pizza+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Mister O1 Pizza in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Earls Kitchen + Bar</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Earls+Kitchen+Bar+Fort+Lauderdale%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Earls Kitchen + Bar in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Ghee Indian Kitchen – Wynwood</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Ghee+Indian+Kitchen+Wynwood%2C+Miami%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Ghee Indian Kitchen in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- DESSERTS & COFFEE -->
+        <div class="spots-category">
+          <div class="spots-cat-header">
+            <span class="spots-cat-icon">☕</span>
+            <h3 class="spots-cat-title">Desserts &amp; Coffee</h3>
+          </div>
+          <ul class="spots-list">
+            <li class="spot-item">
+              <span class="spot-name">Tea.Lab</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Tea.Lab+Plantation%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Tea.Lab in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Haute Coffee</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Haute+Coffee+Davie%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Haute Coffee in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Farmer's Milk</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Farmers+Milk+Hollywood%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Farmer's Milk in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">The Salty Donut – Wynwood</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=The+Salty+Donut+Wynwood%2C+Miami%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open The Salty Donut in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- MIAMI FAVORITES -->
+        <div class="spots-category">
+          <div class="spots-cat-header">
+            <span class="spots-cat-icon">🌴</span>
+            <h3 class="spots-cat-title">Miami Favorites</h3>
+          </div>
+          <ul class="spots-list">
+            <li class="spot-item">
+              <span class="spot-name">Brickell City Centre</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Brickell+City+Centre%2C+Miami%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Brickell City Centre in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">South Pointe Pier</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=South+Pointe+Pier%2C+Miami+Beach%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open South Pointe Pier in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+            <li class="spot-item">
+              <span class="spot-name">Sugar Rooftop</span>
+              <a href="https://www.google.com/maps/search/?api=1&query=Sugar+Rooftop%2C+Miami%2C+FL" target="_blank" rel="noopener noreferrer" class="spot-map-btn" aria-label="Open Sugar Rooftop in Maps">
+                <svg class="spot-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                Map
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <p class="spots-outro">Hope you get a chance to check out a few of our favorites while you're in town! ❤️</p>
+
+      <div class="spots-section-divider" aria-hidden="true">
+        <span class="hotel-sep-line left"></span>
+        <span class="hotel-sep-motif">❦ &nbsp;✦ &nbsp;❦</span>
+        <span class="hotel-sep-line right"></span>
+      </div>
+
+    </section>
+
     <!-- RSVP & CELEBRATION SIGNOFF -->
     <section class="rsvp-section section-burgundy motion-reveal" aria-labelledby="rsvpTitle">
       <p id="rsvpIntro">Kindly confirm your presence by submitting the RSVP below to help us
@@ -620,12 +871,12 @@
         <form id="rsvpForm">
           <label class="field">
             <span>Your Full Name *</span>
-            <input type="text" name="guestName" placeholder="Enter your full name" required>
+            <input type="text" name="guestName" placeholder="Enter your full name" required autocorrect="off" autocapitalize="words" enterkeyhint="next">
           </label>
 
           <label class="field">
             <span>Phone / WhatsApp Number *</span>
-            <input type="tel" name="mobileNumber" inputmode="tel" placeholder="+1 (469) 347-4780" required>
+            <input type="tel" name="mobileNumber" inputmode="tel" placeholder="+1 (469) 347-4780" required autocorrect="off" autocomplete="tel" enterkeyhint="next">
           </label>
 
           <label class="field">
@@ -638,7 +889,7 @@
 
           <label class="field">
             <span>Number of Guests (including yourself) *</span>
-            <input type="number" name="familyGuestCount" inputmode="numeric" value="1" min="1" max="10" required>
+            <input type="number" name="familyGuestCount" inputmode="numeric" value="1" min="1" max="10" required enterkeyhint="done">
           </label>
 
           <div id="rsvpFunctionsWrap" class="field">

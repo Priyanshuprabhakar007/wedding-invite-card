@@ -106,12 +106,16 @@ module.exports = async function handler(req, res) {
     // INSERT INTO SUPABASE
     // -------------------------------
 
+    const abortController = new AbortController();
+    const abortTimeout = setTimeout(() => abortController.abort(), 8000);
+
     const supabaseResponse =
       await fetch(
         supabaseUrl +
           "/rest/v1/wedding_rsvps",
         {
           method: "POST",
+          signal: abortController.signal,
 
           headers: {
             apikey:
@@ -158,6 +162,8 @@ module.exports = async function handler(req, res) {
           })
         }
       );
+
+    clearTimeout(abortTimeout);
 
     let result = null;
 

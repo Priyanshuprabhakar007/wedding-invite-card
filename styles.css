@@ -126,6 +126,8 @@ button {
   pointer-events: none !important;
   overflow: hidden;
   z-index: 100;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .petal-item {
@@ -597,7 +599,10 @@ button {
   aspect-ratio: 1122 / 1402;
   margin: 0 auto;
   perspective: 1400px;
+  -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   outline: none;
   user-select: none;
   -webkit-user-select: none;
@@ -1035,6 +1040,7 @@ button {
   left: 50%;
   top: 67%;
   width: 79%;
+  height: 48px;
   aspect-ratio: 1974 / 317;
   transform: translate(-50%, -50%);
   margin: 0;
@@ -1067,7 +1073,7 @@ button {
   color: #4a0116;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(13px, 2.8vw, 15px);
+  font-size: max(16px, clamp(13px, 2.8vw, 15px));
   text-transform: uppercase;
   letter-spacing: 0.08em;
   text-align: center;
@@ -1122,6 +1128,7 @@ button {
   left: 50%;
   top: 80%;
   width: 79%;
+  height: 48px;
   aspect-ratio: 2004 / 345;
   transform: translate(-50%, -50%);
   margin: 0;
@@ -1292,6 +1299,8 @@ button {
   width: min(calc(100vw - 32px), 760px);
   margin: 0 auto;
   min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
   background: var(--crimson);
   border-left: 1.5px solid rgba(223, 190, 118, 0.55);
   border-right: 1.5px solid rgba(223, 190, 118, 0.55);
@@ -2369,6 +2378,8 @@ button {
   margin-top: 6px;
   flex-wrap: nowrap;
 }
+.countdown.scratch-countdown > .countdown-unit + .countdown-unit { margin-left: clamp(8px, 2.5vw, 14px); }
+@supports (gap: 1px) { .countdown.scratch-countdown > .countdown-unit + .countdown-unit { margin-left: 0; } }
 
 /* Heart-shaped Countdown Unit */
 .countdown-unit.scratch-unit {
@@ -4276,6 +4287,8 @@ button {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s ease;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 .gallery-lightbox:not([hidden]) {
@@ -4565,6 +4578,8 @@ button {
   gap: 14px;
   margin-bottom: 40px;
 }
+.rsvp-button-group > * + * { margin-top: 14px; }
+@supports (gap: 1px) { .rsvp-button-group > * + * { margin-top: 0; } }
 
 .rsvp-button {
   min-width: 200px;
@@ -4652,6 +4667,7 @@ button {
   padding: calc(16px + var(--safe-top)) max(16px, var(--safe-right)) calc(16px + var(--safe-bottom)) max(16px, var(--safe-left));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   box-sizing: border-box;
 }
 
@@ -4902,6 +4918,7 @@ button {
   );
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   background: var(--paper);
   color: var(--ink);
   padding: 40px 30px 32px;
@@ -4966,7 +4983,7 @@ button {
   margin-bottom: 6px;
 }
 
-.field input, .field textarea, .field select {
+.field input:not([type="checkbox"]):not([type="radio"]), .field textarea, .field select {
   width: 100%;
   border: 1px solid #d5cbc3;
   border-radius: 8px;
@@ -4988,7 +5005,7 @@ button {
   padding-right: 38px;
 }
 
-.field input:focus, .field textarea:focus, .field select:focus {
+.field input:not([type="checkbox"]):not([type="radio"]):focus, .field textarea:focus, .field select:focus {
   outline: none;
   border-color: var(--crimson);
   box-shadow: 0 0 0 3px rgba(102, 2, 31, 0.15);
@@ -5039,6 +5056,8 @@ button {
 }
 
 .rsvp-function-item input[type="checkbox"] {
+  -webkit-appearance: checkbox;
+  appearance: checkbox;
   width: 20px;
   height: 20px;
   accent-color: var(--crimson);
@@ -7052,4 +7071,295 @@ button {
   .wedding-ceremony-time {
     font-size: 11.5px;
   }
+}
+
+/* ==========================================================================
+   FLOATING MUSIC TOGGLE BUTTON
+   ========================================================================== */
+
+.music-toggle-btn {
+  position: fixed;
+  bottom: calc(28px + var(--safe-bottom, 0px));
+  right: 20px;
+  z-index: 200;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(223, 190, 118, 0.55);
+  background: rgba(58, 2, 18, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--gold);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.45), 0 0 0 0 rgba(223,190,118,0);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  touch-action: manipulation;
+  padding: 0;
+  overflow: hidden;
+}
+.music-toggle-btn:active { transform: scale(0.93); }
+
+.music-btn-icon {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.music-icon-playing,
+.music-icon-paused {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* Default state: music IS playing (show pause icon) */
+.music-toggle-btn .music-icon-playing  { opacity: 1; transform: scale(1); }
+.music-toggle-btn .music-icon-paused   { opacity: 0; transform: scale(0.7); }
+
+/* When NOT playing: show play icon */
+.music-toggle-btn:not(.is-playing) .music-icon-playing { opacity: 0; transform: scale(0.7); }
+.music-toggle-btn:not(.is-playing) .music-icon-paused  { opacity: 1; transform: scale(1); }
+
+/* Sound wave animation rings (visible only when playing) */
+.music-btn-waves {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.music-btn-waves span {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(223,190,118,0.4);
+  opacity: 0;
+  transform: scale(1);
+}
+.music-toggle-btn.is-playing .music-btn-waves span:nth-child(1) {
+  animation: musicRing 2s ease-out infinite;
+}
+.music-toggle-btn.is-playing .music-btn-waves span:nth-child(2) {
+  animation: musicRing 2s ease-out 0.65s infinite;
+}
+.music-toggle-btn.is-playing .music-btn-waves span:nth-child(3) {
+  animation: musicRing 2s ease-out 1.3s infinite;
+}
+.music-toggle-btn.is-playing {
+  border-color: rgba(223,190,118,0.75);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.45), 0 0 16px rgba(223,190,118,0.2);
+}
+
+@keyframes musicRing {
+  0%   { transform: scale(1);   opacity: 0.5; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+
+/* ==========================================================================
+   OUR FAVORITE SPOTS IN SOUTH FLORIDA
+   ========================================================================== */
+
+.spots-section {
+  position: relative;
+  background: radial-gradient(circle at 50% 20%, #750324 0%, #58021a 45%, #3d0012 100%);
+  padding: clamp(65px, 8vw, 95px) clamp(16px, 4vw, 32px) clamp(50px, 6vw, 75px);
+  text-align: center;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.spots-decor {
+  position: absolute;
+  top: -10px;
+  width: clamp(80px, 14vw, 130px);
+  opacity: 0.18;
+  pointer-events: none;
+}
+.spots-decor-left { left: -20px; transform: rotate(-15deg); }
+.spots-decor-right { right: -20px; transform: rotate(15deg) scaleX(-1); }
+.spots-branch-img { width: 100%; display: block; }
+
+.spots-kicker {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: clamp(9px, 2vw, 11px);
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  opacity: 0.85;
+}
+
+.spots-header { margin-bottom: clamp(32px, 5vw, 48px); }
+
+.spots-flourish {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 14px auto 20px;
+  max-width: 200px;
+}
+.spots-flourish > * + * { margin-left: 10px; }
+@supports (gap: 1px) { .spots-flourish > * + * { margin-left: 0; } }
+.spots-flourish-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(223,190,118,0.5), transparent);
+}
+.spots-flourish-motif {
+  font-size: 11px;
+  color: rgba(223,190,118,0.7);
+  white-space: nowrap;
+}
+
+.spots-intro {
+  font-family: var(--font-serif);
+  font-size: clamp(13px, 3.2vw, 15.5px);
+  color: rgba(255,242,210,0.82);
+  line-height: 1.6;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+/* 2-column grid for categories, stacks on mobile */
+.spots-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(18px, 4vw, 28px);
+  max-width: 620px;
+  margin: 0 auto clamp(32px, 5vw, 48px);
+  text-align: left;
+}
+
+.spots-category {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(223,190,118,0.18);
+  border-radius: 14px;
+  padding: clamp(16px, 3vw, 22px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.spots-cat-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(223,190,118,0.25);
+}
+.spots-cat-header > * + * { margin-left: 8px; }
+@supports (gap: 1px) { .spots-cat-header > * + * { margin-left: 0; } }
+
+.spots-cat-icon { font-size: 1.1rem; line-height: 1; flex-shrink: 0; }
+
+.spots-cat-title {
+  font-family: var(--font-sans);
+  font-size: clamp(10px, 2.2vw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0;
+}
+
+.spots-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.spots-list > * + * { margin-top: 8px; }
+@supports (gap: 1px) { .spots-list > * + * { margin-top: 0; } }
+
+.spot-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(223,190,118,0.08);
+}
+.spot-item:last-child { border-bottom: none; padding-bottom: 0; }
+.spot-item > * + * { margin-left: 8px; }
+@supports (gap: 1px) { .spot-item > * + * { margin-left: 0; } }
+
+.spot-name {
+  font-family: var(--font-serif);
+  font-size: clamp(11.5px, 2.6vw, 13.5px);
+  color: rgba(255,242,210,0.92);
+  line-height: 1.3;
+  flex: 1;
+}
+
+.spot-map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(223,190,118,0.1);
+  border: 1px solid rgba(223,190,118,0.35);
+  border-radius: 999px;
+  padding: 4px 9px;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+.spot-map-btn > * + * { margin-left: 4px; }
+@supports (gap: 1px) { .spot-map-btn > * + * { margin-left: 0; } }
+.spot-map-btn:hover,
+.spot-map-btn:focus-visible {
+  background: rgba(223,190,118,0.22);
+  border-color: rgba(223,190,118,0.65);
+  color: #f5dfa0;
+}
+
+.spot-pin-icon {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+.spots-outro {
+  font-family: var(--font-serif);
+  font-size: clamp(13px, 3.2vw, 15px);
+  font-style: italic;
+  color: rgba(255,242,210,0.7);
+  margin: 0 auto 32px;
+  max-width: 380px;
+}
+
+.spots-section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+.spots-section-divider > * + * { margin-left: 12px; }
+@supports (gap: 1px) { .spots-section-divider > * + * { margin-left: 0; } }
+
+/* Mobile: single column */
+@media (max-width: 520px) {
+  .spots-grid {
+    grid-template-columns: 1fr;
+  }
+  .spots-decor { display: none; }
 }

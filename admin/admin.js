@@ -341,6 +341,24 @@
     });
   }
 
+  async function deleteRsvp(id, name, rowEl) {
+    if (!confirm(`Delete RSVP for "${name || "this guest"}"? This cannot be undone.`)) return;
+    try {
+      rowEl.style.opacity = "0.4";
+      rowEl.style.pointerEvents = "none";
+      const res = await fetch(`/api/admin-delete-rsvp?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) throw new Error(data.error || "Delete failed.");
+      allRsvps = allRsvps.filter(function (r) { return r.id !== id; });
+      renderFilteredRsvps();
+      updateSummaryMetrics();
+    } catch (err) {
+      rowEl.style.opacity = "";
+      rowEl.style.pointerEvents = "";
+      alert(err.message || "Could not delete. Please try again.");
+    }
+  }
+
   function renderFilteredRsvps() {
     const filtered = getFilteredRsvps();
 
@@ -473,6 +491,19 @@
       tdDate.className = "time-cell";
       tdDate.textContent = formatDate(rsvp.created_at);
       tr.appendChild(tdDate);
+
+      // Delete
+      const tdDelete = document.createElement("td");
+      tdDelete.className = "text-center";
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.title = "Delete this RSVP";
+      deleteBtn.innerHTML = "🗑";
+      deleteBtn.addEventListener("click", function () {
+        deleteRsvp(rsvp.id, rsvp.guest_name, tr);
+      });
+      tdDelete.appendChild(deleteBtn);
+      tr.appendChild(tdDelete);
 
       rsvpTableBody.appendChild(tr);
     });

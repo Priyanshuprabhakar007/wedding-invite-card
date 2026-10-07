@@ -29,14 +29,19 @@ module.exports = async function handler(req, res) {
     }
 
     const endpoint = `${supabaseUrl}/rest/v1/wedding_rsvps?select=*&order=created_at.desc`;
+    const abortController = new AbortController();
+    const abortTimeout = setTimeout(() => abortController.abort(), 8000);
+
     const response = await fetch(endpoint, {
       method: "GET",
+      signal: abortController.signal,
       headers: {
         apikey: supabaseSecretKey,
         Authorization: `Bearer ${supabaseSecretKey}`,
         "Content-Type": "application/json"
       }
     });
+    clearTimeout(abortTimeout);
 
     if (!response.ok) {
       const errText = await response.text();
