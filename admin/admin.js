@@ -10,6 +10,7 @@
   let currentStatusFilter = "all";
   let currentEventFilter = "all";
   let currentSearchQuery = "";
+  let isFetching = false;
 
   // DOM Elements
   const initLoader = document.getElementById("initLoader");
@@ -186,10 +187,13 @@
   // 3. DATA RETRIEVAL (GET /api/admin-rsvps)
   // --------------------------------------------------------------------------
   async function fetchRsvps() {
+    if (isFetching) return;
+    isFetching = true;
+
     if (tableLoading) tableLoading.hidden = false;
     if (tableError) tableError.hidden = true;
     if (tableEmpty) tableEmpty.hidden = true;
-    if (tableContainer) tableContainer.hidden = false;
+    if (tableContainer) tableContainer.hidden = true;
 
     if (refreshBtn) refreshBtn.classList.add("is-refreshing");
 
@@ -221,6 +225,7 @@
       }
       if (tableContainer) tableContainer.hidden = true;
     } finally {
+      isFetching = false;
       if (tableLoading) tableLoading.hidden = true;
       if (refreshBtn) refreshBtn.classList.remove("is-refreshing");
     }
@@ -498,7 +503,7 @@
       const deleteBtn = document.createElement("button");
       deleteBtn.className = "delete-btn";
       deleteBtn.title = "Delete this RSVP";
-      deleteBtn.innerHTML = "🗑";
+      deleteBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>';
       deleteBtn.addEventListener("click", function () {
         deleteRsvp(rsvp.id, rsvp.guest_name, tr);
       });
