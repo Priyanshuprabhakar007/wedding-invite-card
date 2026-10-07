@@ -4260,8 +4260,7 @@ button {
 }
 
 /* Below Fold Performance Optimization */
-.details,
-.rsvp-section {
+.details {
   content-visibility: auto;
   contain-intrinsic-size: 500px;
 }
@@ -4569,6 +4568,7 @@ button {
 
 .rsvp-button {
   min-width: 200px;
+  min-height: 48px;
   border: 0;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dark) 100%);
@@ -4581,6 +4581,13 @@ button {
   padding: 16px 36px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 20px rgba(223, 190, 118, 0.4);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  z-index: 5;
 }
 
 .rsvp-button:hover, .rsvp-button:focus-visible {
@@ -4633,24 +4640,23 @@ button {
   position: fixed;
   inset: 0;
   z-index: 300;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(26, 2, 8, 0.88);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
-  padding-top: calc(16px + var(--safe-top));
-  padding-right: max(16px, var(--safe-right));
-  padding-bottom: calc(16px + var(--safe-bottom));
-  padding-left: max(16px, var(--safe-left));
+  padding: calc(16px + var(--safe-top)) max(16px, var(--safe-right)) calc(16px + var(--safe-bottom)) max(16px, var(--safe-left));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
 }
 
 .modal[hidden] {
-  display: none;
+  display: none !important;
 }
 
 /* ========================================================
@@ -4902,6 +4908,9 @@ button {
   border-radius: 12px;
   border: 1px solid var(--gold);
   box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+  box-sizing: border-box;
+  margin: auto;
+  touch-action: pan-y;
 }
 
 .modal-card h2 {
@@ -4923,8 +4932,10 @@ button {
   position: absolute;
   right: 16px;
   top: 16px;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 50%;
   border: 1px solid #ddd;
   background: #ffffff;
@@ -4932,6 +4943,10 @@ button {
   font-size: 18px;
   display: grid;
   place-items: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 10;
 }
 
 .field {
@@ -5005,11 +5020,16 @@ button {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 12px;
+  padding: 10px 12px;
+  min-height: 44px;
   background: #fdfaf7;
   border: 1px solid #ebdcd3;
   border-radius: 6px;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
@@ -5019,12 +5039,13 @@ button {
 }
 
 .rsvp-function-item input[type="checkbox"] {
-  width: 17px;
-  height: 17px;
+  width: 20px;
+  height: 20px;
   accent-color: var(--crimson);
   cursor: pointer;
   flex-shrink: 0;
   margin: 0;
+  touch-action: manipulation;
 }
 
 .field .rsvp-function-item span.func-name {
@@ -5041,7 +5062,8 @@ button {
 .submit-button {
   width: 100%;
   margin-top: 15px;
-  padding: 14px;
+  padding: 14px 20px;
+  min-height: 48px;
   border: 0;
   border-radius: 8px;
   background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-light) 100%);
@@ -5053,6 +5075,13 @@ button {
   font-weight: 600;
   box-shadow: 0 6px 20px rgba(102, 2, 31, 0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  position: relative;
+  z-index: 2;
 }
 
 .submit-button:hover {
@@ -6440,8 +6469,6 @@ button {
   padding: 95px 24px 105px;
   text-align: center;
   overflow: hidden;
-  content-visibility: auto;
-  contain-intrinsic-size: 600px;
 }
 
 .registry-section-divider {

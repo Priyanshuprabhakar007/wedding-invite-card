@@ -209,9 +209,9 @@
     var badge = byId("rsvpInvitationBadge");
     if (!container) return;
 
-    var eventsToDisplay = (invitation && Array.isArray(invitation.allowedEvents)) ?
-      invitation.allowedEvents :
-      [];
+    var eventsToDisplay = (invitation && Array.isArray(invitation.allowedEvents) && invitation.allowedEvents.length > 0)
+      ? invitation.allowedEvents
+      : ((data && Array.isArray(data.events)) ? data.events : (window.WEDDING_CONFIG && Array.isArray(window.WEDDING_CONFIG.events) ? window.WEDDING_CONFIG.events : []));
 
     if (badge) {
       if (invitation && invitation.label) {
@@ -1770,18 +1770,30 @@
 
     if (!modal || !openBtn || !form) return;
 
-    openBtn.addEventListener("click", function () {
-      if (!accessGranted || !activeInvitation) return;
+    function openModal(e) {
+      if (e) {
+        if (typeof e.stopPropagation === "function") e.stopPropagation();
+      }
+      // Ensure functions list is populated
+      var functionsContainer = byId("rsvpFunctionsList");
+      if (!functionsContainer || functionsContainer.children.length === 0) {
+        updateRsvpFormEvents(activeInvitation);
+      }
       modal.hidden = false;
       modal.removeAttribute("inert");
       modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
       document.body.style.overflow = "hidden";
-    });
+    }
 
-    function closeModal() {
+    function closeModal(e) {
+      if (e && typeof e.stopPropagation === "function") {
+        e.stopPropagation();
+      }
       modal.hidden = true;
       modal.setAttribute("inert", "");
       modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("modal-open");
       document.body.style.overflow = "";
       if (formContainer && successView) {
         formContainer.hidden = false;
@@ -1789,10 +1801,36 @@
       }
     }
 
-    if (closeBtn) closeBtn.addEventListener("click", closeModal);
-    if (doneBtn) doneBtn.addEventListener("click", closeModal);
+    // iOS Safari responsive touch & click handlers
+    openBtn.addEventListener("click", openModal);
+    openBtn.addEventListener("touchend", function (e) {
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+      openModal(e);
+    }, { passive: false });
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", closeModal);
+      closeBtn.addEventListener("touchend", function (e) {
+        if (e.cancelable) e.preventDefault();
+        closeModal(e);
+      }, { passive: false });
+    }
+
+    if (doneBtn) {
+      doneBtn.addEventListener("click", closeModal);
+      doneBtn.addEventListener("touchend", function (e) {
+        if (e.cancelable) e.preventDefault();
+        closeModal(e);
+      }, { passive: false });
+    }
+
     modal.addEventListener("click", function (e) {
-      if (e.target === modal) closeModal();
+      var card = modal.querySelector(".modal-card");
+      if (e.target === modal && (!card || !card.contains(e.target))) {
+        closeModal(e);
+      }
     });
 
     var attendanceSelect = byId("rsvpAttendanceSelect");
