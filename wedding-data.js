@@ -54,6 +54,15 @@ window.WEDDING_CONFIG = {
     rsvpButton: "RSVP Now",
     signoff: "Looking forward to celebrating with you!",
     closingNames: "With Best Compliments from Family",
+    registryEyebrow: "WITH LOVE & GRATITUDE",
+    registryTitle: "Wedding Registry",
+    registryIntroOne: "We are not having a traditional wedding registry. Your presence at our wedding is truly the greatest gift we could ask for, and we feel so grateful to celebrate this special day with you.",
+    registryIntroTwo: "If you would like to give a gift, we would be incredibly grateful for a contribution toward our honeymoon and the adventures we’ll share as newlyweds. Your love and support mean the world to us!",
+    honeymoonFundLabel: "OUR HONEYMOON FUND",
+    honeymoonFundTitle: "Honeymoon Fund",
+    honeymoonFundPaymentMethod: "Zelle",
+    honeymoonFundNumber: "469-347-4780",
+    honeymoonFundMicrocopy: "For all the adventures yet to come.",
     playMusic: "Play Music",
     pauseMusic: "Pause Music",
     playSymbol: "▶",
@@ -120,7 +129,14 @@ window.WEDDING_CONFIG = {
         "Family welcome & blessings",
         "Music and celebration",
         "Dinner with family & friends"
-      ]
+      ],
+      dressCode: {
+        eyebrow: "STYLE GUIDE",
+        title: "DRESS CODE",
+        subtitle: "Colorful • Joyful • Comfortable",
+        text: "Wear whatever you prefer.",
+        tagline: "Come comfortable, come colorful, come as you are."
+      }
     },
     {
       id: "wedding",
@@ -146,7 +162,15 @@ window.WEDDING_CONFIG = {
         "Seven Sacred Steps",
         "Sindoor & Sacred Necklace Ceremony",
         "Blessings from Family & Elders"
-      ]
+      ],
+      dressCode: {
+        eyebrow: "TRADITIONAL ATTIRE",
+        title: "DRESS CODE",
+        subtitle: "Regal • Traditional • Elegant",
+        text: "We would love to see you in your favorite <strong class=\"dc-highlight\">Indian ethnic wear</strong> (Sarees, Kurtas, Lehengas, Indian suits)! If you prefer Western formalwear, please opt for a modest style that covers the shoulders and knees.",
+        tagline: "Pick the color of your choice.",
+        templeNote: "Shoes are not permitted inside the temple. Please plan your footwear accordingly."
+      }
     },
     {
       id: "reception",
@@ -168,7 +192,20 @@ window.WEDDING_CONFIG = {
         "Dinner",
         "Music & dancing",
         "Celebration with family & friends"
-      ]
+      ],
+      dressCode: {
+        eyebrow: "EVENING SOIRÉE",
+        title: "DRESS CODE",
+        subtitle: "Elegant • Jewel Tones • A Touch of Sparkle",
+        text: "We want our reception to feel cozy, elegant, and full of celebration! We ask that our guests wear dark, rich jewel tones such as deep reds, maroons, emerald greens, navy, or black. Whether you prefer Western formalwear or Indian traditional attire, we love a bit of sparkle.",
+        swatches: [
+          { name: "Deep Red", color: "#78061F" },
+          { name: "Maroon", color: "#4A0E17" },
+          { name: "Emerald", color: "#14452F" },
+          { name: "Navy", color: "#152238" },
+          { name: "Black", color: "#1E1E22" }
+        ]
+      }
     }
   ],
   rsvpForm: {

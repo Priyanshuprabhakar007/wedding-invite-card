@@ -307,6 +307,17 @@
     if (byId("signoff")) byId("signoff").textContent = cfg.copy.signoff;
     if (byId("closingNames")) byId("closingNames").textContent = cfg.copy.closingNames;
 
+    // Wedding Registry Section
+    if (cfg.copy && cfg.copy.registryEyebrow && byId("registryEyebrow")) byId("registryEyebrow").textContent = cfg.copy.registryEyebrow;
+    if (cfg.copy && cfg.copy.registryTitle && byId("registryTitle")) byId("registryTitle").textContent = cfg.copy.registryTitle;
+    if (cfg.copy && cfg.copy.registryIntroOne && byId("registryIntroOne")) byId("registryIntroOne").textContent = cfg.copy.registryIntroOne;
+    if (cfg.copy && cfg.copy.registryIntroTwo && byId("registryIntroTwo")) byId("registryIntroTwo").textContent = cfg.copy.registryIntroTwo;
+    if (cfg.copy && cfg.copy.honeymoonFundLabel && byId("honeymoonFundLabel")) byId("honeymoonFundLabel").textContent = cfg.copy.honeymoonFundLabel;
+    if (cfg.copy && cfg.copy.honeymoonFundTitle && byId("honeymoonFundTitle")) byId("honeymoonFundTitle").textContent = cfg.copy.honeymoonFundTitle;
+    if (cfg.copy && cfg.copy.honeymoonFundPaymentMethod && byId("honeymoonFundPaymentMethod")) byId("honeymoonFundPaymentMethod").textContent = cfg.copy.honeymoonFundPaymentMethod;
+    if (cfg.copy && cfg.copy.honeymoonFundNumber && byId("honeymoonFundNumber")) byId("honeymoonFundNumber").textContent = cfg.copy.honeymoonFundNumber;
+    if (cfg.copy && cfg.copy.honeymoonFundMicrocopy && byId("honeymoonFundMicrocopy")) byId("honeymoonFundMicrocopy").textContent = cfg.copy.honeymoonFundMicrocopy;
+
     validateWeddingConfig(cfg);
     buildRsvpForm(cfg);
 
@@ -432,12 +443,31 @@
         }).join("");
 
         if (ev.id === "wedding") {
+          var weddingRows = ev.timings.map(function(t) {
+            return '<div class="wedding-ceremony-row">' +
+              '<span class="wedding-ceremony-time">' + t.time + '</span>' +
+              '<span class="wedding-ceremony-sep" aria-hidden="true">✦</span>' +
+              '<span class="wedding-ceremony-label">' + t.label + '</span>' +
+            '</div>';
+          }).join("");
+
           timingHtml =
-            '<div class="ceremony-meta-badge ceremony-meta-stacked">' +
-              '<span class="ceremony-date-long">' + (ev.dateLong || ev.date || "") + '</span>' +
+            '<div class="wedding-gold-divider top" aria-hidden="true"></div>' +
+            '<div class="wedding-ceremony-date">' + (ev.dateLong ? ev.dateLong.toUpperCase() : "FRIDAY, NOVEMBER 20, 2026") + '</div>' +
+            '<div class="wedding-ceremony-schedule">' +
+              weddingRows +
             '</div>' +
-            '<div class="wedding-timing-list">' +
-              timingRows +
+            '<div class="wedding-gold-divider bottom" aria-hidden="true"></div>';
+        } else if (ev.id === "reception") {
+          timingHtml =
+            '<div class="reception-gold-divider" aria-hidden="true"></div>' +
+            '<div class="reception-date-block">' +
+              '<div class="reception-date">' + (ev.dateLong ? ev.dateLong.toUpperCase() : "SATURDAY, NOVEMBER 21, 2026") + '</div>' +
+              '<div class="reception-main-time">' + (ev.timelineTime || ev.time || "5:00 PM — 11:00 PM").replace(/–/g, "—") + '</div>' +
+            '</div>' +
+            '<div class="reception-cocktail-strip">' +
+              '<span class="cocktail-time">5:00 PM — 6:00 PM</span>' +
+              '<span class="cocktail-label">Cocktail Hour</span>' +
             '</div>';
         } else {
           timingHtml =
@@ -476,6 +506,7 @@
               '</a>' : '') +
           '</div>' +
           ritualsHtml +
+          buildCeremonyDressCodeCard(ev) +
         '</div>';
 
       container.appendChild(section);
@@ -483,6 +514,70 @@
 
     observeMotionElements(container);
   }
+  // -------------------------------------------------------------
+  // 2c. FESTIVE & PREMIUM CEREMONY DRESS CODE CARD
+  // -------------------------------------------------------------
+  function buildCeremonyDressCodeCard(ev) {
+    if (!ev || !ev.dressCode) return "";
+    var dc = typeof ev.dressCode === "object" ? ev.dressCode : { text: ev.dressCode };
+    var dcTitle = dc.title || "DRESS CODE";
+    var dcEyebrow = dc.eyebrow || "STYLE GUIDE";
+    var dcSubtitle = dc.subtitle || "";
+    var dcText = dc.text || "";
+    var dcTagline = dc.tagline || "";
+    var dcTempleNote = dc.templeNote || "";
+
+    var iconSvg = "";
+    if (ev.id === "mehendi") {
+      iconSvg = '<svg class="dc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a4 4 0 0 1 4 4c0 3-4 7-4 7s-4-4-4-7a4 4 0 0 1 4-4z"/><circle cx="12" cy="6" r="1.5"/><path d="M12 13v9"/><path d="M8 18c1.5-1 3-1 4-1s2.5 0 4 1"/><path d="M9 15c1-0.8 2-0.8 3-0.8s2 0 3 0.8"/></svg>';
+    } else if (ev.id === "wedding") {
+      iconSvg = '<svg class="dc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/><path d="M3 12h18"/><circle cx="12" cy="12" r="4"/><path d="m6.5 6.5 11 11"/><path d="m17.5 6.5-11 11"/></svg>';
+    } else {
+      iconSvg = '<svg class="dc-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.4 6.6L21 11l-5.4 4.4L17.2 22 12 18.3 6.8 22l1.6-6.6L3 11l6.6-2.4z"/><path d="M12 7v5"/><path d="M9.5 12h5"/></svg>';
+    }
+
+    var swatchesHtml = "";
+    if (Array.isArray(dc.swatches) && dc.swatches.length > 0) {
+      var chips = dc.swatches.map(function(sw) {
+        return '<div class="dc-swatch-item">' +
+          '<span class="dc-swatch-dot" style="background-color: ' + sw.color + ';" title="' + sw.name + '" aria-label="' + sw.name + '"></span>' +
+          '<span class="dc-swatch-label">' + sw.name + '</span>' +
+        '</div>';
+      }).join("");
+      swatchesHtml = '<div class="dc-swatches-grid" role="group" aria-label="Suggested Jewel Tone Colors">' + chips + '</div>';
+    }
+
+    return '<div class="ceremony-dress-code-card ceremony-dress-code-' + ev.id + '">' +
+      '<div class="dc-corner top-left" aria-hidden="true"></div>' +
+      '<div class="dc-corner top-right" aria-hidden="true"></div>' +
+      '<div class="dc-corner bottom-left" aria-hidden="true"></div>' +
+      '<div class="dc-corner bottom-right" aria-hidden="true"></div>' +
+      '<div class="dc-card-inner">' +
+        '<div class="dc-icon-badge" aria-hidden="true">' + iconSvg + '</div>' +
+        '<span class="dc-eyebrow">' + dcEyebrow + '</span>' +
+        '<h4 class="dc-heading">' + dcTitle + '</h4>' +
+        '<div class="dc-divider" aria-hidden="true">' +
+          '<span class="dc-divider-line"></span>' +
+          '<span class="dc-divider-gem">✦</span>' +
+          '<span class="dc-divider-line"></span>' +
+        '</div>' +
+        (dcSubtitle ? '<div class="dc-subtitle">' + dcSubtitle + '</div>' : '') +
+        '<div class="dc-body">' +
+          '<div class="dc-text">' + dcText + '</div>' +
+          (dcTagline ? '<p class="dc-tagline">' + dcTagline + '</p>' : '') +
+          (dcTempleNote ?
+            '<div class="dc-temple-badge">' +
+              '<span class="dc-temple-spark">✦</span>' +
+              '<span class="dc-temple-title">Temple Etiquette</span>' +
+              '<span class="dc-temple-spark">✦</span>' +
+              '<p class="dc-temple-desc">' + dcTempleNote + '</p>' +
+            '</div>' : '') +
+          swatchesHtml +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
 
   // -------------------------------------------------------------
   // 3. INTERACTIVE WEDDING SCRATCH-CARD COUNTDOWN
