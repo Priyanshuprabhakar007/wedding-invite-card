@@ -13,7 +13,39 @@
   var accessGranted = false;
   var activeInvitation = null;
 
-  // Memory-only authentication lifecycle: unconditionally purge any legacy persistent keys
+  // -------------------------------------------------------------
+  // IOS SAFARI VIEWPORT & SCREEN ORIENTATION HELPER
+  // -------------------------------------------------------------
+  function updateAppViewportHeight() {
+    var viewportHeight =
+      window.visualViewport && window.visualViewport.height
+        ? window.visualViewport.height
+        : window.innerHeight;
+
+    document.documentElement.style.setProperty(
+      "--app-height-px",
+      viewportHeight + "px"
+    );
+  }
+
+  updateAppViewportHeight();
+
+  window.addEventListener("resize", updateAppViewportHeight, { passive: true });
+
+  window.addEventListener("orientationchange", function () {
+    setTimeout(updateAppViewportHeight, 100);
+    setTimeout(updateAppViewportHeight, 400);
+  });
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener(
+      "resize",
+      updateAppViewportHeight,
+      { passive: true }
+    );
+  }
+
+// Memory-only authentication lifecycle: unconditionally purge any legacy persistent keys
   try {
     localStorage.removeItem("wedding_guest_code");
     sessionStorage.removeItem("wedding_guest_code");
@@ -793,7 +825,7 @@
 
       // Redraw on window resize ONLY for non-revealed cards
       var resizeTimeout = null;
-      window.addEventListener("resize", function () {
+      function redrawUnscratchedCards() {
         if (resizeTimeout) clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(function () {
           units.forEach(function (unit) {
@@ -807,6 +839,11 @@
             }
           });
         }, 150);
+      }
+      window.addEventListener("resize", redrawUnscratchedCards, { passive: true });
+      window.addEventListener("orientationchange", function () {
+        setTimeout(redrawUnscratchedCards, 120);
+        setTimeout(redrawUnscratchedCards, 350);
       });
     }
   }
@@ -823,26 +860,32 @@
   }
 
   function playUnsealSound() {
-    if (!audioCtx) initAudio();
-    if (!audioCtx) return;
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    try {
+      if (!audioCtx) initAudio();
+      if (!audioCtx) return;
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(function () {});
+      }
 
-    // Soft realistic wax pop + paper chime
-    var osc = audioCtx.createOscillator();
-    var gain = audioCtx.createGain();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
+      // Soft realistic wax pop + paper chime
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.15);
 
-    gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.05);
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.35);
+      gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.35);
 
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
 
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.36);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.36);
+    } catch (e) {
+      console.log("Audio unseal sound bypassed", e);
+    }
   }
 
   function playWeddingMelody() {
@@ -1615,18 +1658,7 @@
       container.appendChild(item);
     }
 
-    // Gracefully handle screen resize / orientation changes
-    var resizeTimer;
-    window.addEventListener("resize", function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function () {
-        var newIsMobile = window.innerWidth <= 768;
-        if (newIsMobile !== isMobile) {
-          setupPetals();
-    initCoupleGallery();
-        }
-      }, 300);
-    });
+    // Petals initialized for current viewport
   }
 
   // -------------------------------------------------------------
@@ -2239,7 +2271,8 @@
       var diffX = touchEndX - touchStartX;
       var diffY = touchEndY - touchStartY;
 
-      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 45) {
+      // Only change slide when horizontal motion clearly dominates vertical scroll
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
         if (diffX < 0) {
           nextGallerySlide();
         } else {
@@ -2338,7 +2371,7 @@
       lightbox.addEventListener("touchend", function () {
         var diffX = lbTouchEndX - lbTouchStartX;
         var diffY = lbTouchEndY - lbTouchStartY;
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 45) {
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
           if (diffX < 0) {
             nextGallerySlide();
           } else {

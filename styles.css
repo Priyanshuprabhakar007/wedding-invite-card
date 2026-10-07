@@ -3,6 +3,14 @@
    ======================================================== */
 
 :root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+
+  --app-height: 100dvh;
+  --app-height-px: 100dvh;
+
   --crimson: #66021f;
   --crimson-deep: #4a0116;
   --crimson-darker: #30000e;
@@ -42,17 +50,30 @@
 html {
   background: var(--champagne-bg);
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
   scrollbar-gutter: stable;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
   background: var(--champagne-bg);
   color: var(--ink);
   font-family: var(--font-serif);
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+}
+
+@supports not (overflow: clip) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
 }
 
 body.envelope-closed-state {
@@ -68,8 +89,8 @@ body.envelope-closed-state {
 
 body.invitation-locked {
   overflow: hidden !important;
-  height: 100vh !important;
-  touch-action: none;
+  width: 100%;
+  min-height: 100%;
 }
 
 body.invitation-locked #mainSite {
@@ -85,6 +106,7 @@ body.invitation-locked #rsvpModal {
 
 button, input, textarea, select {
   font: inherit;
+  touch-action: manipulation;
 }
 
 button {
@@ -200,8 +222,13 @@ button {
   position: fixed;
   inset: 0;
   width: 100%;
-  height: 100dvh;
+  max-width: 100vw;
+  height: 100vh;
   height: 100svh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -485,7 +512,10 @@ button {
   position: absolute;
   inset: 0 0 auto 0;
   height: var(--seal-y);
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
+  contain: paint;
   z-index: 24;
   pointer-events: none;
 }
@@ -563,7 +593,7 @@ button {
 .envelope-wrapper {
   position: relative;
   width: min(88vw, 470px);
-  max-height: 88svh;
+  max-height: min(88svh, calc(var(--app-height-px, 100dvh) - var(--safe-top) - var(--safe-bottom) - 20px));
   aspect-ratio: 1122 / 1402;
   margin: 0 auto;
   perspective: 1400px;
@@ -779,6 +809,15 @@ button {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
   }
+}
+
+.envelope-scene.state-code-entry .envelope-wrapper {
+  max-height: calc(
+    var(--app-height-px, 100dvh)
+    - var(--safe-top)
+    - var(--safe-bottom)
+    - 20px
+  );
 }
 
 .envelope-scene.state-code-entry .code-card-layer {
@@ -1028,11 +1067,14 @@ button {
   color: #4a0116;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(12.5px, 2.8vw, 15px) !important;
+  font-size: clamp(13px, 2.8vw, 15px);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-align: center;
   box-sizing: border-box;
+  -webkit-appearance: none;
+  border-radius: 0;
+  touch-action: manipulation;
 }
 
 .card-invite-code-input::placeholder {
@@ -1288,8 +1330,9 @@ button {
    ======================================================== */
 .hero {
   position: relative;
-  min-height: 100dvh;
+  min-height: 100vh;
   min-height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3731,6 +3774,7 @@ button {
   margin: 28px auto 0;
   padding: 0 10px;
   outline: none;
+  touch-action: pan-y pinch-zoom;
 }
 
 .gallery-stage {
@@ -3749,6 +3793,7 @@ button {
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
+  touch-action: pan-y pinch-zoom;
 }
 
 .gallery-blur-bg {
@@ -3810,6 +3855,8 @@ button {
   z-index: 5;
   width: 48px;
   height: 48px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 50%;
   background: rgba(53, 0, 15, 0.75);
   backdrop-filter: blur(8px);
@@ -3948,19 +3995,26 @@ button {
   width: 100%;
   height: 100%;
   max-width: 1200px;
-  max-height: 94vh;
+  max-height: calc(var(--app-height-px, 100dvh) - var(--safe-top) - var(--safe-bottom) - 20px);
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
+  padding-top: max(20px, var(--safe-top));
+  padding-bottom: max(20px, var(--safe-bottom));
+  padding-left: max(16px, var(--safe-left));
+  padding-right: max(16px, var(--safe-right));
 }
 
 .lightbox-close {
   position: absolute;
-  top: 20px;
-  right: 24px;
+  top: max(20px, calc(10px + var(--safe-top)));
+  right: max(24px, calc(12px + var(--safe-right)));
+  min-width: 44px;
+  min-height: 44px;
+  touch-action: manipulation;
   z-index: 10;
   width: 44px;
   height: 44px;
@@ -3985,7 +4039,14 @@ button {
 .lightbox-image-wrap {
   position: relative;
   width: min(90vw, 900px);
+  max-width: calc(100vw - var(--safe-left) - var(--safe-right) - 32px);
   height: min(78vh, 700px);
+  max-height: calc(
+    var(--app-height-px, 100dvh)
+    - var(--safe-top)
+    - var(--safe-bottom)
+    - 110px
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4060,8 +4121,10 @@ button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     font-size: 24px;
     margin: 0;
     background: rgba(53, 0, 15, 0.85);
@@ -4252,6 +4315,9 @@ button {
   align-items: center;
   gap: 8px;
   padding: 22px 18px;
+  padding-bottom: calc(22px + var(--safe-bottom));
+  padding-left: max(18px, var(--safe-left));
+  padding-right: max(18px, var(--safe-right));
   background: #ffffff;
   color: #382c2f;
   font-size: 14px;
@@ -4268,8 +4334,16 @@ button {
   place-items: center;
   background: rgba(26, 2, 8, 0.88);
   backdrop-filter: blur(8px);
-  padding: 16px;
+  -webkit-backdrop-filter: blur(8px);
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding-top: calc(16px + var(--safe-top));
+  padding-right: max(16px, var(--safe-right));
+  padding-bottom: calc(16px + var(--safe-bottom));
+  padding-left: max(16px, var(--safe-left));
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal[hidden] {
@@ -4511,8 +4585,14 @@ button {
 .modal-card {
   position: relative;
   width: min(100%, 480px);
-  max-height: calc(100dvh - 40px);
+  max-height: calc(
+    var(--app-height-px, 100dvh)
+    - var(--safe-top)
+    - var(--safe-bottom)
+    - 32px
+  );
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--paper);
   color: var(--ink);
   padding: 40px 30px 32px;
@@ -4572,11 +4652,22 @@ button {
   width: 100%;
   border: 1px solid #d5cbc3;
   border-radius: 8px;
-  background: #ffffff;
+  background-color: #ffffff;
   padding: 12px 14px;
   color: var(--ink);
-  font-size: 15px;
+  font-size: 16px;
+  -webkit-appearance: none;
+  appearance: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  touch-action: manipulation;
+}
+
+.field select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2366021f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+  padding-right: 38px;
 }
 
 .field input:focus, .field textarea:focus, .field select:focus {
@@ -5965,5 +6056,73 @@ button {
   }
   .hotel-ornament-halo {
     animation: none !important;
+  }
+}
+
+/* ========================================================
+   IOS SAFARI COMPATIBILITY & FORM AUTO-ZOOM PREVENTION
+   ======================================================== */
+@media (max-width: 768px), (pointer: coarse) {
+  .card-invite-code-input,
+  .field input,
+  .field textarea,
+  .field select,
+  #rsvpForm input,
+  #rsvpForm textarea,
+  #rsvpForm select {
+    font-size: 16px !important;
+  }
+
+  .card-invite-code-input {
+    letter-spacing: 0.04em;
+    padding-left: 14%;
+    padding-right: 6%;
+  }
+
+  .card-invite-code-input::placeholder {
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+  }
+}
+
+@media (max-width: 540px) {
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    min-height: 100dvh;
+    padding-top: calc(50px + var(--safe-top));
+    padding-bottom: calc(40px + var(--safe-bottom));
+    padding-left: max(16px, var(--safe-left));
+    padding-right: max(16px, var(--safe-right));
+  }
+
+  .modal-close {
+    min-width: 44px;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+}
+
+/* Prevent sticky hover on touch/mobile devices */
+@media (hover: none) and (pointer: coarse) {
+  .dress-card:hover,
+  .hotel-card:hover,
+  .hotel-booking-btn:hover,
+  .rsvp-button:hover,
+  .submit-button:hover,
+  .gallery-nav:hover,
+  .lightbox-close:hover,
+  .lightbox-nav:hover {
+    transform: none !important;
+    box-shadow: inherit !important;
+  }
+
+  .hotel-booking-btn:active,
+  .rsvp-button:active,
+  .submit-button:active,
+  .gallery-nav:active,
+  .lightbox-close:active,
+  .lightbox-nav:active {
+    transform: scale(0.96) !important;
   }
 }
