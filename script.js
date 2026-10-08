@@ -1174,7 +1174,7 @@
       if (!bgAudioChecked) {
         bgAudioChecked = true;
         try {
-          var a = new Audio('assets/audio/background.mp3');
+          var a = new Audio('/assets/audio/background.mp3');
           a.loop   = true;
           a.volume = 0.30;
           a.onerror = function () {
