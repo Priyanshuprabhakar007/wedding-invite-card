@@ -211,7 +211,7 @@
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Unable to load RSVP responses. Please try again.");
+        throw new Error((data.error || "Unable to load RSVP responses.") + ` (HTTP ${response.status})`);
       }
 
       allRsvps = Array.isArray(data.rsvps) ? data.rsvps : [];
