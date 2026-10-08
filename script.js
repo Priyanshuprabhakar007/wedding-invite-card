@@ -1171,15 +1171,17 @@
       if (btn) { btn.classList.add("is-playing"); btn.setAttribute("aria-label", "Pause music"); }
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(function () {});
 
-      // First try playing a real audio file — sounds infinitely better than synthesis.
-      // Drop any MP3/OGG into assets/audio/background.mp3 and it will be used automatically.
       if (!bgAudioChecked) {
         bgAudioChecked = true;
         try {
           var a = new Audio('assets/audio/background.mp3');
           a.loop   = true;
           a.volume = 0.30;
-          a.onerror = function () { bgAudio = null; if (isMusicPlaying) playWeddingMelody(); };
+          a.onerror = function () {
+            bgAudio = null;
+            isMusicPlaying = false;
+            if (btn) { btn.classList.remove("is-playing"); btn.setAttribute("aria-label", "Play music"); }
+          };
           bgAudio = a;
         } catch (e) { bgAudio = null; }
       }
@@ -1189,11 +1191,10 @@
         if (playPromise && playPromise.catch) {
           playPromise.catch(function () {
             bgAudio = null;
-            if (isMusicPlaying) playWeddingMelody();
+            isMusicPlaying = false;
+            if (btn) { btn.classList.remove("is-playing"); btn.setAttribute("aria-label", "Play music"); }
           });
         }
-      } else {
-        playWeddingMelody();
       }
     }
   }
