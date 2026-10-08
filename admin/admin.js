@@ -489,10 +489,15 @@
       tdMessage.className = "message-cell";
       tdMessage.textContent = rsvp.message || "—";
       if (rsvp.message) {
-        tdMessage.title = "Click to expand";
+        tdMessage.title = "Click to read full message";
+        tdMessage.style.cursor = "pointer";
         tdMessage.addEventListener("click", function () {
-          tdMessage.classList.toggle("expanded");
-          tdMessage.title = tdMessage.classList.contains("expanded") ? "Click to collapse" : "Click to expand";
+          const popup = document.getElementById("msgPopup");
+          const popupText = document.getElementById("msgPopupText");
+          if (popup && popupText) {
+            popupText.textContent = rsvp.message;
+            popup.style.display = "flex";
+          }
         });
       }
       tr.appendChild(tdMessage);

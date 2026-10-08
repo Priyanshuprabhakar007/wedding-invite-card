@@ -318,6 +318,15 @@
 
   </div>
 
-  <script src="/admin/admin.js?v=1.5"></script>
+  <!-- Message Popup -->
+  <div id="msgPopup" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.55);align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+    <div style="background:#fff;border-radius:14px;padding:28px 28px 20px;max-width:480px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,0.3);position:relative;">
+      <p style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:0.12em;color:#9b7f5a;text-transform:uppercase;margin-bottom:10px;">Guest Message</p>
+      <p id="msgPopupText" style="font-size:15px;line-height:1.7;color:#2a1a0e;font-style:italic;white-space:pre-wrap;word-break:break-word;"></p>
+      <button onclick="document.getElementById('msgPopup').style.display='none'" style="margin-top:18px;background:#4a0e1a;color:#e8c97a;border:none;border-radius:8px;padding:9px 22px;font-family:'Cinzel',serif;font-size:12px;font-weight:700;letter-spacing:0.08em;cursor:pointer;">Close</button>
+    </div>
+  </div>
+
+  <script src="/admin/admin.js?v=1.6"></script>
 </body>
 </html>
