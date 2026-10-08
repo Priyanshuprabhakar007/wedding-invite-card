@@ -183,6 +183,13 @@
       mainSite.setAttribute("aria-hidden", "false");
     }
 
+    // 4a. Update guide download link to only show allowed events
+    var guideBtn = document.querySelector(".guide-download-btn");
+    if (guideBtn && Array.isArray(invitation.allowedEvents)) {
+      var eventIds = invitation.allowedEvents.map(function (e) { return e.id; }).join(",");
+      guideBtn.href = "/guide?events=" + encodeURIComponent(eventIds);
+    }
+
     // 5. Remove locked CSS class from body
     document.body.classList.remove("invitation-locked");
 

@@ -395,25 +395,42 @@
 
     /* ── PRINT STYLES ────────────────────────────────────── */
     @media print {
-      @page {
-        margin: 14mm 12mm;
-        size: A4;
+      @page { margin: 12mm 10mm; size: A4; }
+
+      html, body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background: #fff;
+        font-size: 10.5px;
       }
-      body { background: #fff; font-size: 11px; }
       .print-bar { display: none !important; }
       .guide { padding: 0; max-width: 100%; }
-      .guide-names { font-size: 36px; }
-      .events-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .guide-header { padding-bottom: 16px; margin-bottom: 20px; }
+      .guide-names { font-size: 34px; }
+      .guide-dates { font-size: 12px; }
+      .events-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 8px; margin-bottom: 20px; }
+      .event-card { break-inside: avoid; border: 1px solid #c9a84c; }
+      .event-card-top { background: var(--burgundy) !important; padding: 10px 12px 8px; }
+      .event-badge { font-size: 9px; }
+      .event-name { font-size: 16px; }
+      .event-card-body { padding: 10px 12px; }
+      .event-row { font-size: 11px; margin-bottom: 6px; }
+      .event-dress-text { font-size: 10.5px; }
+      .hotels-grid { grid-template-columns: 1fr 1fr !important; gap: 8px; margin-bottom: 20px; }
+      .hotel-card { break-inside: avoid; padding: 12px; }
       .hotel-link { display: none; }
       .hotel-book-btn { display: none; }
-      .hotel-card::after {
-        content: 'Book via Marriott Group Link';
-        font-size: 10px;
-        color: #666;
-        font-style: italic;
+      .hotel-card .hotel-note::after {
+        content: ' — book via Marriott group link';
       }
-      a { color: inherit; text-decoration: none; }
-      .guide-footer { margin-top: 12px; }
+      .spots-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; margin-bottom: 20px; }
+      .spots-list li { font-size: 11px; padding: 3px 0; }
+      .contact-card { padding: 14px 18px; break-inside: avoid; }
+      .contact-name { font-size: 16px; }
+      .contact-phone { font-size: 14px; }
+      .section-heading { font-size: 9px; margin-bottom: 10px; }
+      a { color: inherit !important; text-decoration: none !important; }
+      .guide-footer { margin-top: 10px; padding-top: 10px; }
     }
   </style>
 </head>
@@ -452,7 +469,7 @@
     <div class="events-grid">
 
       <!-- Mehendi -->
-      <div class="event-card">
+      <div class="event-card" data-event="mehendi">
         <div class="event-card-top">
           <div class="event-badge">🌿 Thursday, Nov 19</div>
           <div class="event-name">Mehendi Celebration</div>
@@ -477,7 +494,7 @@
       </div>
 
       <!-- Wedding -->
-      <div class="event-card">
+      <div class="event-card" data-event="wedding">
         <div class="event-card-top">
           <div class="event-badge">🪔 Friday, Nov 20</div>
           <div class="event-name">Wedding Ceremony</div>
@@ -505,7 +522,7 @@
       </div>
 
       <!-- Reception -->
-      <div class="event-card">
+      <div class="event-card" data-event="reception">
         <div class="event-card-top">
           <div class="event-badge">🥂 Saturday, Nov 21</div>
           <div class="event-name">Wedding Reception</div>
@@ -636,5 +653,29 @@
     </footer>
 
   </div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var eventsParam = params.get('events');
+      if (!eventsParam) return; // no filter — show everything
+
+      var allowed = eventsParam.split(',').map(function (s) { return s.trim(); });
+      var cards = document.querySelectorAll('.event-card[data-event]');
+      var visible = 0;
+      cards.forEach(function (card) {
+        if (allowed.indexOf(card.getAttribute('data-event')) === -1) {
+          card.style.display = 'none';
+        } else {
+          visible++;
+        }
+      });
+
+      // Adjust grid columns to match how many events are visible
+      var grid = document.querySelector('.events-grid');
+      if (grid && visible === 1) grid.style.maxWidth = '300px';
+      if (grid && visible === 2) grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+    })();
+  </script>
 </body>
 </html>
