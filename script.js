@@ -10,7 +10,6 @@
   var audioCtx = null;
   var isMusicPlaying = false;
   var bgAudio = null;
-  var bgAudioChecked = false;
   var isEnvelopeOpened = false;
   var accessGranted = false;
   var activeInvitation = null;
@@ -1171,8 +1170,7 @@
       if (btn) { btn.classList.add("is-playing"); btn.setAttribute("aria-label", "Pause music"); }
       if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume().catch(function () {});
 
-      if (!bgAudioChecked) {
-        bgAudioChecked = true;
+      if (!bgAudio) {
         try {
           var a = new Audio('/assets/audio/background.mp3');
           a.loop   = true;
