@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Isha & Sajan — Wedding Weekend Guide</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --burgundy: #4a0e1a;
+      --burgundy-deep: #2e0810;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --cream: #fdf8f0;
+      --text: #2a1008;
+      --text-light: #6b3a2a;
+      --border: rgba(201,168,76,0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── PRINT BUTTON (screen only) ──────────────────────── */
+    .print-bar {
+      background: var(--burgundy-deep);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .print-bar-label {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      color: var(--gold-light);
+      letter-spacing: 0.08em;
+    }
+    .print-btn {
+      background: var(--gold);
+      color: var(--burgundy-deep);
+      border: none;
+      border-radius: 6px;
+      padding: 10px 22px;
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .print-btn:hover { background: var(--gold-light); }
+    .print-btn svg { flex-shrink: 0; }
+
+    /* ── GUIDE WRAPPER ───────────────────────────────────── */
+    .guide {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 40px 24px 60px;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .guide-header {
+      text-align: center;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+    .guide-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .guide-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(38px, 8vw, 60px);
+      font-weight: 400;
+      color: var(--burgundy);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .guide-amp {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .guide-dates {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      color: var(--text-light);
+    }
+    .guide-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px auto 0;
+      max-width: 260px;
+    }
+    .guide-divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .guide-divider-motif {
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 0.15em;
+    }
+
+    /* ── SECTION HEADING ─────────────────────────────────── */
+    .section-heading {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-heading::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── EVENTS ──────────────────────────────────────────── */
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    @media (max-width: 640px) {
+      .events-grid { grid-template-columns: 1fr; }
+    }
+    .event-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .event-card-top {
+      background: var(--burgundy);
+      padding: 14px 16px 12px;
+    }
+    .event-badge {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+    .event-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+      margin-top: 4px;
+      line-height: 1.2;
+    }
+    .event-card-body {
+      padding: 14px 16px;
+    }
+    .event-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 9px;
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+    .event-row:last-child { margin-bottom: 0; }
+    .event-icon {
+      flex-shrink: 0;
+      width: 16px;
+      margin-top: 1px;
+      color: var(--gold);
+    }
+    .event-row strong {
+      display: block;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .event-row span {
+      color: var(--text-light);
+    }
+    .event-dress {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .event-dress-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .event-dress-text {
+      font-size: 12px;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+    .dress-swatches {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 6px;
+    }
+    .swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    /* ── HOTELS ──────────────────────────────────────────── */
+    .hotels-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 36px;
+    }
+    @media (max-width: 500px) {
+      .hotels-grid { grid-template-columns: 1fr; }
+    }
+    .hotel-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      background: #fff;
+    }
+    .hotel-name {
+      font-family: 'Cinzel', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--burgundy);
+      margin-bottom: 4px;
+    }
+    .hotel-note {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+    .hotel-link {
+      font-size: 11px;
+      color: var(--text-light);
+      word-break: break-all;
+      font-family: monospace;
+      background: var(--cream);
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      display: block;
+      margin-bottom: 8px;
+    }
+    .hotel-book-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--burgundy);
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── SPOTS ───────────────────────────────────────────── */
+    .spots-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+    @media (max-width: 500px) {
+      .spots-grid { grid-template-columns: 1fr; }
+    }
+    .spots-col-title {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--burgundy);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .spots-list {
+      list-style: none;
+    }
+    .spots-list li {
+      font-size: 13px;
+      color: var(--text);
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .spots-list li:last-child { border-bottom: none; }
+    .spot-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ── CONTACT ─────────────────────────────────────────── */
+    .contact-card {
+      background: var(--burgundy);
+      border-radius: 10px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .contact-label {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 4px;
+    }
+    .contact-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      color: #fff;
+    }
+    .contact-phone {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--gold-light);
+      letter-spacing: 0.06em;
+    }
+    .contact-note {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 2px;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .guide-footer {
+      text-align: center;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--text-light);
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── PRINT STYLES ────────────────────────────────────── */
+    @media print {
+      @page {
+        margin: 14mm 12mm;
+        size: A4;
+      }
+      body { background: #fff; font-size: 11px; }
+      .print-bar { display: none !important; }
+      .guide { padding: 0; max-width: 100%; }
+      .guide-names { font-size: 36px; }
+      .events-grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .hotel-link { display: none; }
+      .hotel-book-btn { display: none; }
+      .hotel-card::after {
+        content: 'Book via Marriott Group Link';
+        font-size: 10px;
+        color: #666;
+        font-style: italic;
+      }
+      a { color: inherit; text-decoration: none; }
+      .guide-footer { margin-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Print Bar (screen only) -->
+  <div class="print-bar">
+    <span class="print-bar-label">Isha & Sajan — Wedding Weekend Guide</span>
+    <button class="print-btn" onclick="window.print()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9V2h12v7"/><rect x="6" y="17" width="12" height="5"/><path d="M6 13H4a2 2 0 0 0-2 2v4h4v-3h12v3h4v-4a2 2 0 0 0-2-2h-2"/>
+      </svg>
+      Save as PDF / Print
+    </button>
+  </div>
+
+  <div class="guide">
+
+    <!-- Header -->
+    <header class="guide-header">
+      <p class="guide-eyebrow">Wedding Weekend Guide • November 2026 • Fort Lauderdale, Florida</p>
+      <h1 class="guide-names">Isha <span class="guide-amp">&</span> Sajan</h1>
+      <p class="guide-dates">NOVEMBER 19 &ndash; 21, 2026</p>
+      <div class="guide-divider">
+        <span class="guide-divider-line"></span>
+        <span class="guide-divider-motif">✦ ❦ ✦</span>
+        <span class="guide-divider-line"></span>
+      </div>
+    </header>
+
+    <!-- Events -->
+    <p class="section-heading">Schedule of Events</p>
+    <div class="events-grid">
+
+      <!-- Mehendi -->
+      <div class="event-card">
+        <div class="event-card-top">
+          <div class="event-badge">🌿 Thursday, Nov 19</div>
+          <div class="event-name">Mehendi Celebration</div>
+        </div>
+        <div class="event-card-body">
+          <div class="event-row">
+            <svg class="event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div><strong>5:00 PM – 10:00 PM</strong></div>
+          </div>
+          <div class="event-row">
+            <svg class="event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div>
+              <strong>Deccan Spice</strong>
+              <span>1151 S Federal Hwy, Pompano Beach, FL 33062</span>
+            </div>
+          </div>
+          <div class="event-dress">
+            <div class="event-dress-label">Attire</div>
+            <div class="event-dress-text">Casual & vibrant — wear what makes you feel wonderful. Flowy salwar, bright kurta, or any fun look.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wedding -->
+      <div class="event-card">
+        <div class="event-card-top">
+          <div class="event-badge">🪔 Friday, Nov 20</div>
+          <div class="event-name">Wedding Ceremony</div>
+        </div>
+        <div class="event-card-body">
+          <div class="event-row">
+            <svg class="event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div>
+              <strong>3:00 PM – 8:00 PM</strong>
+              <span>3:30 PM Baraat · 5:00 PM Ceremony · 6:30 PM Dinner</span>
+            </div>
+          </div>
+          <div class="event-row">
+            <svg class="event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div>
+              <strong>South Florida Hindu Temple</strong>
+              <span>13010 Griffin Rd, Southwest Ranches, FL</span>
+            </div>
+          </div>
+          <div class="event-dress">
+            <div class="event-dress-label">Attire</div>
+            <div class="event-dress-text">Indian ethnic wear — Sarees, Lehengas, Sherwanis, Kurtas. Western formal also welcome.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reception -->
+      <div class="event-card">
+        <div class="event-card-top">
+          <div class="event-badge">🥂 Saturday, Nov 21</div>
+          <div class="event-name">Wedding Reception</div>
+        </div>
+        <div class="event-card-body">
+          <div class="event-row">
+            <svg class="event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div>
+              <strong>5:00 PM – 11:00 PM</strong>
+              <span>5:00–6:00 PM Cocktail Hour</span>
+            </div>
+          </div>
+          <div class="event-row">
+            <svg class="event-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div>
+              <strong>The White Barn at Cielo Farms</strong>
+              <span>4680 Volunteer Rd, Southwest Ranches, FL 33330</span>
+            </div>
+          </div>
+          <div class="event-dress">
+            <div class="event-dress-label">Attire — Jewel Tones</div>
+            <div class="event-dress-text">Deep reds, burgundy, emerald, sapphire, navy, plum, or black. Add a touch of sparkle!</div>
+            <div class="dress-swatches">
+              <span class="swatch" style="background:#78061F" title="Deep Red"></span>
+              <span class="swatch" style="background:#5C1A2A" title="Burgundy"></span>
+              <span class="swatch" style="background:#14452F" title="Emerald"></span>
+              <span class="swatch" style="background:#0F2A4A" title="Sapphire"></span>
+              <span class="swatch" style="background:#152238" title="Navy"></span>
+              <span class="swatch" style="background:#2D1A4A" title="Royal Purple"></span>
+              <span class="swatch" style="background:#3A1042" title="Deep Plum"></span>
+              <span class="swatch" style="background:#1E1E22" title="Black"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Hotels -->
+    <p class="section-heading">Where to Stay</p>
+    <div class="hotels-grid">
+
+      <div class="hotel-card">
+        <div class="hotel-name">The Dalmar</div>
+        <div class="hotel-note">Fort Lauderdale — Group rate via Marriott</div>
+        <a class="hotel-link" href="https://app.marriott.com/resview2?id=1791230174650&key=GRP&app=resvlink" target="_blank" rel="noopener">marriott.com — Group Link</a>
+        <a class="hotel-book-btn" href="https://app.marriott.com/resview2?id=1791230174650&key=GRP&app=resvlink" target="_blank" rel="noopener">Book The Dalmar</a>
+      </div>
+
+      <div class="hotel-card">
+        <div class="hotel-name">Fairmont Las Olas</div>
+        <div class="hotel-note">Fort Lauderdale — Group rate via Marriott</div>
+        <a class="hotel-link" href="https://app.marriott.com/resview2?id=1790974423973&key=GRP&app=resvlink" target="_blank" rel="noopener">marriott.com — Group Link</a>
+        <a class="hotel-book-btn" href="https://app.marriott.com/resview2?id=1790974423973&key=GRP&app=resvlink" target="_blank" rel="noopener">Book Fairmont Las Olas</a>
+      </div>
+
+    </div>
+
+    <!-- Spots -->
+    <p class="section-heading">Our Favorite Spots in South Florida</p>
+    <div class="spots-grid">
+
+      <div>
+        <div class="spots-col-title">🌊 Explore</div>
+        <ul class="spots-list">
+          <li><span class="spot-dot"></span>Pompano Beach Pier</li>
+          <li><span class="spot-dot"></span>Hollywood Beach Broadwalk</li>
+          <li><span class="spot-dot"></span>Las Olas Riverwalk</li>
+          <li><span class="spot-dot"></span>The Wharf Fort Lauderdale</li>
+          <li><span class="spot-dot"></span>Rooftop @1WLO</li>
+          <li><span class="spot-dot"></span>Pier Top</li>
+          <li><span class="spot-dot"></span>Swizzle</li>
+          <li><span class="spot-dot"></span>The Wilder</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="spots-col-title">🍽 Restaurants</div>
+        <ul class="spots-list">
+          <li><span class="spot-dot"></span>El Camino</li>
+          <li><span class="spot-dot"></span>Moxies</li>
+          <li><span class="spot-dot"></span>Nour Thai Kitchen</li>
+          <li><span class="spot-dot"></span>Café Bastille</li>
+          <li><span class="spot-dot"></span>Mister O1 Pizza</li>
+          <li><span class="spot-dot"></span>Earls Kitchen + Bar</li>
+          <li><span class="spot-dot"></span>Ghee Indian Kitchen – Wynwood</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="spots-col-title">☕ Coffee & Desserts</div>
+        <ul class="spots-list">
+          <li><span class="spot-dot"></span>Tea.Lab</li>
+          <li><span class="spot-dot"></span>Haute Coffee</li>
+          <li><span class="spot-dot"></span>Farmer's Milk</li>
+          <li><span class="spot-dot"></span>The Salty Donut – Wynwood</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="spots-col-title">🌴 Miami Day Trip</div>
+        <ul class="spots-list">
+          <li><span class="spot-dot"></span>Brickell City Centre</li>
+          <li><span class="spot-dot"></span>South Pointe Pier</li>
+          <li><span class="spot-dot"></span>Sugar Rooftop</li>
+          <li><span class="spot-dot"></span>Wynwood Walls</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-card">
+      <div>
+        <div class="contact-label">Questions? Reach out to</div>
+        <div class="contact-name">Sarker & Goyal Family</div>
+        <div class="contact-note">Travel, accommodation, or any queries</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="contact-phone">+1 (469) 347-4780</div>
+        <div class="contact-note">Call or WhatsApp</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="guide-footer">
+      Isha & Sajan — November 19–21, 2026 · Fort Lauderdale, Florida · With Love ❦
+    </footer>
+
+  </div>
+</body>
+</html>

@@ -4636,9 +4636,10 @@ button {
 
 .site-footer {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 14px;
   padding: 22px 18px;
   padding-bottom: calc(22px + var(--safe-bottom));
   padding-left: max(18px, var(--safe-left));
@@ -4647,6 +4648,23 @@ button {
   color: #382c2f;
   font-size: 14px;
 }
+.guide-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #4a0e1a;
+  color: #e8c97a;
+  text-decoration: none;
+  padding: 11px 22px;
+  border-radius: 999px;
+  font-family: 'Cinzel', 'Georgia', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.guide-download-btn:hover { background: #6b1e30; transform: translateY(-1px); }
+.guide-download-btn svg { flex-shrink: 0; }
 
 
 

@@ -8,19 +8,21 @@
   <meta name="description" content="You are cordially invited to celebrate the royal wedding of Sajan &amp; Isha.">
   <meta name="theme-color" content="#66021f">
 
-  <!-- Google Fonts Optimized -->
+  <!-- Google Fonts — subset to reduce payload; display=swap unblocks rendering -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
-    rel="stylesheet">
+    href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Beau+Rivage&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"></noscript>
 
   <!-- Critical Above-The-Fold Image Preloads -->
   <link rel="preload" as="image" href="assets/images/envelope-seal.webp" fetchpriority="high">
   <link rel="preload" as="image" href="assets/images/envelope-flap-ornate.webp" fetchpriority="high">
   <link rel="preload" as="image" href="assets/images/corner-ornament.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/images/hero-burgundy-bg.webp" fetchpriority="low">
 
-  <link rel="stylesheet" href="styles.css?v=3.2">
+  <link rel="stylesheet" href="styles.css?v=3.3">
 </head>
 
 <body class="envelope-closed-state invitation-locked">
@@ -128,11 +130,17 @@
     <!-- FLOATING MUSIC TOGGLE -->
     <button id="musicToggle" class="music-toggle-btn" type="button" aria-label="Pause music">
       <span class="music-btn-icon" aria-hidden="true">
-        <svg class="music-icon-playing" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>
+        <!-- Speaker on with sound waves (playing state) -->
+        <svg class="music-icon-playing" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
         </svg>
-        <svg class="music-icon-paused" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M8 5v14l11-7z"/>
+        <!-- Speaker muted with X (paused state) -->
+        <svg class="music-icon-paused" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+          <line x1="23" y1="9" x2="17" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="17" y1="9" x2="23" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </span>
       <span class="music-btn-waves" aria-hidden="true">
@@ -854,6 +862,10 @@
 
     <!-- FOOTER -->
     <footer class="site-footer">
+      <a href="/guide" target="_blank" rel="noopener" class="guide-download-btn" aria-label="Download wedding weekend guide as PDF">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+        <span>Download Wedding Guide</span>
+      </a>
       <span>Crafted with Love for Isha &amp; Sajan's Special Day ✨</span>
     </footer>
   </main>

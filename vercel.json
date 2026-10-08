@@ -59,6 +59,10 @@
     {
       "source": "/admin",
       "destination": "/admin/index.html"
+    },
+    {
+      "source": "/guide",
+      "destination": "/guide/index.html"
     }
   ]
 }
