@@ -947,6 +947,8 @@ body {
 }
 
 /* Loading, Error, and Empty States */
+[hidden] { display: none !important; }
+
 .table-loading {
   padding: 48px;
   display: flex;
