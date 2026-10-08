@@ -183,7 +183,11 @@
       mainSite.setAttribute("aria-hidden", "false");
     }
 
-    // 4a. Update guide download link to only show allowed events
+    // 4a. Show floating music button (lives outside mainSite)
+    var musicToggle = byId("musicToggle");
+    if (musicToggle) musicToggle.removeAttribute("hidden");
+
+    // 4b. Update guide download link to only show allowed events
     var guideBtn = document.querySelector(".guide-download-btn");
     if (guideBtn && Array.isArray(invitation.allowedEvents)) {
       var eventIds = invitation.allowedEvents.map(function (e) { return e.id; }).join(",");
