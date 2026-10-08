@@ -1728,11 +1728,21 @@ button {
   color: #fffaf0;
   line-height: 1.1;
   margin: clamp(2px, 0.6vh, 6px) auto clamp(4px, 0.8vh, 7px);
-  text-shadow: 
-    0 3px 18px rgba(0, 0, 0, 0.75), 
+  text-shadow:
+    0 3px 18px rgba(0, 0, 0, 0.75),
     0 0 30px rgba(247, 231, 196, 0.35),
     0 0 55px rgba(223, 190, 118, 0.22);
   font-weight: 400;
+}
+.hero-hashtag {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(12px, 2.4vw, 16px);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--gold, #dfbe76);
+  text-transform: uppercase;
+  margin: clamp(4px, 0.8vh, 8px) auto 0;
+  opacity: 0.88;
 }
 
 .hero-date-wrap {
