@@ -488,7 +488,13 @@
       const tdMessage = document.createElement("td");
       tdMessage.className = "message-cell";
       tdMessage.textContent = rsvp.message || "—";
-      if (rsvp.message) tdMessage.title = rsvp.message;
+      if (rsvp.message) {
+        tdMessage.title = "Click to expand";
+        tdMessage.addEventListener("click", function () {
+          tdMessage.classList.toggle("expanded");
+          tdMessage.title = tdMessage.classList.contains("expanded") ? "Click to collapse" : "Click to expand";
+        });
+      }
       tr.appendChild(tdMessage);
 
       // Submitted At

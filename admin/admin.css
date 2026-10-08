@@ -938,6 +938,15 @@ body {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.message-cell:hover { color: var(--color-text); }
+.message-cell.expanded {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  white-space: normal;
+  display: block;
 }
 
 .time-cell {
