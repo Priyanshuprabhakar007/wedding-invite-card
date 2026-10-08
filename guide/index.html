@@ -63,6 +63,18 @@
     }
     .print-btn:hover { background: var(--gold-light); }
     .print-btn svg { flex-shrink: 0; }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+    .back-btn:hover { color: var(--gold-light); }
 
     /* ── GUIDE WRAPPER ───────────────────────────────────── */
     .guide {
@@ -409,7 +421,10 @@
 
   <!-- Print Bar (screen only) -->
   <div class="print-bar">
-    <span class="print-bar-label">Isha & Sajan — Wedding Weekend Guide</span>
+    <a href="/" class="back-btn" aria-label="Back to wedding invitation">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Invitation
+    </a>
     <button class="print-btn" onclick="window.print()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 9V2h12v7"/><rect x="6" y="17" width="12" height="5"/><path d="M6 13H4a2 2 0 0 0-2 2v4h4v-3h12v3h4v-4a2 2 0 0 0-2-2h-2"/>
