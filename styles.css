@@ -4571,6 +4571,21 @@ button {
   color: #fff9f5;
 }
 
+.rsvp-deadline {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold, #dfbe76);
+  border: 1px solid rgba(223, 190, 118, 0.45);
+  border-radius: 999px;
+  padding: 7px 20px;
+  margin-bottom: 22px;
+}
+.rsvp-deadline strong { font-weight: 700; color: #fff; }
+
 .rsvp-button-group {
   display: flex;
   flex-direction: column;
